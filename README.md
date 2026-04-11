@@ -6,6 +6,7 @@ Este repositório contém os materiais e recursos relacionados ao MBA em Engenha
 ## Fundamentos de IA Generativa - Módulos
 
 - [Módulo 1 - Gen IA](GenIA.md)
+- [Módulo 2 - Aprofundando na IA e LLM](IAeLLM.md)
 
 
 
