@@ -4,6 +4,7 @@
 
 - [Aula 1: Cadeias de Markov](#aula-1-cadeias-de-markov)
 - [Aula 2: Redes Neurais Profundas e a Evolução do NLP](#aula-2-redes-neurais-profundas-e-a-evolução-do-nlp)
+- [Aula 3: Redes Neurais Recorrentes (RNNs) e a Busca por Memória](#aula-3-redes-neurais-recorrentes-rnns-e-a-busca-por-memória)
 
 
 ## Aula 1: Cadeias de Markov
@@ -55,14 +56,10 @@ A transição de modelos simples (como bigramas e Cadeias de Markov) para as **R
 * **Disponibilidade Massiva de Dados:** A popularização da internet, redes sociais e sistemas digitais gerou a matéria-prima essencial para treinar as IAs em larga escala.
 * **Aumento do Poder Computacional:** A chegada e o uso de GPUs potentes permitiram o processamento viável de algoritmos muito mais complexos.
 
----
-
 ### Redes Neurais Profundas
 Diferente dos modelos anteriores, onde o caminho de decisão era curto e claro, as redes neurais profundas simulam o comportamento e as sinapses do cérebro humano.
 * O termo **"profundo"** refere-se à vasta quantidade de camadas que a informação percorre.
 * Um dado de entrada passa por uma cadeia gigantesca de transformações, combinações e reinterpretações até gerar uma saída coerente.
-
----
 
 ### Processamento de Linguagem e "Word Embeddings"
 Redes neurais não processam palavras de forma direta, nem usam a conversão literal de letras para bits (0 e 1). O segredo para a IA entender a linguagem natural está nos **Embeddings**.
@@ -70,14 +67,10 @@ Redes neurais não processam palavras de forma direta, nem usam a conversão lit
 * Na prática, uma palavra deixa de ser um texto e vira um vetor matemático (ex: `0.25, -0.14, 0.88`).
 * **A vantagem:** Palavras com significados e contextos semelhantes geram vetores com valores próximos. Isso permite que a IA faça correlações matemáticas para entender a linguagem (base para modelos como GloVe, BERT e GPT).
 
----
-
 ### Redes Feedforward e Janelas de Contexto
 Para tentar prever a próxima palavra em uma frase, a IA começou a usar redes *feedforward* (fluxo unidirecional de dados, apenas para a frente) unidas a uma estratégia de **Janelas de Contexto Fixas**.
 * O modelo analisa um grupo fixo de palavras anteriores para prever a próxima.
 * Exemplo em uma janela de 4 palavras: Ao processar os vetores de "O", "cachorro", "está", "no", a rede calcula a maior probabilidade e prevê que a palavra 5 seja "jardim".
-
----
 
 ### Limitações Críticas Desse Modelo
 Apesar do grande salto tecnológico, essas estruturas esbarraram em problemas que impediam a IA de ter diálogos complexos:
@@ -85,7 +78,39 @@ Apesar do grande salto tecnológico, essas estruturas esbarraram em problemas qu
 * **Contexto Limitado (Janela Fixa):** Como a janela de leitura olha apenas para um número fixo de palavras passadas, a IA perde o contexto do que foi dito no início de um parágrafo longo.
 * **Problema de Ordem/Sequência temporal:** Como os vetores são frequentemente somados ou concatenados, a rede tem dificuldade em distinguir o papel do sujeito e do objeto. Para ela, "O cachorro mordeu o homem" e "O homem mordeu o cachorro" podem gerar resultados matemáticos tão próximos que a IA perde a semântica real da ação.
 
----
-
 ### O Próximo Passo
 A necessidade de superar a falta de memória e a dependência de ordem prepara o terreno para o surgimento de uma nova arquitetura revolucionária: os **Transformers** (a base das IAs generativas atuais).
+
+## Aula 3: Redes Neurais Recorrentes (RNNs) e a Busca por Memória
+
+### O Problema dos Modelos Anteriores
+Modelos passados, como os bigramas, Cadeias de Markov e as Redes Neurais Profundas (feedforward), possuíam uma limitação estrutural: **falta de memória**. O processamento ia apenas para frente em blocos fixos. Isso impedia a IA de lembrar o sujeito no início de um parágrafo para concordar com o verbo no final, quebrando a coerência de textos mais longos.
+
+
+### O Surgimento das RNNs (Redes Neurais Recorrentes)
+As RNNs foram projetadas para lidar com **dados sequenciais** (como texto, áudio, vídeo e séries temporais), tentando simular a forma como formulamos frases na linguagem natural.
+* **A grande sacada:** A rede passa a processar os dados para a frente, mas **guarda o estado anterior** em uma espécie de "memória em cache".
+* A saída atual depende não só da nova entrada, mas de todo o contexto processado no passado.
+* Isso ajuda a manter a ordem lógica das ações (garantindo que "o cachorro mordeu o homem" não vire "o homem mordeu o cachorro").
+
+### Principais Aplicações e Avanços
+Com a chegada das RNNs, a inteligência artificial deu um salto de qualidade nas seguintes áreas:
+* Tradução automática.
+* Geração de texto mais coerente.
+* Reconhecimento de fala.
+* Análise de sentimento (capacidade de entender o "tom" de um texto).
+
+### Limitações Críticas das RNNs
+Apesar de inovadoras, as RNNs trouxeram problemas graves na hora de lidar com grandes volumes de dados ou textos muito longos:
+* **Desvanecimento de Gradiente:** Em sequências longas, os sinais matemáticos de aprendizado (gradientes) ficam tão pequenos que a rede perde a rastreabilidade e "esquece" o início da frase, gerando alucinações.
+* **Explosão de Gradiente:** O cenário oposto, onde o gradiente cresce demais e gera instabilidade total no treinamento.
+* **Lentidão e Falta de Paralelização:** Como o processamento é estritamente sequencial (uma palavra depende da anterior estar finalizada), é impossível treinar a IA em paralelo. Isso torna o treinamento extremamente lento e difícil de escalar.
+
+### A Evolução da Memória: LSTMs e GRUs
+Para tentar contornar os problemas de gradiente e estouro de memória, a arquitetura das RNNs foi aprimorada com mecanismos de controle:
+* **LSTM (Long Short-Term Memory):** Introduz "portões" de controle (entrada, esquecimento e saída). A rede aprende a reter apenas as informações relevantes e deletar o ruído ou o que não faz mais sentido para o contexto.
+* **GRU (Gated Recurrent Unit):** É uma versão simplificada da LSTM. Ela junta as portas de entrada e esquecimento, diminuindo os parâmetros. Isso torna o treinamento mais rápido e leve, entregando uma performance muito similar à da LSTM.
+
+
+### O Que Faltou Resolver? (Preparação para o Futuro)
+As LSTMs e GRUs melhoraram a retenção de contexto, mas eram apenas "mais do mesmo" na mesma arquitetura. Elas não resolveram o problema principal: **o processamento continua sendo sequencial e lento**. A IA ainda precisava de uma forma de processar dados gigantes em paralelo e buscar correlações em textos imensos sem depender de uma leitura encadeada (o que abrirá portas para a próxima revolução tecnológica).
