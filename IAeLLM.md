@@ -152,3 +152,30 @@ O Transformer é a fundação de quase todos os modelos modernos:
 * **Visão Computacional:** ViT (Vision Transformer) para interpretação de imagens.
 * **Multimodalidade:** Capacidade de integrar texto, imagem e áudio em um único sistema (ex: GPT-4).
 * **Outras Áreas:** Bioinformática, finanças e sistemas de recomendação avançados.
+
+# Aula 5: A Base da IA Moderna – O Conceito de Tokens
+
+### Por que a IA não "lê" palavras?
+Até agora, usamos o termo "palavra" para facilitar o entendimento, mas na realidade, a IA processa a linguagem de forma diferente. 
+A linguagem humana (natural) é caótica: inventamos novas palavras o tempo todo, cometemos erros de digitação e temos milhares de idiomas. Se a IA tentasse aprender mapeando *palavras inteiras*, o vocabulário dela seria infinito e ela travaria sempre que encontrasse uma palavra desconhecida. 
+* **A Solução:** Reduzir o vocabulário quebrando as palavras em pedaços menores e familiares.
+
+### O que é um Token na prática?
+O **Token** é a unidade fundamental de informação que a IA realmente processa. Ele não é necessariamente uma palavra inteira. Dependendo do tamanho e da complexidade, um token pode ser:
+* **Uma palavra inteira:** Palavras comuns e curtas (ex: "sol", "você").
+* **Um pedaço de palavra:** Sílabas ou radicais que se repetem muito (ex: "inter" e "essante").
+* **Uma única letra ou símbolo:** (ex: o traço "-", o número "4", ou a vogal "e").
+
+### Como a Tokenização funciona? (Exemplo: BPE)
+O método utilizado por modelos como o ChatGPT (GPT-3, 3.5 e 4) é o **Byte Pair Encoding (BPE)**. Ele funciona através de análise estatística:
+1. **Quebra total inicial:** O modelo começa olhando para as letras isoladas (bytes), como `C - A - C - H - O - R - R - O`.
+2. **Agrupamento estatístico:** Ele analisa a frequência com que letras aparecem juntas em bilhões de textos. Se as letras `C` e `A` aparecem juntas com muita frequência, elas se fundem em um token forte: `CA`.
+3. **Resultado:** Uma frase como "GPT-4 é poderoso" pode ser fatiada em pedaços estatísticos como: `[GPT] [-] [4] [é] [poder] [oso]`.
+
+*Nota: Esse dicionário de tokens não é criado na hora da conversa com o usuário. Ele é definido de forma fixa durante a fase de **treinamento** do modelo, após ele ler a massa de dados.*
+
+### O Impacto Prático dos Tokens (Preparação para as LLMs)
+Compreender tokens é crucial para o próximo passo (Large Language Models - LLMs), pois eles mudam a forma como medimos a IA:
+1. **Mecânica Interna:** Daqui para frente, tudo o que estudamos antes (Embeddings, Mecanismo de Atenção, Transformers) não é feito com palavras, mas sim **em cima de tokens**.
+2. **Janela de Contexto:** Quando ouvimos que uma IA suporta "8.000 de contexto" ou "32.000", isso refere-se ao limite máximo de *tokens* que ela consegue "lembrar" de uma vez, e não caracteres ou palavras.
+3. **Custo Financeiro:** O processamento em nuvem (como AWS Bedrock, OpenAI API, etc.) é cobrado e medido estritamente pelo número de **tokens processados** (tanto na entrada do prompt quanto na saída gerada), e não pelo tamanho do texto em si.
