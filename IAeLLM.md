@@ -5,7 +5,7 @@
 - [Aula 1: Cadeias de Markov](#aula-1-cadeias-de-markov)
 - [Aula 2: Redes Neurais Profundas e a Evolução do NLP](#aula-2-redes-neurais-profundas-e-a-evolução-do-nlp)
 - [Aula 3: Redes Neurais Recorrentes (RNNs) e a Busca por Memória](#aula-3-redes-neurais-recorrentes-rnns-e-a-busca-por-memória)
-
+- [Aula 4: Transformers ](#aula-4-transformers-e-o-mecanismo-de-atenção)
 
 ## Aula 1: Cadeias de Markov
 
@@ -114,3 +114,41 @@ Para tentar contornar os problemas de gradiente e estouro de memória, a arquite
 
 ### O Que Faltou Resolver? (Preparação para o Futuro)
 As LSTMs e GRUs melhoraram a retenção de contexto, mas eram apenas "mais do mesmo" na mesma arquitetura. Elas não resolveram o problema principal: **o processamento continua sendo sequencial e lento**. A IA ainda precisava de uma forma de processar dados gigantes em paralelo e buscar correlações em textos imensos sem depender de uma leitura encadeada (o que abrirá portas para a próxima revolução tecnológica).
+
+## Aula 4: Transformers e o Mecanismo de Atenção
+
+### 1. A Ruptura de 2017: "Attention Is All You Need"
+Até 2017, o estado da arte eram as redes LSTM e GRU. Embora avançadas, elas ainda sofriam com a dificuldade de capturar dependências de longo prazo e a impossibilidade de paralelizar o processamento (treinamento lento). 
+
+O cenário mudou com o paper **"Attention Is All You Need"**, publicado por pesquisadores do Google. Ele introduziu a arquitetura **Transformer**, que eliminou a necessidade de estruturas recorrentes (RNNs) e baseou-se inteiramente no mecanismo de **Autoatenção (Self-Attention)**.
+
+
+### 2. O Mecanismo de Autoatenção (Self-Attention)
+Diferente da atenção humana (focar em uma única coisa), a atenção em redes neurais permite que o modelo foque em **diferentes partes da sequência simultaneamente**, atribuindo pesos variados a cada token.
+
+* **Ponderação Contextual:** O modelo identifica quais palavras são mais relevantes para o sentido da frase, independentemente da distância entre elas.
+* **Exemplo Prático:** Na frase *"O cachorro que o menino viu estava latindo"*, o mecanismo de atenção atribui um peso maior à relação entre "cachorro" e "latindo", mesmo que a palavra "menino" esteja fisicamente mais próxima do verbo. Isso resolve ambiguidades sintáticas que modelos anteriores falhavam em interpretar.
+
+
+### 3. Os Componentes da Arquitetura Transformer
+A arquitetura é composta por três pilares fundamentais:
+
+1.  **Camada de Atenção:** Compara cada token com todos os outros da sequência para calcular sua importância relativa e criar uma representação interna rica em contexto.
+2.  **Camadas Feedforward (MLP):** Após a atenção, cada token passa por uma rede neural densa (Multilayer Perceptron). Isso introduz não-linearidade e permite que o modelo aprenda padrões complexos e densos.
+3.  **Positional Encoding (Codificação Posicional):** Como o Transformer processa todos os tokens ao mesmo tempo (paralelismo), ele perde a noção natural de ordem. O Positional Encoding adiciona um "identificador de posição" a cada token, garantindo que a estrutura da frase seja respeitada.
+
+
+### 4. Benefícios e Impactos Práticos
+A mudança de paradigma trouxe vantagens cruciais para a escala da IA moderna:
+
+* **Processamento Paralelo:** O fim do processamento sequencial permitiu o uso eficiente de GPUs e TPUs, acelerando drasticamente o treinamento em volumes massivos de dados.
+* **Dependências de Longo Prazo:** Redução drástica do problema de degradação do gradiente, permitindo que o modelo relacione informações distantes (como o início e o fim de um livro).
+* **Escalabilidade:** A arquitetura provou ser extremamente estável mesmo quando escalada para bilhões de parâmetros.
+
+
+### 5. O Ecossistema Atual
+O Transformer é a fundação de quase todos os modelos modernos:
+* **Texto:** BERT (análise e classificação) e linha GPT (geração e chatbots).
+* **Visão Computacional:** ViT (Vision Transformer) para interpretação de imagens.
+* **Multimodalidade:** Capacidade de integrar texto, imagem e áudio em um único sistema (ex: GPT-4).
+* **Outras Áreas:** Bioinformática, finanças e sistemas de recomendação avançados.
