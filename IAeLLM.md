@@ -8,7 +8,8 @@
 - [Aula 4: Transformers ](#aula-4-transformers-e-o-mecanismo-de-atenção)
 - [Aula 5: A Base da IA Moderna – O Conceito de Tokens](#aula-5-a-base-da-ia-moderna--o-conceito-de-tokens)
 - [Aula 6: Large Language Models (LLMs) e a Era Generativa](#aula-6-large-language-models-llms-e-a-era-generativa)
-
+- [Aula 7: IA Generativa para Imagens – GANs e VAEs](#aula-7-ia-generativa-para-imagens--gans-e-vaes)
+- [Aula 8: Aprofundamento em LLMs – Multi-Head Attention](#aula-8-aprofundamento-em-llms--multi-head-attention)
 
 ## Aula 1: Cadeias de Markov
 
@@ -220,3 +221,60 @@ Embora todos sejam LLMs, eles têm abordagens e objetivos diferentes na sua cons
 
 ### O Impacto: A Mudança de Paradigma
 A grande revolução dos LLMs é a mudança da era dos especialistas para os generalistas. Antes, criava-se uma IA apenas para traduzir, outra apenas para resumir, e outra para analisar sentimento. Hoje, **um único modelo generalista (LLM)** consegue executar todas essas tarefas, adaptando-se a novos contextos e simulando a fluência da inteligência humana.
+
+## Aula 7: IA Generativa para Imagens – GANs e VAEs
+
+### A Mudança de Foco: De Texto para Imagem
+Até agora, o foco foi em LLMs (textos) porque é o que mais usamos no dia a dia, especialmente na área de tecnologia e programação. No entanto, a IA generativa também brilha no universo visual (marketing, publicidade, design, etc.).
+* **O Desafio da Imagem:** A estratégia para gerar imagens é totalmente diferente da usada para textos. Em texto, a IA precisa resolver a "coesão textual" de forma sequencial (da esquerda para a direita). Na imagem, a coesão é visual e espacial, exigindo arquiteturas próprias.
+
+### GANs (Generative Adversarial Networks / Redes Adversárias Generativas)
+Surgiram por volta de 2014 para resolver o problema das imagens geradas por IA que eram muito rudimentares, artificiais e de baixa qualidade. As GANs abriram caminho para a criação de imagens ultrarrealistas.
+
+**Como funciona? (O Jogo do Falsificador vs. Policial)**
+A arquitetura é baseada em duas redes neurais que competem entre si:
+1. **Gerador (O "Falsificador"):** Tenta criar imagens falsas o mais próximo possível da realidade (ex: desenhar uma nota de 10 reais falsa).
+2. **Discriminador (O "Policial"):** Avalia as imagens geradas e diz se são reais ou falsas.
+* **A Dinâmica:** Conforme o Discriminador aponta os erros, o Gerador vai aprendendo e melhorando. Com o tempo, o Gerador fica tão bom que consegue enganar o Discriminador, produzindo imagens (como rostos humanos, artes e itens de moda) indistinguíveis da realidade.
+
+### VAEs (Variational Autoencoders)
+Enquanto as GANs são ótimas para o realismo livre, os VAEs surgiram para trazer **controle direcionado** sobre o que está sendo gerado. 
+* **O Objetivo:** Permitir que você manipule variáveis específicas (ex: pedir para a IA gerar não apenas um humano realista, mas especificamente "um homem sorrindo, de cabelo curto e bigode").
+* **Como funciona:** São modelos probabilísticos que usam um processo de duas vias:
+  * **Encoder (Codificador):** Comprime os dados e a estratégia de entrada.
+  * **Decoder (Decodificador):** Reconstrói os dados a partir dessa compressão para gerar a saída detalhada.
+* **Vantagens:** Matematicamente mais estáveis e controlados que as GANs. Além do avanço em imagens precisas, os VAEs foram fundamentais para a evolução da geração de **som e voz**, tornando-os muito mais realistas.
+
+### Próximos Passos
+Após esse parênteses para entender como a IA lida com o mundo visual e sonoro, as próximas aulas voltarão a se aprofundar no funcionamento e nas estratégias dos LLMs.
+
+## Aula 8: Aprofundamento em LLMs – Multi-Head Attention  
+
+### LLMs: O Próximo Passo dos Transformers
+Os LLMs atuais não são apenas Transformers básicos; eles representam uma evolução dessa arquitetura original. Foram adicionadas camadas extras e estratégias de implementação que permitem lidar com a complexidade da linguagem de forma muito mais eficiente. A principal mudança está na forma como o modelo "presta atenção" ao conteúdo.
+
+## O Mecanismo de Atenção: Q, K e V
+Para entender como a IA processa o contexto, precisamos olhar para três vetores fundamentais que compõem o cálculo de cada palavra (ou token):
+
+* **Q (Query/Pergunta):** É a "pergunta" que o token faz ao contexto. Exemplo: Se o texto diz "ela", a Query pergunta "A quem este pronome se refere?".
+* **K (Key/Chave):** É a "identidade" ou o rótulo de cada palavra no texto. Funciona como um crachá. Se "Maria" apareceu antes, a Key de Maria responderá à Query da palavra "ela".
+* **V (Value/Valor):** É o resultado final. Uma vez que a Query (pergunta) encontra a Key (chave) correspondente, o Value entrega o significado ou a informação que será levada adiante.
+
+## Single-Head vs. Multi-Head Attention
+A grande limitação dos modelos iniciais era o **Single-Head Attention** (Atenção Única). 
+
+* **Single-Head:** O modelo foca em apenas uma perspectiva por vez. Se ele focar em resolver quem é "ela" (referência pronominal), pode perder a nuance da ironia, do tempo verbal ou da emoção da frase.
+* **Multi-Head Attention (Atenção de Múltiplas Cabeças):** É a solução dos LLMs modernos. Em vez de uma única "cabeça" processando tudo, o modelo divide os vetores e coloca várias cabeças trabalhando em **paralelo**.
+
+### O Trabalho em Paralelo das "Heads"
+Cada "head" (cabeça) é treinada para focar em um aspecto linguístico diferente simultaneamente:
+1.  **Head 1:** Foca na gramática e sintaxe.
+2.  **Head 2:** Foca na relação semântica (significado).
+3.  **Head 3:** Foca no tempo verbal e cronologia.
+4.  **Head 4:** Foca em referências pronominais (ele, ela, aquilo).
+5.  **Head 5:** Foca em nuances como tom e estilo.
+
+## Conclusão do Processo
+Após todas essas cabeças processarem o texto sob suas respectivas óticas em paralelo, os resultados são **concatenados** (unidos) e passados por uma camada **Feed-Forward**. 
+
+Essa abordagem multi-head é o que dá aos LLMs a segurança para construir textos longos e complexos, mantendo a coerência em múltiplos níveis gramaticais e semânticos ao mesmo tempo. A geração de conteúdo, no fundo, é um processo profundamente ligado à engenharia da linguística.
