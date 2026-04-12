@@ -6,6 +6,9 @@
 - [Aula 2: Redes Neurais Profundas e a Evolução do NLP](#aula-2-redes-neurais-profundas-e-a-evolução-do-nlp)
 - [Aula 3: Redes Neurais Recorrentes (RNNs) e a Busca por Memória](#aula-3-redes-neurais-recorrentes-rnns-e-a-busca-por-memória)
 - [Aula 4: Transformers ](#aula-4-transformers-e-o-mecanismo-de-atenção)
+- [Aula 5: A Base da IA Moderna – O Conceito de Tokens](#aula-5-a-base-da-ia-moderna--o-conceito-de-tokens)
+- [Aula 6: Large Language Models (LLMs) e a Era Generativa](#aula-6-large-language-models-llms-e-a-era-generativa)
+
 
 ## Aula 1: Cadeias de Markov
 
@@ -153,7 +156,7 @@ O Transformer é a fundação de quase todos os modelos modernos:
 * **Multimodalidade:** Capacidade de integrar texto, imagem e áudio em um único sistema (ex: GPT-4).
 * **Outras Áreas:** Bioinformática, finanças e sistemas de recomendação avançados.
 
-# Aula 5: A Base da IA Moderna – O Conceito de Tokens
+## Aula 5: A Base da IA Moderna – O Conceito de Tokens
 
 ### Por que a IA não "lê" palavras?
 Até agora, usamos o termo "palavra" para facilitar o entendimento, mas na realidade, a IA processa a linguagem de forma diferente. 
@@ -179,3 +182,41 @@ Compreender tokens é crucial para o próximo passo (Large Language Models - LLM
 1. **Mecânica Interna:** Daqui para frente, tudo o que estudamos antes (Embeddings, Mecanismo de Atenção, Transformers) não é feito com palavras, mas sim **em cima de tokens**.
 2. **Janela de Contexto:** Quando ouvimos que uma IA suporta "8.000 de contexto" ou "32.000", isso refere-se ao limite máximo de *tokens* que ela consegue "lembrar" de uma vez, e não caracteres ou palavras.
 3. **Custo Financeiro:** O processamento em nuvem (como AWS Bedrock, OpenAI API, etc.) é cobrado e medido estritamente pelo número de **tokens processados** (tanto na entrada do prompt quanto na saída gerada), e não pelo tamanho do texto em si.
+
+## Aula 6: Large Language Models (LLMs) e a Era Generativa
+
+### O que é um LLM?
+**LLM (Large Language Model)** é o termo usado para descrever os Modelos de Linguagem de Larga Escala. Eles representam a junção de toda a evolução tecnológica que discutimos até agora.
+* São treinados com **bilhões de parâmetros** e volumes colossais de dados em texto.
+* Não se limitam a memorizar padrões; eles aprendem a **contextualizar a linguagem**, permitindo interações fluidas, coerentes e adaptáveis, muito próximas à comunicação humana.
+* A maioria baseia-se na arquitetura **Transformer**, mas "LLM" não é um produto único, e sim uma categoria ou estratégia de arquitetura.
+
+### A Base Técnica dos LLMs
+A estrutura de um LLM consolida três grandes blocos que já estudamos:
+1. **Autoatenção (Self-Attention):** Cada token analisa o contexto completo da sequência para entender pesos e correlações.
+2. **Embeddings:** A transformação dos tokens em vetores matemáticos para calcular proximidade semântica.
+3. **Feedforward (Múltiplas Camadas):** Processamento denso e em paralelo que permite à rede aprender padrões altamente complexos.
+
+### Como um LLM é Treinado?
+O treinamento acontece em etapas fundamentais:
+1. **Pré-treinamento:** O modelo é exposto a bilhões de tokens (livros, sites, fóruns, códigos). De forma auto-supervisionada, ele aprende a prever o próximo token ou preencher lacunas, absorvendo a estrutura da linguagem humana. *(Nota: O uso de dados autorais nesta fase gera grandes debates legais no mundo todo).*
+2. **Fine-tuning (Ajuste Fino):** O modelo genérico recebe instruções supervisionadas para ficar bom em tarefas específicas (ex: responder dúvidas, classificar textos).
+3. **RLHF (Reinforcement Learning with Human Feedback):** Reforço de aprendizado com feedback humano. É o que permite ao ChatGPT, por exemplo, refinar suas respostas para que soem mais naturais e úteis com base no que os humanos preferem.
+
+### O Poder e as Capacidades dos LLMs
+Devido ao treinamento massivo, os LLMs desenvolvem habilidades que vão além de prever palavras:
+* **Geração Textual:** Escrever textos, livros, imitar estilos e agir como assistentes virtuais.
+* **Compreensão Semântica:** Fazer resumos, análise de sentimento e tradução complexa.
+* **Raciocínio Emergente:** Resolver problemas lógicos de múltiplas etapas.
+* **Few-shot / Zero-shot:** A capacidade impressionante de realizar uma tarefa nova recebendo pouquíssimos exemplos (few-shot) ou nenhum exemplo prévio (zero-shot), bastando apenas uma boa instrução.
+
+### Principais Modelos do Mercado e Suas Diferenças
+Embora todos sejam LLMs, eles têm abordagens e objetivos diferentes na sua construção:
+
+* **GPT (Generative Pre-trained Transformer) - OpenAI:** Modelo autorregressivo e unidirecional (lê da esquerda para a direita). O seu foco absoluto é a **geração de texto** e o funcionamento como assistente conversacional (ChatGPT, Copilot).
+* **BERT (Bidirectional Encoder Representations from Transformers) - Google:** Trabalha de forma bidirecional (olha o contexto antes e depois da palavra ao mesmo tempo). Seu foco não é gerar texto, mas **compreender profundamente** o conteúdo (usado para buscas, classificação e análise de sentimento).
+* **Gemini - Google:** Nasceu com uma arquitetura **multimodal** nativa, focado não apenas em texto, mas em transitar fluidamente entre texto, imagem e código.
+* **LLaMA - Meta:** Tem forte apelo **Open Source** (código aberto), sendo amplamente adotado para pesquisa, desenvolvimento e experimentação pela comunidade.
+
+### O Impacto: A Mudança de Paradigma
+A grande revolução dos LLMs é a mudança da era dos especialistas para os generalistas. Antes, criava-se uma IA apenas para traduzir, outra apenas para resumir, e outra para analisar sentimento. Hoje, **um único modelo generalista (LLM)** consegue executar todas essas tarefas, adaptando-se a novos contextos e simulando a fluência da inteligência humana.
