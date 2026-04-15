@@ -307,3 +307,39 @@ Apesar de parecer apenas um recálculo matemático, o Feedforward traz duas capa
 
 * **Não Linearidade:** As camadas de atenção são estritamente lineares. Ao introduzir uma função matemática não linear (como o $\max(0, ...)$ que corta valores negativos), o modelo ganha a capacidade de aprender e representar relações incrivelmente profundas, complexas e cruzadas dentro do texto.
 * **Raciocínio Local:** Ele permite que o modelo pause para reorganizar e enriquecer as informações de cada token de forma isolada (local), antes de devolver esse token para a visão global da próxima camada.
+
+## Aula 10: O Desafio da Ordem – Positional Encoding
+
+### O Problema da Perda de Sequência
+Como vimos nas aulas anteriores, os Transformers trouxeram a grande vantagem de processar todos os tokens **em paralelo**. No entanto, isso gerou um novo problema: o modelo perdeu a noção natural da ordem temporal das palavras. Sem saber a sequência exata, uma frase como "eu comi antes de dormir" poderia ser interpretada pelo modelo como "dormir antes eu comi".
+
+**A Solução:** É necessário injetar uma "assinatura" indicando a posição de cada token. O cálculo básico passa a ser:
+`Token Final = Word Embedding + Positional Encoding`
+
+Existem duas abordagens principais para calcular esse *Positional Encoding*:
+
+### Método 1: Seno e Cosseno (Positional Encoding Fixo)
+Originado no famoso paper *"Attention is All You Need"* (2017), este método usa propriedades matemáticas para mapear posições.
+* **Como funciona:** Ele utiliza funções de seno e cosseno para gerar padrões ondulatórios. Cada posição na frase ganha uma frequência de onda única (uma assinatura matemática).
+* **Entendendo a Fórmula Básica:**
+  * `POS`: Representa a posição do token na frase (0, 1, 2...).
+  * `i`: É o índice do embedding do vetor.
+  * `dmodel`: É a dimensão total do vetor de embedding (ex: 512, 768).
+* **Na prática:** O cálculo cria altas frequências nos primeiros índices e baixas frequências nos últimos, gerando curvas suaves que oscilam entre 1 e -1. Com isso, o modelo consegue deduzir a distância relativa entre duas palavras matemáticas (ex: calcular a distância exata entre o token da posição 3 e da posição 7).
+* **Vantagens:** * Excelente para lidar com **sequências longas** (um dos maiores desafios da IA, seja em texto ou vídeo).
+  * Exige menos poder de processamento (GPU) e menos parâmetros, já que não precisa ser "treinado".
+* **Uso Ideal:** Tarefas amplas, dinâmicas e generalistas (ex: ChatGPT, tradução automática, geração de textos abertos).
+
+### Método 2: Learned Position Embeddings (Posicionamento Aprendido)
+Em vez de depender de uma fórmula matemática fixa de ondas, nesta abordagem o modelo **aprende as posições por tentativa e erro** durante a fase de treinamento.
+* **Como funciona:** Durante o *fine-tuning*, os vetores posicionais vão sendo ajustados conforme o modelo estuda as bases de dados. Ele desenvolve uma "intuição" estrutural baseada no que consome.
+* **Vantagens:** Consegue capturar nuances de contexto muito específicas que o cálculo de seno/cosseno rígido pode deixar passar.
+* **Uso Ideal:** Contextos que possuem uma linguagem altamente estruturada, padronizada e previsível. Exemplos:
+  * **Geração de código-fonte** (pois a lógica de programação é altamente repetitiva e estruturada).
+  * Criação de contratos e documentos jurídicos.
+  * Processamento de prontuários médicos.
+
+### Conclusão: Qual é o melhor?
+A escolha depende diretamente da aplicação do LLM:
+* Se o objetivo for **generalização e estabilidade em contextos longos** (conversas abertas), o método matemático de **Seno e Cosseno** leva vantagem.
+* Se o objetivo for um **nicho estático e muito específico** (como automatizar a escrita de códigos ou contratos), o modelo **Aprendido** tende a entregar resultados mais precisos.
