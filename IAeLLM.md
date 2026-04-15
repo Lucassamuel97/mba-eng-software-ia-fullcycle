@@ -10,7 +10,7 @@
 - [Aula 6: Large Language Models (LLMs) e a Era Generativa](#aula-6-large-language-models-llms-e-a-era-generativa)
 - [Aula 7: IA Generativa para Imagens – GANs e VAEs](#aula-7-ia-generativa-para-imagens--gans-e-vaes)
 - [Aula 8: Aprofundamento em LLMs – Multi-Head Attention](#aula-8-aprofundamento-em-llms--multi-head-attention)
-
+- [Aula 9: Feedforward Position-wise Layers](#aula-9-feedforward-position-wise-layers)
 ## Aula 1: Cadeias de Markov
 
 ### Resumo Expresso: Modelos Ocultos de Markov (HMM)
@@ -278,3 +278,32 @@ Cada "head" (cabeça) é treinada para focar em um aspecto linguístico diferent
 Após todas essas cabeças processarem o texto sob suas respectivas óticas em paralelo, os resultados são **concatenados** (unidos) e passados por uma camada **Feed-Forward**. 
 
 Essa abordagem multi-head é o que dá aos LLMs a segurança para construir textos longos e complexos, mantendo a coerência em múltiplos níveis gramaticais e semânticos ao mesmo tempo. A geração de conteúdo, no fundo, é um processo profundamente ligado à engenharia da linguística.
+
+## Aula 9: Feedforward Position-wise Layers
+
+### O Papel do Feedforward no Transformer
+Após o mecanismo de atenção (onde as palavras "olham" umas para as outras para entender o contexto), a informação passa pelas camadas **Feedforward Position-wise**. Enquanto a atenção conecta os tokens, o Feedforward processa cada posição de forma totalmente **independente**.
+
+* **A Analogia da Conversa e Reflexão:**
+  * **Atenção (A Conversa):** É o momento de coletar informações. É como um grupo de pessoas conversando e trocando ideias.
+  * **Feedforward (A Reflexão):** É o momento pós-conversa. Cada pessoa vai para o seu canto refletir individualmente sobre o que ouviu, processando a informação para formar uma nova ideia sólida.
+
+### A Matemática por Trás (Explicada de Forma Simples)
+O cálculo aplicado a cada token (palavra) pode ser representado pela seguinte fórmula de rede neural:
+
+$$FFN(x) = \max(0, xW_1 + b_1)W_2 + b_2$$
+
+Para entender como isso transforma os dados, imagine que o token $x$ é um "aluno" processando o que acabou de aprender:
+
+* **Passo 1: A Primeira Transformação ($xW_1 + b_1$)**
+  A matriz de peso $W_1$ age como uma nova "lente" ou filtro que dá ao token uma nova perspectiva sobre a informação que ele recebeu da etapa de atenção. O vetor de viés $b_1$ atua como um ajuste fino ("conselho adicional"). O resultado é uma ideia ainda bruta, mas evoluída.
+* **Passo 2: O Filtro de Utilidade ($\max(0, ...)$)**
+  Esta é a **função de ativação**. O aluno reflete e joga fora tudo o que for inútil ou negativo (ruídos que não ajudam no aprendizado). A função zera os valores negativos e mantém apenas os positivos, garantindo que apenas informações com potencial sigam em frente.
+* **Passo 3: A Consolidação ($...W_2 + b_2$)**
+  Ocorre a segunda transformação. A matriz $W_2$ condensa o conhecimento filtrado em uma forma final e o viés $b_2$ dá o arremate. O token sai dessa etapa com uma representação vetorial completamente nova e refinada, pronta para a próxima camada do modelo.
+
+### Por que essa etapa é essencial?
+Apesar de parecer apenas um recálculo matemático, o Feedforward traz duas capacidades vitais para a IA generativa:
+
+* **Não Linearidade:** As camadas de atenção são estritamente lineares. Ao introduzir uma função matemática não linear (como o $\max(0, ...)$ que corta valores negativos), o modelo ganha a capacidade de aprender e representar relações incrivelmente profundas, complexas e cruzadas dentro do texto.
+* **Raciocínio Local:** Ele permite que o modelo pause para reorganizar e enriquecer as informações de cada token de forma isolada (local), antes de devolver esse token para a visão global da próxima camada.
