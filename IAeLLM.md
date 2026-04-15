@@ -343,3 +343,31 @@ Em vez de depender de uma fórmula matemática fixa de ondas, nesta abordagem o 
 A escolha depende diretamente da aplicação do LLM:
 * Se o objetivo for **generalização e estabilidade em contextos longos** (conversas abertas), o método matemático de **Seno e Cosseno** leva vantagem.
 * Se o objetivo for um **nicho estático e muito específico** (como automatizar a escrita de códigos ou contratos), o modelo **Aprendido** tende a entregar resultados mais precisos.
+
+## Resumo da Aula 11: Estabilidade do Modelo – Layer Norm e Conexões Residuais
+
+### O Problema das Múltiplas Camadas
+Como os Transformers operam com uma arquitetura profunda (várias camadas de processamento encadeadas), eles enfrentam duas grandes dificuldades mecânicas durante o treinamento:
+* **Explosão de Gradientes:** Os valores matemáticos podem crescer (ou encolher) de forma descontrolada ao passarem por muitas camadas consecutivas.
+* **Instabilidade do Fluxo de Informação:** A informação pura original pode se perder, diluir ou sofrer muita distorção (entropia) ao longo de todo o percurso.
+
+Para resolver isso e tornar o Transformer escalável para criar os LLMs massivos de hoje, foram adicionados dois elementos de segurança:
+
+### 1. Conexões Residuais (Residual Connections)
+A ideia central é criar um "atalho" para que a informação essencial não se perca no meio dos cálculos densos. A conexão residual pega a informação de entrada e a faz "pular" a camada de processamento, somando-a ao resultado final dessa camada.
+* **A Fórmula:** `Saída = x + f(x)`
+  * `x`: É a entrada original intocada.
+  * `f(x)`: É o resultado do processamento feito pela camada.
+* **A Intuição:** O modelo permite que a camada modifique e refine a informação (`f(x)`), mas soma essa modificação à base de conhecimento bruta da entrada (`x`). Isso garante que a essência do dado original seja sempre propagada para frente, garantindo uma fundação perene.
+
+### 2. Layer Normalization (Normalização de Camada)
+Trabalha como uma dupla inseparável das conexões residuais. Enquanto as conexões residuais garantem o fluxo da informação, a *Layer Norm* estabiliza a "distribuição dos dados". Na prática, ela padroniza a escala e a variância dos valores que entram e saem de cada camada, diminuindo o caos (entropia) para que os números não fiquem grandes ou pequenos demais, mantendo a rede equilibrada.
+
+### Os Grandes Benefícios na Prática
+Esses dois componentes, apesar de mais simples que o mecanismo de atenção, entregam vantagens críticas:
+* **Facilita o "Backpropagation":** Quando a IA atualiza seus erros (aprendendo do resultado final de volta para o começo), o fluxo do gradiente passa de forma muito mais fluida pelos atalhos criados.
+* **Preservação de Dados Críticos:** As informações mais fortes, que não precisam ser alteradas, passam pelas camadas quase ilesas, poupando processamento e evitando distorções em conceitos que a rede já acertou.
+* **Aceleração do Treinamento:** Garante a convergência do modelo. Sem isso, treinar um LLM de bilhões de parâmetros demoraria muito mais ou simplesmente quebraria no meio do processo.
+
+### O Fim da Arquitetura e o Próximo Passo
+Com esses componentes, fechamos o design estrutural (o "motor") do nosso modelo de linguagem. Agora que temos um Transformer encorpado e altamente capaz, as próximas aulas focarão em como "alimentar" e ensinar essa estrutura através das fases fundamentais de **Pré-treinamento** e **Fine-tuning**.
