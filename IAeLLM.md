@@ -11,6 +11,12 @@
 - [Aula 7: IA Generativa para Imagens – GANs e VAEs](#aula-7-ia-generativa-para-imagens--gans-e-vaes)
 - [Aula 8: Aprofundamento em LLMs – Multi-Head Attention](#aula-8-aprofundamento-em-llms--multi-head-attention)
 - [Aula 9: Feedforward Position-wise Layers](#aula-9-feedforward-position-wise-layers)
+- [Aula 10: O Desafio da Ordem – Positional Encoding](#aula-10-o-desafio-da-ordem--positional-encoding)
+- [Aula 11: Estabilidade do Modelo – Layer Norm e Conexões Residuais](#aula-11-estabilidade-do-modelo--layer-norm-e-conexões-residuais)
+- [Aula 12: Pré-Treinamento e o Aprendizado das LLMs](#aula-12-pré-treinamento-e-o-aprendizado-das-llms)
+- [Aula 13: Masked Language Modeling (MLM)](#aula-13-masked-language-modeling-mlm)
+- [Aula 14: Fine Tuning Supervisionado (A Especialização da IA)](#aula-14-fine-tuning-supervisionado-a-especialização-da-ia)
+
 ## Aula 1: Cadeias de Markov
 
 ### Resumo Expresso: Modelos Ocultos de Markov (HMM)
@@ -344,7 +350,7 @@ A escolha depende diretamente da aplicação do LLM:
 * Se o objetivo for **generalização e estabilidade em contextos longos** (conversas abertas), o método matemático de **Seno e Cosseno** leva vantagem.
 * Se o objetivo for um **nicho estático e muito específico** (como automatizar a escrita de códigos ou contratos), o modelo **Aprendido** tende a entregar resultados mais precisos.
 
-## Resumo da Aula 11: Estabilidade do Modelo – Layer Norm e Conexões Residuais
+## Aula 11: Estabilidade do Modelo – Layer Norm e Conexões Residuais
 
 ### O Problema das Múltiplas Camadas
 Como os Transformers operam com uma arquitetura profunda (várias camadas de processamento encadeadas), eles enfrentam duas grandes dificuldades mecânicas durante o treinamento:
@@ -371,3 +377,82 @@ Esses dois componentes, apesar de mais simples que o mecanismo de atenção, ent
 
 ### O Fim da Arquitetura e o Próximo Passo
 Com esses componentes, fechamos o design estrutural (o "motor") do nosso modelo de linguagem. Agora que temos um Transformer encorpado e altamente capaz, as próximas aulas focarão em como "alimentar" e ensinar essa estrutura através das fases fundamentais de **Pré-treinamento** e **Fine-tuning**.
+
+## Aula 12: Pré-Treinamento e o Aprendizado das LLMs
+
+### 1. A Fome por Dados e o Aprendizado Não Supervisionado
+Após entendermos a arquitetura (o "cérebro"), o foco agora é em como a IA aprende durante a fase de **Pré-treinamento**. 
+* **O Ouro Digital:** As IAs precisam de uma exposição colossal a textos (livros, fóruns, sites, redes sociais). Hoje, quase todo o texto público da web já foi transformado em tokens e processado pelas Big Techs.
+* **O Fim dos Rótulos Manuais:** Antigamente, treinar uma IA exigia **dados rotulados** (humanos classificando manualmente milhares de frases como "positivo" ou "negativo"). Isso é caro e impossível de escalar.
+* **A Grande Sacada:** No pré-treinamento moderno, a IA consome dados **não rotulados**. Ela não sabe se está lendo um artigo médico ou uma receita de bolo; ela simplesmente absorve os padrões linguísticos estruturais (sintaxe e semântica) da linguagem humana em escala de bilhões de tokens.
+
+### 2. Causal Language Modeling (CLM)
+É a abordagem de aprendizado usada por modelos como a linha GPT, Gemini, LLaMA e Mistral. O objetivo central é **prever o próximo token**.
+* **Relação Causal (Causa e Efeito):** O modelo opera de forma **unidirecional** (da esquerda para a direita). As palavras anteriores ("a causa") ditam qual será a próxima palavra ("o efeito").
+* **Máscara Causal:** A IA é "cega" para o futuro da frase. Ela só pode olhar para trás (o contexto à esquerda) para tentar adivinhar a próxima palavra.
+
+### 3. O Ciclo de Treinamento na Prática
+O treinamento acontece através de um processo constante de tentativa, erro e ajuste:
+1. **Ocultação:** O sistema pega uma frase real ("O cachorro correu para o parque"), esconde a última palavra e entrega o fragmento para a IA ("O cachorro correu para o...").
+2. **Predição:** A IA tenta adivinhar o final (ex: adivinha "portão").
+3. **Comparação e Backpropagation:** O sistema revela a palavra correta ("parque"). A IA percebe o erro e faz o **backpropagation** (propagação reversa): ela envia um sinal de volta por toda a sua rede neural para ajustar os "pesos", garantindo que não cometa o mesmo erro na próxima vez. É o equivalente digital a uma criança aprendendo por tentativa e erro.
+
+### 4. Cross Entropy Loss (Função de Perda de Entropia Cruzada)
+Para que a máquina saiba *o quanto* ela errou ao prever "portão" em vez de "parque", ela utiliza uma função matemática chamada **Cross Entropy Loss**.
+* **O que faz:** Ela mede a distância (o delta) entre a previsão feita pelo modelo e a resposta real.
+* **Por que é vital:** Sem essa função matemática para quantificar a distância exata do erro nos vetores, o modelo não saberia como calibrar seus pesos, tornando o treinamento inviável ou computacionalmente insano.
+
+## Aula 13: Masked Language Modeling (MLM)
+
+### 1. O que é MLM?
+Enquanto o modelo anterior (CLM) analisa a frase da esquerda para a direita para prever o futuro, o **MLM (Masked Language Modeling)** trabalha de forma **bidirecional**. Ele olha tanto para trás quanto para frente simultaneamente para entender o contexto.
+
+* **A Estratégia da Máscara:** Em vez de ocultar a última palavra, o modelo oculta (mascara) aleatoriamente cerca de 20% das palavras no meio do texto.
+* **Exemplo:** "O [MASK] hoje está muito azul". A IA precisa usar o contexto das palavras ao redor para adivinhar que a palavra mascarada é "céu".
+* O modelo mais famoso que utiliza essa arquitetura é o **BERT**, do Google.
+
+### 2. O Processo de Treinamento
+A lógica de correção e aprendizado é muito similar à do CLM:
+1. O modelo tenta preencher as lacunas mascaradas.
+2. O sistema compara a resposta gerada com a palavra real que estava escondida.
+3. Se a IA errar, ela realiza o *backpropagation* (ajusta seus pesos e vieses) para melhorar na próxima tentativa.
+
+### 3. Pontos Fortes e Fracos
+Por causa da sua natureza bidirecional de preencher lacunas, o MLM tem aplicações muito específicas:
+* **Ponto Forte (Compreensão):** É excelente para interpretação de texto, busca de informações e análise de contexto profundo. Funciona como um humano passando o olho em um documento para encontrar palavras-chave e entender o assunto central.
+* **Ponto Fraco (Geração):** Não é bom para gerar conversas ou criar textos do zero. A fala humana é linear (construída palavra por palavra), e não feita através do preenchimento de buracos em uma frase pré-existente.
+
+### 4. Aprendizado Não Supervisionado (Unsupervised)
+Tanto o CLM (da aula anterior) quanto o MLM compartilham essa característica vital: eles não precisam de supervisão humana.
+* Não é necessário que uma pessoa rotule os dados ou corrija o modelo. 
+* O próprio texto serve como "gabarito" da prova (seja ocultando o fim da frase ou mascarando o meio). O aprendizado é auto-organizado, permitindo escalar o treinamento para bilhões de tokens de forma automática.
+
+## Aula 14: Fine Tuning Supervisionado (A Especialização da IA)
+
+### 1. O que é o Fine Tuning Supervisionado?
+Enquanto o pré-treinamento serve para criar um modelo de linguagem generalista (que sabe muito sobre o mundo, mas nada profundamente), o **Fine Tuning Supervisionado** pega esse modelo pronto e o transforma em um especialista em um nicho específico. 
+
+* **Analogia da Profissão:** O pré-treinamento ensina a IA a falar português (ler, escrever, conjugar verbos). O Fine Tuning é quando você pega essa pessoa fluente em português e a matricula em um curso técnico de Enfermagem para que ela aprenda a fazer triagem em um hospital.
+
+### 2. Como funciona na prática?
+Diferente do pré-treinamento (onde você jogava dados crus e a IA se virava), aqui você precisa de **supervisão**.
+* **Pares de Entrada e Saída:** Você deve criar um dataset com exemplos exatos do que você espera. Se você quer criar um gerador de código, você precisa fornecer pares contendo o "código com erro" (entrada) e o "código corrigido" (saída).
+* O modelo processará essas instruções e utilizará funções de perda (como a *Cross Entropy Loss*) para recalcular seus pesos e vieses através do *backpropagation*, mas agora focado em dominar aquele contexto específico.
+
+### 3. Principais Casos de Uso
+O Fine Tuning é vital para o mercado corporativo. Você o utiliza quando:
+* O modelo precisa dominar jargões técnicos e densos (Medicina, Direito, Engenharia).
+* Você precisa estabelecer um "Tom de Voz" fixo (ex: o chatbot do seu banco não pode ser grosseiro e nunca deve mencionar os concorrentes).
+* Quando os dados são proprietários/sensíveis (histórico de atendimento de clientes dos últimos 20 anos que não existem na internet).
+
+### 4. Riscos e Limitações
+Apesar de poderoso, treinar uma IA especificamente tem seus perigos:
+* **Overfitting (O "Decoreba"):** Se o seu dataset for muito pequeno ou tiver muitas perguntas repetidas, a IA não vai aprender a gerar conteúdo, ela vai apenas *decorar* as respostas, tornando-se mecânica e propensa a alucinar quando receber perguntas inéditas.
+* **Vieses Humanos:** Se os humanos que rotularem o dataset cometerem erros, a IA vai aprender esses erros como se fossem verdades absolutas.
+* **Custo e Atualização Constante:** Treinar modelos grandes gasta muito processamento. E, como o mundo muda, você precisará retreinar a IA sempre que a base de conhecimento ficar desatualizada.
+
+### 5. Tipos de Fine Tuning e Estratégias para Reduzir Custos
+Fazer um *Fine Tuning Completo* (recalcular todos os bilhões de parâmetros da IA) é caro, demorado e muitas vezes desnecessário. O mercado criou soluções alternativas:
+
+* **Fine Tuning Parcial (Ex: LoRA e PEFT):** Em vez de reescrever toda a rede, atualiza apenas algumas poucas camadas do modelo. É muito mais rápido, barato e permite "ensinar" uma nova habilidade sem que a IA esqueça o que já sabia. (Ferramentas como *Hugging Face* facilitam esse processo).
+* **Prompt Tuning / Prefix Tuning:** Em vez de alterar o modelo, você cria e acopla um "super prompt interno e invisível" que serve como guia. Sempre que o modelo processa algo, esse prefixo guia o caminho das respostas, o que é muito mais barato do que treinar uma rede neural inteira.
