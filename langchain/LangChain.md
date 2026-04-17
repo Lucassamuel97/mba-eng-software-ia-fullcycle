@@ -70,3 +70,11 @@ Com a evolução do framework, a biblioteca principal foi desmembrada para facil
 * **Memória**: Gerenciamento automático do histórico de conversas para manter o contexto.
 * **Sumarização / MapReduce**: Técnicas integradas para resumir conversas longas ou processar grandes volumes de dados sem estourar os limites de contexto do modelo.
 
+
+
+# Resumo: Exemplos Práticos e Aplicações da LangChain
+* **[1-hello-world.py](exemplos/1-fundamentos/1-hello-world.py)**: Exemplo básico de invocação de um modelo Gemini com LangChain.
+* **[2-init-chat-model.py](exemplos/1-fundamentos/2-init-chat-model.py)**: Inicialização de modelo via `init_chat_model`, com abstração de provedor.
+* **[3-prompt-template.py](exemplos/1-fundamentos/3-prompt-template.py)**: Criação e formatação de prompt com variável dinâmica.
+* **[4-chat-prompt-template.py](exemplos/1-fundamentos/4-chat-prompt-template.py)**: Montagem de mensagens `system` e `user` com `ChatPromptTemplate` e chamada do modelo.
+* **[1-iniciando-com-chains.py](exemplos/2-chains-e-processamento/1-iniciando-com-chains.py)**: Composição de chain com LCEL (`prompt | model`) e execução com `invoke`.
