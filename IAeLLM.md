@@ -1,6 +1,6 @@
 # Módulo Aprofundando na IA e LLM
 
-## Sumário
+# Sumário
 
 - [Aula 1: Cadeias de Markov](#aula-1-cadeias-de-markov)
 - [Aula 2: Redes Neurais Profundas e a Evolução do NLP](#aula-2-redes-neurais-profundas-e-a-evolução-do-nlp)
@@ -16,6 +16,7 @@
 - [Aula 12: Pré-Treinamento e o Aprendizado das LLMs](#aula-12-pré-treinamento-e-o-aprendizado-das-llms)
 - [Aula 13: Masked Language Modeling (MLM)](#aula-13-masked-language-modeling-mlm)
 - [Aula 14: Fine Tuning Supervisionado (A Especialização da IA)](#aula-14-fine-tuning-supervisionado-a-especialização-da-ia)
+- [Aula 15: Reinforcement Learning with Human Feedback (RLHF)](#aula-15-rlhf)
 
 ## Aula 1: Cadeias de Markov
 
@@ -456,3 +457,46 @@ Fazer um *Fine Tuning Completo* (recalcular todos os bilhões de parâmetros da 
 
 * **Fine Tuning Parcial (Ex: LoRA e PEFT):** Em vez de reescrever toda a rede, atualiza apenas algumas poucas camadas do modelo. É muito mais rápido, barato e permite "ensinar" uma nova habilidade sem que a IA esqueça o que já sabia. (Ferramentas como *Hugging Face* facilitam esse processo).
 * **Prompt Tuning / Prefix Tuning:** Em vez de alterar o modelo, você cria e acopla um "super prompt interno e invisível" que serve como guia. Sempre que o modelo processa algo, esse prefixo guia o caminho das respostas, o que é muito mais barato do que treinar uma rede neural inteira.
+
+
+## Aula 15: RLHF      
+- [ Sumário ](#sumario)
+
+### 1. O que é RLHF?
+**RLHF (Reinforcement Learning from Human Feedback)** é uma estratégia de Fine Tuning que ensina os modelos de Inteligência Artificial a seguirem instruções humanas. Ela combina o aprendizado de máquina supervisionado com o aprendizado por reforço, guiado diretamente pelo feedback e julgamento humano.
+
+### 2. O Pipeline do RLHF (Os 3 Passos Principais)
+Utilizando o processo do GPT-4 como base, o RLHF geralmente é dividido em três etapas:
+
+#### Passo 1: SFT (Supervised Fine Tuning)
+* **Como funciona:** Humanos escrevem pares de perguntas e respostas de altíssima qualidade (ex: "Explique a teoria da relatividade para uma criança" -> Resposta didática e simples feita por um humano).
+* **Objetivo:** O modelo é treinado com esses exemplos e aprende o formato, a estrutura e a qualidade exata do que se espera como resposta para determinados tipos de comandos.
+
+#### Passo 2: Reward Model (Modelo de Recompensa)
+* **Como funciona:** O modelo gera múltiplas respostas para uma mesma pergunta (Resposta A, B e C). Um humano avalia e **cria um ranking** (dando notas) para essas respostas.
+* **Objetivo:** O modelo aprende a identificar quais caminhos de resposta geram maior recompensa (maior nota humana), entendendo que a resposta melhor ranqueada deve ser o padrão a ser seguido.
+
+#### Passo 3: RL com PPO (Proximal Policy Optimization)
+* **Como funciona:** O modelo original ajustado é submetido ao algoritmo PPO.
+* **Objetivo:** A meta matemática do modelo passa a ser gerar respostas que **maximizem a recompensa prevista** pelo Reward Model. O PPO reforça comportamentos que geram respostas úteis, seguras e claras.
+
+### 3. Por que o RLHF é fundamental?
+Na sua essência, uma LLM apenas tenta prever a "próxima palavra". Sem o refinamento do RLHF, o modelo tende a apresentar problemas graves:
+* Reprodução de vieses prejudiciais presentes nos dados de treino originais.
+* Respostas prolixas, imprecisas ou repetitivas.
+* Geração de conteúdo inseguro, tóxico ou ofensivo.
+
+O RLHF atua como uma **bússola ética**, garantindo que o modelo seja mais educado, respeitoso, assertivo, admita quando não sabe algo e reduza drasticamente as alucinações.
+
+> **💡 Dica Prática de Prompting:** Muitas vezes, ser extremamente polido com a IA (usando "por favor", "obrigado") faz com que ela tente "agradar" o usuário, gerando respostas prolixas. Comandos diretos, claros e sem rodeios costumam gerar resultados mais precisos e técnicos.
+
+### 4. Instruction Tuning
+Um passo complementar (que pode ocorrer antes ou junto ao RLHF).
+* **O que é:** Treinar o modelo com uma vasta gama de instruções humanas para diversas tarefas diferentes (ex: "Escreva uma carta amigável", "Crie um roteiro de podcast").
+* **Objetivo:** Tornar a IA mais **generalista** e versátil, capaz de alternar entre tons, formatos e tarefas com facilidade.
+
+### 5. Limitações do RLHF
+Apesar de poderoso, o processo possui desafios:
+1. **Subjetividade:** Como depende de humanos ranqueando respostas, critérios subjetivos (como preferências de vocabulário ou estilo) são incorporados ao modelo.
+2. **Custo Elevado:** Exige um esforço massivo de curadoria humana especializada.
+3. **Transferência de Viés:** O viés inconsciente dos humanos que estão avaliando as respostas pode ser transferido para a IA.
