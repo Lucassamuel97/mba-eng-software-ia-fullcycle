@@ -18,6 +18,7 @@
 - [Aula 14: Fine Tuning Supervisionado (A Especialização da IA)](#aula-14-fine-tuning-supervisionado-a-especialização-da-ia)
 - [Aula 15: Reinforcement Learning with Human Feedback (RLHF)](#aula-15-rlhf)
 - [Aula 16 : Técnicas de Otimização para Fine Tuning em LLMs](#aula-16-técnicas-de-otimização-para-fine-tuning-em-llms)
+- [Aula 17: Factualidade e Alucinação](#aula-17-factualidade-e-alucinação)
 
 ## Aula 1: Cadeias de Markov
 
@@ -535,3 +536,34 @@ Esta aula aborda quatro estratégias fundamentais para otimizar o processo de Fi
 * **Como Funciona:** Trata-se de uma evolução da engenharia de prompt. Em vez de mexer no modelo, inserem-se "tokens pré-treinados" ou vetores contextuais no início da sequência da requisição (como um *sidecar*). 
 * **Vantagens:** Orienta o modelo de forma rígida a seguir comportamentos ou padrões específicos (como agir com base em uma "etiqueta" ou receita predefinida) de maneira muito leve.
 * **Analogia:** É como orientar uma pessoa sobre as regras de etiqueta de um jantar de gala logo na entrada do evento; ela não muda sua essência (os pesos), mas adapta perfeitamente seu comportamento ao contexto.
+
+## Aula 17: Factualidade e Alucinação
+
+- [ Sumário ](#sumário) 
+
+Esta aula inicia um novo capítulo focado nos desafios inerentes ao uso de Grandes Modelos de Linguagem (LLMs), com foco no problema mais crítico e comum do dia a dia: a alucinação e a factualidade.
+
+### 1. O Paradigma da "Inteligência" (Como a LLM pensa)
+Para entender a alucinação, é preciso entender a natureza da IA. Como cita o neurocientista Miguel Nicolelis: *"A IA não é nem inteligente, nem artificial"*. 
+* **Mestres da Fluência:** As LLMs não "entendem" o que estão dizendo. Elas são motores probabilísticos que preveem qual é o próximo *token* (palavra) com base em cálculos vetoriais. 
+* **Falta de Compreensão Real:** Para a IA, gerar um texto sobre física quântica ou uma receita de bolo de cenoura envolve exatamente o mesmo processo matemático. Ela não raciocina sobre o sentido das palavras; ela apenas organiza a linguagem de forma estatisticamente provável.
+* **O Perigo da Confiança:** Como não têm consciência do que falam, elas geram respostas naturais, bem estruturadas e altamente confiantes. Isso cria a perigosa ilusão de que *"se parece certo e bem escrito, então é verdade"*.
+
+### 2. O que é Alucinação?
+É o fenômeno onde a LLM gera afirmações incorretas factualmente. Ela não tem a intenção de mentir; ela apenas constrói uma relação de palavras que, no mundo real, não corresponde à verdade.
+
+### Tipos de Alucinação:
+1. **Factual:** A IA afirma um dado irreal de forma muito convincente (ex: afirmar que Marie Curie ganhou 3 Prêmios Nobel, quando na verdade foram 2).
+2. **De Citação ou Fonte:** A IA inventa frases, artigos científicos, links ou referências bibliográficas que simplesmente não existem para tentar justificar um argumento.
+3. **Estrutural:** Muito comum na área de desenvolvimento. A IA produz fórmulas matemáticas inexistentes, bibliotecas falsas ou códigos com falhas de lógica (reforçando a necessidade de *pair programming/peer review* ao codificar com IA).
+4. **Contextual:** A IA começa um texto de forma coerente, mas perde o raciocínio lógico no meio do caminho, derivando para conclusões que não fazem sentido com a premissa inicial (ocorre muito em textos longos e geração de imagens).
+
+### 3. Por que a IA alucina?
+* **Intuição Estatística vs. Banco de Fatos:** A IA não tem um "banco de dados da verdade" para consultar. Ela opera na base da probabilidade.
+* **Lacunas de Conhecimento:** Se a IA não foi treinada naquele assunto específico, ou se o *prompt* exige cruzar informações inéditas, ela tenta preencher as lacunas "imaginando" os dados.
+* **O Desejo de Agradar:** Os modelos são treinados para serem solícitos e parecerem humanos. Muitas vezes, eles preferem inventar uma resposta fluente a admitir que não sabem.
+
+### 4. Impactos e Boas Práticas (Como Mitigar)
+* **Impactos Críticos:** Em conversas banais, alucinações são inofensivas. Mas em contextos médicos, jurídicos ou de engenharia de software estrutural, um erro pode ser fatal. O excesso de erros pode levar à perda de confiança na tecnologia (um novo "Inverno da IA").
+* **Direto ao Ponto:** Ao invés de tratar a IA como um humano, seja extremamente direto e objetivo. Quanto menos "firulas" no prompt, menor a chance de a IA tentar "agradar" e alucinar. Use exemplos (Few-Shot) sempre que possível.
+* **A Regra de Ouro:** **Nunca terceirize o que você não pode validar.** Se você não tem domínio sobre o assunto que a IA gerou, não confie cegamente no texto. É essencial ter conhecimento prévio para atuar como o validador do conteúdo.
