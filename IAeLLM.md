@@ -19,6 +19,7 @@
 - [Aula 15: Reinforcement Learning with Human Feedback (RLHF)](#aula-15-rlhf)
 - [Aula 16 : Técnicas de Otimização para Fine Tuning em LLMs](#aula-16-técnicas-de-otimização-para-fine-tuning-em-llms)
 - [Aula 17: Factualidade e Alucinação](#aula-17-factualidade-e-alucinação)
+- [Aula 18: Técnicas para Mitigar Alucinações e Casos Reais](#aula-18-técnicas-para-mitigar-alucinações-e-casos-reais)
 
 ## Aula 1: Cadeias de Markov
 
@@ -567,3 +568,41 @@ Para entender a alucinação, é preciso entender a natureza da IA. Como cita o 
 * **Impactos Críticos:** Em conversas banais, alucinações são inofensivas. Mas em contextos médicos, jurídicos ou de engenharia de software estrutural, um erro pode ser fatal. O excesso de erros pode levar à perda de confiança na tecnologia (um novo "Inverno da IA").
 * **Direto ao Ponto:** Ao invés de tratar a IA como um humano, seja extremamente direto e objetivo. Quanto menos "firulas" no prompt, menor a chance de a IA tentar "agradar" e alucinar. Use exemplos (Few-Shot) sempre que possível.
 * **A Regra de Ouro:** **Nunca terceirize o que você não pode validar.** Se você não tem domínio sobre o assunto que a IA gerou, não confie cegamente no texto. É essencial ter conhecimento prévio para atuar como o validador do conteúdo.
+
+## Aula 18: Técnicas para Mitigar Alucinações e Casos Reais
+
+- [ Sumário ](#sumário) 
+
+Nesta aula, o foco muda da teoria para a prática do uso de LLMs no dia a dia. Como sabemos que os modelos têm a tendência de alucinar (inventar fatos), existem técnicas de *prompting* que ajudam a "frear" esse comportamento.
+
+### 1. Técnicas de Prompting para Reduzir Alucinações
+
+Ao interagir com a IA, você pode aplicar comandos específicos para forçá-la a ser mais precisa e menos "criativa" com os fatos:
+
+* **Exigir Evidências e Fontes:** * Peça explicitamente para a IA listar fontes confiáveis, autores ou estudos que sustentam a resposta.
+  * Delimite o escopo de busca (ex: "Use apenas artigos acadêmicos" ou "Busque apenas em jornais"). Isso força o modelo a buscar consistência.
+* **Instruções de Cautela:** * Insira o comando: *"Se você não tiver certeza, diga que não sabe."*
+  * Como a IA é programada para "agradar" o usuário dando respostas, essa instrução tira a pressão de ter que inventar algo quando faltam dados.
+* **Chain of Thought (Cadeia de Pensamento):** * Peça para o modelo: *"Explique seu raciocínio passo a passo antes de chegar à conclusão."*
+  * Isso obriga a IA a manter consistência lógica e permite que você identifique exatamente em qual etapa ela "viajou" ou inventou um dado, facilitando a validação.
+* **Criar uma Persona / Delimitar Escopo:** * Use as configurações de "Instruções Personalizadas" (disponíveis no ChatGPT, Copilot, etc.) para definir regras fixas.
+  * Exemplo: *"Você é um assistente treinado apenas com dados até 2023. Não invente informações nem tente prever o futuro."*
+* **Few-shot Prompting e Consistência de Uso:** * Fornecer exemplos diretos do que é certo e errado para calibrar o modelo.
+  * *Dica prática do professor:* Manter o uso consistente de uma mesma conta/ferramenta ao longo do tempo faz com que o modelo se "afine" com o seu estilo e contexto, reduzindo erros.
+
+### 2. O Impacto das Alucinações no Mundo Real (Casos Jurídicos)
+
+Para ilustrar a gravidade de confiar cegamente na IA em contextos críticos, a aula apresentou três casos reais de 2025 nos Estados Unidos onde advogados sofreram graves consequências:
+
+* **Caso Royer vs Nelson (Utah):**
+  * O advogado Richard Bednar usou o ChatGPT para gerar um processo e incluiu uma citação de jurisprudência totalmente inventada pela IA.
+  * *Consequência:* O tribunal não achou os registros, o advogado teve que se retratar formalmente, e o estado de Utah criou diretrizes mais rigorosas para o uso de IA.
+* **Escritório K&L Gates (EUA):**
+  * Advogados deste grande escritório apresentaram uma peça jurídica com **seis citações inexistentes**.
+  * *Consequência:* O juiz considerou o ato negligente. Os advogados foram multados em US$ 31.000, sofrendo um enorme dano de reputação.
+* **Caso Butler Snow (Alabama):**
+  * O escritório, contratado com dinheiro público para defender o sistema prisional do estado, gerou argumentos com IA contendo falsas citações.
+  * *Consequência:* O estado do Alabama perdeu milhões de dólares, a imagem institucional foi manchada e abriu-se um debate ético sobre o uso de recursos públicos em defesas baseadas em IA sem revisão.
+
+### 3. A Regra de Ouro: A IA é o seu "Estagiário"
+A empolgação com a IA é válida e necessária, mas ela exige supervisão. Trate a IA como um estagiário brilhante, mas em fase de aprendizado: **nunca passe o trabalho para frente como uma verdade absoluta sem antes fazer uma dupla checagem dos fatos (Fact-Checking).**
