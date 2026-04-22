@@ -1,6 +1,6 @@
 # Módulo Aprofundando na IA e LLM
 
-# Sumário
+## Sumário
 
 - [Aula 1: Cadeias de Markov](#aula-1-cadeias-de-markov)
 - [Aula 2: Redes Neurais Profundas e a Evolução do NLP](#aula-2-redes-neurais-profundas-e-a-evolução-do-nlp)
@@ -17,6 +17,7 @@
 - [Aula 13: Masked Language Modeling (MLM)](#aula-13-masked-language-modeling-mlm)
 - [Aula 14: Fine Tuning Supervisionado (A Especialização da IA)](#aula-14-fine-tuning-supervisionado-a-especialização-da-ia)
 - [Aula 15: Reinforcement Learning with Human Feedback (RLHF)](#aula-15-rlhf)
+- [Aula 16 : Técnicas de Otimização para Fine Tuning em LLMs](#aula-16-técnicas-de-otimização-para-fine-tuning-em-llms)
 
 ## Aula 1: Cadeias de Markov
 
@@ -404,6 +405,7 @@ Para que a máquina saiba *o quanto* ela errou ao prever "portão" em vez de "pa
 * **Por que é vital:** Sem essa função matemática para quantificar a distância exata do erro nos vetores, o modelo não saberia como calibrar seus pesos, tornando o treinamento inviável ou computacionalmente insano.
 
 ## Aula 13: Masked Language Modeling (MLM)
+- [ Sumário ](#sumário)  
 
 ### 1. O que é MLM?
 Enquanto o modelo anterior (CLM) analisa a frase da esquerda para a direita para prever o futuro, o **MLM (Masked Language Modeling)** trabalha de forma **bidirecional**. Ele olha tanto para trás quanto para frente simultaneamente para entender o contexto.
@@ -429,6 +431,7 @@ Tanto o CLM (da aula anterior) quanto o MLM compartilham essa característica vi
 * O próprio texto serve como "gabarito" da prova (seja ocultando o fim da frase ou mascarando o meio). O aprendizado é auto-organizado, permitindo escalar o treinamento para bilhões de tokens de forma automática.
 
 ## Aula 14: Fine Tuning Supervisionado (A Especialização da IA)
+- [ Sumário ](#sumário) 
 
 ### 1. O que é o Fine Tuning Supervisionado?
 Enquanto o pré-treinamento serve para criar um modelo de linguagem generalista (que sabe muito sobre o mundo, mas nada profundamente), o **Fine Tuning Supervisionado** pega esse modelo pronto e o transforma em um especialista em um nicho específico. 
@@ -459,8 +462,9 @@ Fazer um *Fine Tuning Completo* (recalcular todos os bilhões de parâmetros da 
 * **Prompt Tuning / Prefix Tuning:** Em vez de alterar o modelo, você cria e acopla um "super prompt interno e invisível" que serve como guia. Sempre que o modelo processa algo, esse prefixo guia o caminho das respostas, o que é muito mais barato do que treinar uma rede neural inteira.
 
 
-## Aula 15: RLHF      
-- [ Sumário ](#sumario)
+## Aula 15: RLHF     
+
+- [ Sumário ](#sumário) 
 
 ### 1. O que é RLHF?
 **RLHF (Reinforcement Learning from Human Feedback)** é uma estratégia de Fine Tuning que ensina os modelos de Inteligência Artificial a seguirem instruções humanas. Ela combina o aprendizado de máquina supervisionado com o aprendizado por reforço, guiado diretamente pelo feedback e julgamento humano.
@@ -500,3 +504,34 @@ Apesar de poderoso, o processo possui desafios:
 1. **Subjetividade:** Como depende de humanos ranqueando respostas, critérios subjetivos (como preferências de vocabulário ou estilo) são incorporados ao modelo.
 2. **Custo Elevado:** Exige um esforço massivo de curadoria humana especializada.
 3. **Transferência de Viés:** O viés inconsciente dos humanos que estão avaliando as respostas pode ser transferido para a IA.
+
+
+## Aula 16: Técnicas de Otimização para Fine Tuning em LLMs
+- [ Sumário ](#sumário) 
+
+Esta aula aborda quatro estratégias fundamentais para otimizar o processo de Fine Tuning, mitigando os altos custos financeiros e os gargalos computacionais associados ao treinamento de Grandes Modelos de Linguagem (LLMs).
+
+### 1. LoRA (Low-Rank Adaptation)
+* **O Problema:** Realizar o Fine Tuning completo (atualizando todos os parâmetros de uma LLM) é inviável e extremamente caro para a maioria das empresas.
+* **Como Funciona:** O LoRA **congela os pesos originais** do modelo e adiciona novas "camadas leves" (de baixa complexidade matricial ou *low rank*). O treinamento ocorre exclusivamente nessas novas camadas.
+* **Vantagens:** Processo mais rápido, significativamente mais barato, exige menos memória e reduz os riscos de *overfitting* (sobreajuste).
+* **Exemplo Prático:** Especializar o LLaMA 2 para atendimento jurídico em português treinando apenas as camadas LoRA, em vez de reprocessar todo o modelo original.
+
+### 2. Quantização (INT4 e INT8)
+* **O Problema:** A execução de LLMs exige grande capacidade de memória e GPUs potentes, dificultando rodar essas IAs em máquinas locais ou com recursos limitados.
+* **Como Funciona:** Atua como um "compactador" matemático. Converte os pesos do modelo — que normalmente utilizam alta precisão com pontos flutuantes (FP32 ou FP16) — para representações menores em números inteiros (INT8 ou INT4).
+* **Vantagens:** Reduz drasticamente o consumo de memória RAM/VRAM e acelera o processamento, viabilizando a execução em hardware comum (inclusive CPUs).
+* **Trade-off:** Ocorre uma pequena perda na precisão e na qualidade das respostas.
+* **Exemplo Prático:** Comprimir o Mistral 7B de 13GB para cerca de 4GB (INT4), permitindo rodá-lo localmente em um notebook utilizando ferramentas como Ollama ou LM Studio.
+
+### 3. MoE (Mixture of Experts)
+* **O Problema:** Ativar todas as redes neurais de um modelo gigantesco para responder a qualquer prompt gera um desperdício enorme de processamento.
+* **Como Funciona:** O modelo é dividido internamente em múltiplos "submodelos" (os especialistas). Existe uma **rede roteadora** que analisa o *input* (a entrada do usuário) e decide quais especialistas devem ser ativados para aquela tarefa específica.
+* **Vantagens:** Permite que o modelo escale para tamanhos colossais sem aumentar proporcionalmente o custo de inferência, pois apenas uma fração da IA é processada por vez.
+* **Exemplo Prático:** O Google Switch Transformer, que possui mais de 1 trilhão de parâmetros, mas pode acionar apenas 2 de seus 64 especialistas para formular uma resposta específica (como uma tradução).
+
+### 4. P-Tuning e Prefix Tuning
+* **O Problema:** Necessidade de especializar a IA para contextos específicos sem alterar absolutamente nenhum peso do modelo base.
+* **Como Funciona:** Trata-se de uma evolução da engenharia de prompt. Em vez de mexer no modelo, inserem-se "tokens pré-treinados" ou vetores contextuais no início da sequência da requisição (como um *sidecar*). 
+* **Vantagens:** Orienta o modelo de forma rígida a seguir comportamentos ou padrões específicos (como agir com base em uma "etiqueta" ou receita predefinida) de maneira muito leve.
+* **Analogia:** É como orientar uma pessoa sobre as regras de etiqueta de um jantar de gala logo na entrada do evento; ela não muda sua essência (os pesos), mas adapta perfeitamente seu comportamento ao contexto.
