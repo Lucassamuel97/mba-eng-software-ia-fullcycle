@@ -21,6 +21,7 @@
 - [Aula 17: Factualidade e Alucinação](#aula-17-factualidade-e-alucinação)
 - [Aula 18: Técnicas para Mitigar Alucinações e Casos Reais](#aula-18-técnicas-para-mitigar-alucinações-e-casos-reais)
 - [Aula 19: Context window - Janela de Contexto](#aula-19-context-window---janela-de-contexto)
+- [Aula 20: Dificuldades das LLMs com Raciocínio Simbólico e Lógico](#aula-20-dificuldades-das-llms-com-raciocínio-simbólico-e-lógico)
 
 
 ## Aula 1: Cadeias de Markov
@@ -654,3 +655,39 @@ Para não depender inteiramente da janela de contexto máxima do modelo, utilize
 * **Resumos Hierárquicos:** Peça para a IA resumir o texto por partes (capítulo por capítulo) e, em seguida, trabalhe em cima da junção desses resumos menores, poupando a janela de contexto.
 * **Instruções de Foco Explícitas:** Use comandos de engenharia de prompt para guiar a atenção do modelo e eliminar ruídos. 
   * *Exemplo:* *"Ignore os últimos 1.000 tokens deste documento. Concentre sua atenção exclusivamente no conteúdo da página 13 e extraia a cláusula X."*
+
+
+## Aula 20: Dificuldades das LLMs com Raciocínio Simbólico e Lógico
+- [ Sumário ](#sumário) 
+
+Nesta aula, exploramos uma das maiores fraquezas arquitetônicas dos Grandes Modelos de Linguagem (LLMs): a dificuldade em lidar com raciocínio lógico, matemático e simbólico.
+
+### 1. O Paradigma da Fluência vs. Raciocínio
+As LLMs são mestres em **fluência textual**. Elas sabem prever e reproduzir a gramática e a estrutura da linguagem humana com base em estatísticas e padrões de tokens. No entanto, elas **não compreendem** as regras matemáticas ou lógicas por trás dos textos que geram. 
+
+Quando uma LLM resolve um cálculo matemático simples corretamente, não é porque ela "calculou", mas sim porque estatisticamente aquele padrão de tokens já apareceu milhões de vezes em sua base de treinamento.
+
+### 2. O que é Raciocínio Simbólico e Lógico?
+É a capacidade de manipular símbolos com base em regras formais (matemática, álgebra, lógica de programação).
+* **Exemplo Lógico:** Compreender que se todo $A$ é $B$ e $X$ é $A$, então obrigatoriamente $X$ é $B$.
+* **Exemplo Algébrico:** Traduzir um problema em variáveis, como "João tem o dobro da idade de Maria" para $J = 2M$.
+
+### 3. Por que as LLMs falham nisso?
+* **Base Probabilística:** As LLMs "adivinham" a próxima palavra; elas não aplicam fórmulas fixas.
+* **Falta de Memória de Estado/Verificação:** Diferente de um compilador ou calculadora tradicional, a IA não tem um mecanismo interno para verificar se o passo anterior da conta faz sentido lógico antes de prosseguir.
+* **Erros em Cascata (Múltiplas Etapas):** Se o modelo cometer um erro probabilístico no primeiro passo de uma equação complexa, todo o resto do raciocínio desanda, e ele apresentará o resultado errado com extrema confiança.
+* **Dificuldades Específicas:**
+  * **Negações complexas:** (ex: "Ninguém que não é rico é feliz").
+  * **Inversão de quantificadores:** Confundir a premissa de que "todo $X$ é $Y$" não significa que "todo $Y$ é $X$".
+
+### 4. Estratégias para Solucionar e Mitigar o Problema
+Para tarefas que exigem precisão matemática e lógica, você não deve depender exclusivamente da probabilidade da LLM. Use as seguintes estratégias:
+
+* **Chain of Thought (CoT) / Cadeia de Pensamento:**
+  * **O que é:** Um tipo de prompt que força a IA a pensar "em voz alta", resolvendo o problema etapa por etapa.
+  * **Vantagem:** Ajuda a organizar o processamento da IA e permite que o usuário encontre exatamente onde a máquina errou o raciocínio.
+* **Raciocínio Híbrido (Ferramentas Externas):**
+  * **O que é:** Combinar a capacidade de linguagem da LLM com a precisão de ferramentas que sabem fazer cálculos matemáticos, como Python ou calculadoras lógicas.
+  * **Exemplo Prático:** O uso de frameworks como **LangChain** ou **AutoGPT**, onde a IA atua apenas como a "inteligência" que delega o cálculo estrutural para uma API ou sistema externo confiável.
+* **Modelos Neurossimbólicos (Avanço Futuro):**
+  * Uma abordagem híbrida ainda em desenvolvimento que visa unir o *Deep Learning* (Redes Neurais) com sistemas tradicionais de lógica simbólica para garantir precisão absoluta na verificação de dados.
