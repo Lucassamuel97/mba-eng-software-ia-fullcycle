@@ -20,6 +20,8 @@
 - [Aula 16 : Técnicas de Otimização para Fine Tuning em LLMs](#aula-16-técnicas-de-otimização-para-fine-tuning-em-llms)
 - [Aula 17: Factualidade e Alucinação](#aula-17-factualidade-e-alucinação)
 - [Aula 18: Técnicas para Mitigar Alucinações e Casos Reais](#aula-18-técnicas-para-mitigar-alucinações-e-casos-reais)
+- [Aula 19: Context window - Janela de Contexto](#aula-19-context-window---janela-de-contexto)
+
 
 ## Aula 1: Cadeias de Markov
 
@@ -606,3 +608,49 @@ Para ilustrar a gravidade de confiar cegamente na IA em contextos críticos, a a
 
 ### 3. A Regra de Ouro: A IA é o seu "Estagiário"
 A empolgação com a IA é válida e necessária, mas ela exige supervisão. Trate a IA como um estagiário brilhante, mas em fase de aprendizado: **nunca passe o trabalho para frente como uma verdade absoluta sem antes fazer uma dupla checagem dos fatos (Fact-Checking).**
+
+
+## Aula 19: Context window - Janela de Contexto 
+- [ Sumário ](#sumário) 
+
+Nesta aula, exploramos um dos grandes desafios técnicos e práticos das LLMs: a limitação associada à **janela de contexto**. 
+
+### 1. O que é a Janela de Contexto?
+A janela de contexto é a **quantidade máxima de tokens** que um modelo consegue "enxergar" e processar de uma só vez para entender as informações anteriores e prever a próxima palavra.
+* **Exemplos de capacidade:**
+  * GPT-3.5: ~4.100 tokens.
+  * GPT-4: ~8.000 tokens.
+  * GPT-4 Turbo: ~128.000 tokens.
+  * Claude 3 (Anthropic): ~200.000 tokens.
+
+A premissa básica é: quanto maior a janela, maior a capacidade teórica do modelo de manter a coerência e cruzar informações de documentos longos. No entanto, **a qualidade do processamento não é uniforme** em toda a extensão dessa janela.
+
+### 2. As 3 Principais Limitações em Janelas de Contexto
+Mesmo utilizando modelos com janelas gigantescas, você enfrentará os seguintes problemas:
+
+#### A. Diluição de Relevância
+* **O Problema:** Quando há excesso de tokens, a LLM tem dificuldade em manter o foco. O mecanismo de atenção (que define o peso de cada palavra) pode falhar ou se tornar excessivamente seletivo.
+* **Consequência:** A IA pode ignorar instruções específicas no meio do texto, perder a coerência em trechos muito longos e gerar respostas genéricas.
+
+#### B. Perda de Foco (Viés de Posição)
+* **O Problema:** Modelos autorregressivos tendem a dar um peso muito maior aos tokens que estão no **final** do contexto (e, em menor grau, no comecinho).
+* **Consequência:** Informações vitais ou instruções complexas colocadas no início ou no meio do prompt podem ser "esquecidas" pelo modelo.
+* **💡 Dica Prática:** Sempre deixe as instruções mais críticas e as perguntas principais para o final do seu prompt.
+
+#### C. Custo Computacional e Latência
+* **O Problema:** O tempo de processamento e o custo de modelos como o GPT-4 crescem de forma quase quadrática em relação ao tamanho do contexto.
+* **Consequência:** Enviar janelas imensas (ex: 128k tokens) a todo momento é extremamente caro, lento e ineficiente computacionalmente.
+
+### 3. Exemplo Prático do Problema
+Se você enviar um PDF de 200 páginas e pedir: *"Resuma os principais pontos da cláusula de confidencialidade da página 13"*. 
+A LLM pode ler tudo, mas devido à **diluição de relevância**, ela perde o foco e entrega uma resposta vaga sobre confidencialidade geral, ignorando a instrução estrita de focar apenas na página 13.
+
+### 4. Estratégias para Contornar essas Limitações
+
+Para não depender inteiramente da janela de contexto máxima do modelo, utilize técnicas de otimização de input:
+
+* **Chunking (Fatiamento):** Divida documentos grandes em partes lógicas (capítulos ou seções) antes de processá-los, garantindo que o modelo foque totalmente em uma parte de cada vez.
+* **Sistemas Externos / Recorte Manual:** Em vez de enviar as 200 páginas do PDF, recorte (manualmente ou via código) apenas as páginas relevantes e envie um prompt curto e altamente direcionado.
+* **Resumos Hierárquicos:** Peça para a IA resumir o texto por partes (capítulo por capítulo) e, em seguida, trabalhe em cima da junção desses resumos menores, poupando a janela de contexto.
+* **Instruções de Foco Explícitas:** Use comandos de engenharia de prompt para guiar a atenção do modelo e eliminar ruídos. 
+  * *Exemplo:* *"Ignore os últimos 1.000 tokens deste documento. Concentre sua atenção exclusivamente no conteúdo da página 13 e extraia a cláusula X."*
