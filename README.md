@@ -7,6 +7,7 @@ Este repositório contém os materiais e recursos relacionados ao MBA em Engenha
 
 - [Módulo 1 - Gen IA](GenIA.md)
 - [Módulo 2 - Aprofundando na IA e LLM](IAeLLM.md)
+- [Módulo 3 - Hands-on](HandsOn.md)
 
 
 
