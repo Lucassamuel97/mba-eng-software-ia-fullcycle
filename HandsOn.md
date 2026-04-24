@@ -10,6 +10,7 @@
 
 - [Aula 4: Arquiteturas e Tipos de Modelos (Foco em Encoder-Only)](#aula-4-arquiteturas-e-tipos-de-modelos-foco-em-encoder-only)
 
+- [Aula 5: Arquiteturas e Tipos de Modelos (Foco em Decoder-Only)](#aula-5-arquiteturas-e-tipos-de-modelos-foco-em-decoder-only)
 
 ## Aula 1: Introdução à Geração de Respostas e Tokenização na Prática
 
@@ -143,3 +144,31 @@ Além do BERT original, surgiram variações otimizadas para diferentes necessid
 * **RoBERTa:** Uma versão aprimorada e mais robusta, treinada com muito mais dados e processamento do que o BERT original.
 * **DistilBERT:** Uma versão menor, mais rápida e mais barata, ideal para ambientes com restrição computacional (embora perca um pouco de precisão).
 * **ALBERT:** Versão altamente eficiente que compartilha parâmetros internamente. É mais rápida na execução (*inferência*) e consegue resultados superiores, mas o treinamento é mais complexo.
+
+## Aula 5: Arquiteturas e Tipos de Modelos (Foco em Decoder-Only)
+- [ Sumário ](#sumário)
+
+Nesta aula, avançamos no estudo das arquiteturas baseadas em Transformers, focando agora nos modelos **Decoder-Only** (Apenas Decodificador). Enquanto o modelo *Encoder* (visto na aula anterior) foca na compreensão global do texto, o *Decoder* abre mão de olhar para o "futuro" da frase para se tornar um especialista em **geração textual** (como o ChatGPT).
+
+### 1. O Propósito do Decoder-Only
+Ao isolar apenas a parte decodificadora do Transformer, reduz-se a complexidade arquitetural, tornando o modelo mais rápido, barato e extremamente eficiente para tarefas **autorregressivas** (prever a próxima palavra).
+* **Casos de Uso Ideais:** Geração de *storytelling*, autocompletar textos e formulação de respostas conversacionais.
+
+### 2. O Mecanismo Central: Causal Self-Attention
+O grande segredo do Decoder-Only é a **Atenção Causal Autorregressiva**. O modelo é forçado a olhar apenas para o passado (os tokens que já foram gerados) para descobrir qual será a próxima palavra, sem nunca "espiar" o futuro. Para garantir isso matematicamente, utiliza-se a **Máscara Triangular Inferior**.
+
+* **Como a Máscara Funciona:** Imagine uma matriz onde as linhas e colunas são os tokens (vetores) da frase *"o cachorro correu rápido"*. A máscara aplica "zeros" (cegueira) na parte superior direita da matriz e "checks/1s" (visibilidade) na parte inferior esquerda, formando um triângulo. 
+* **O Efeito Prático:** Quando o modelo está tentando prever a palavra *"correu"*, ele só tem permissão matemática para enxergar *"o"* e *"cachorro"*. O resto da matriz fica oculto para evitar alucinações matemáticas e garantir a coerência preditiva.
+
+> **💡 A Analogia do Aluno:** Imagine um aluno fazendo uma prova de 10 questões. Ao chegar na questão 6, ele tem permissão para ler e revisar as questões de 1 a 5 (seu passado/contexto) para focar na resposta da 6. Se ele lesse as questões 7 a 10 ao mesmo tempo, perderia o foco e a atenção na resposta atual. A máscara funciona como um "tampão visual" para manter o foco da IA apenas no passo atual.
+
+### 3. Paralelismo sem Perder a Ordem (Substituindo a RNN)
+Diferente das antigas Redes Neurais Recorrentes (RNNs) que liam palavra por palavra de forma lenta, o Transformer processa os dados em múltiplas camadas simultâneas (*multi-thread*). A máscara triangular, combinada com os carimbos de posição dos vetores, é o que garante que a máquina respeite a ordem cronológica do texto mesmo processando tudo paralelamente.
+
+### 4. A Anatomia das Camadas Internas do Decoder
+Cada bloco dentro do decodificador é dividido em três partes fundamentais para processar a informação:
+
+1. **Multi-Head Attention com Máscara Causal:** O modelo avalia os tokens anteriores para decidir quais importam mais para prever o próximo. A técnica *Multi-Head* permite que o modelo olhe para essa mesma informação sob múltiplas perspectivas simultâneas (ex: uma "cabeça" analisa a gramática, a outra analisa o tom emocional).
+2. **Feedforward Position-wise:** Atua como um "mini cérebro" individual para cada palavra. Ele capta padrões não-lineares e combina significados abstratos dos vetores.
+3. **Layer Norm com Conexões Residuais:** * *Layer Norm:* Mantém os cálculos matemáticos equilibrados, impedindo que os números "explodam" ou "morram" (normalizando *outliers*).
+   * *Conexões Residuais:* Transportam o aprendizado da camada anterior diretamente para a próxima, garantindo que o modelo não "esqueça" o contexto no meio do processamento.
