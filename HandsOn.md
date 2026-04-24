@@ -12,6 +12,8 @@
 
 - [Aula 5: Arquiteturas e Tipos de Modelos (Foco em Decoder-Only)](#aula-5-arquiteturas-e-tipos-de-modelos-foco-em-decoder-only)
 
+- [Aula 6: Aprofundando em Embeddings e Similaridade Vetorial](#aula-6-aprofundando-em-embeddings-e-similaridade-vetorial)
+
 ## Aula 1: Introdução à Geração de Respostas e Tokenização na Prática
 
 Esta aula marca o início de um novo módulo. Após compreender os conceitos fundamentais, a arquitetura e os desafios das LLMs, o foco agora é entender **como** a máquina gera suas respostas e como podemos manipulá-la (tunar seus parâmetros) para obter o resultado exato que precisamos.
@@ -172,3 +174,50 @@ Cada bloco dentro do decodificador é dividido em três partes fundamentais para
 2. **Feedforward Position-wise:** Atua como um "mini cérebro" individual para cada palavra. Ele capta padrões não-lineares e combina significados abstratos dos vetores.
 3. **Layer Norm com Conexões Residuais:** * *Layer Norm:* Mantém os cálculos matemáticos equilibrados, impedindo que os números "explodam" ou "morram" (normalizando *outliers*).
    * *Conexões Residuais:* Transportam o aprendizado da camada anterior diretamente para a próxima, garantindo que o modelo não "esqueça" o contexto no meio do processamento.
+
+## Aula 6: Aprofundando em Embeddings e Similaridade Vetorial
+- [ Sumário ](#sumário)
+
+Nesta aula prática, o objetivo é consolidar o conceito de **Embeddings**, mostrando como as máquinas transformam a semântica da linguagem humana em números para calcular a "distância" e a similaridade entre palavras e textos.
+
+### 1. O que são Embeddings? (Revisão Conceitual)
+As máquinas (LLMs) não compreendem o texto da mesma forma que os humanos. Enquanto nós usamos nossa vivência, gramática e neurônios para interpretar o significado de uma frase, as máquinas precisam de cálculos matemáticos.
+
+* **A Transformação Vetorial:** Para a máquina entender o texto, ela transforma cada palavra (ou token) em um **Vetor** (uma representação numérica de múltiplas dimensões). 
+* **O Papel do Embedding:** O *Embedding* é uma representação vetorial "densa". Ele não apenas armazena a palavra, mas embuti o seu **significado, contexto e relação** com outras palavras dentro de um espaço multidimensional.
+* **Proximidade Semântica:** A grande mágica dos Embeddings é organizar esses vetores de forma que palavras com significados semelhantes fiquem "matematicamente próximas".
+  * *Exemplo:* O vetor da palavra "gato" estará muito mais próximo, no espaço vetorial, do vetor de "cachorro" do que do vetor de "avião". Essa distância é geralmente calculada através de fórmulas matemáticas (como a distância Euclidiana ou a Similaridade de Cosseno).
+
+### 2. Hands-on: Criando uma Calculadora de Similaridade (Hugging Face)
+Para tangibilizar o conceito, a aula apresentou um laboratório prático na plataforma **Hugging Face**, criando um *Space* interativo para calcular a similaridade vetorial entre duas frases.
+
+#### Passo a passo executado no Hugging Face:
+1. Acessar a aba **Spaces** e criar um novo projeto (ex: `aula-emb2`).
+2. Configurar o ambiente com a licença MIT e alocar o processamento (CPU gratuita).
+3. **Criação do Código Fonte (`app.py`):**
+   * Importação da biblioteca `Gradio` (para criar a interface visual) e da biblioteca de `Transformers`.
+   * Escolha de um modelo pré-treinado do Hugging Face.
+   * Criação de uma função matemática que:
+     * Recebe duas frases como entrada.
+     * Converte as frases em Embeddings (vetores).
+     * Calcula a **Similaridade de Cosseno** entre os dois vetores.
+     * Retorna um *score* numérico (de 0.0 a 1.0) representando o quão semanticamente próximas são as frases.
+4. **Criação do `requirements.txt`:** Arquivo obrigatório para indicar ao servidor do Hugging Face quais bibliotecas instalar (neste caso, `gradio`).
+
+### 3. Testes e Observações Práticas
+Com a interface rodando, foram realizados testes inserindo frases para avaliar o comportamento matemático do Embedding:
+
+* **Teste 1 (Semântica Próxima):**
+  * Frase 1: *"Hoje cedo meu cachorro passou mal pois comeu algo que não deveria."*
+  * Frase 2: *"Hoje cedo meu gato comeu algo estragado por isso não está bem."*
+  * *Resultado:* Score de similaridade moderado/alto (0.69). Os animais e os sintomas são similares matematicamente.
+* **Teste 2 (Mudança Sutil):**
+  * Alterando "gato" para "cachorro" na Frase 2, o *score* aumenta consideravelmente, refletindo a aproximação vetorial exata do sujeito.
+* **Teste 3 (Semântica Distante):**
+  * Frase 1: *"Hoje cedo meu cachorro passou mal..."*
+  * Frase 2: *"Meu avião precisa de um mecânico novo pois está com problemas no trem de pouso."*
+  * *Resultado:* O *score* despenca drasticamente, pois os vetores de "avião/mecânico" estão extremamente distantes de "cachorro/passar mal" no espaço vetorial.
+* **Teste 4 (O "Ponto Cego" da Máquina):**
+  * Frase 1: *"Hoje cedo meu cachorro passou mal pois comeu algo que **não** deveria."*
+  * Frase 2: *"Hoje cedo meu cachorro passou mal pois comeu algo que deveria."*
+  * *Resultado:* A similaridade é quase de 100%. **Por quê?** Porque a máquina não "entende" a lógica da frase. Para o cálculo vetorial, a presença de quase todos os tokens exatos (cachorro, comer, passar mal) torna as frases matematicamente idênticas, mesmo que o significado prático/humano (o uso da negação "não") altere totalmente o sentido. Isso demonstra uma das limitações práticas de depender exclusivamente da similaridade de tokens sem análise profunda de
