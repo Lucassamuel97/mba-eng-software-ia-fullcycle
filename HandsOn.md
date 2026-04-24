@@ -17,6 +17,7 @@
 - [Aula 7: Fundamentos e Estratégias de Prompt Engineering](#aula-7-fundamentos-e-estratégias-de-prompt-engineering)
 
 - [Aula 8: Estratégias Práticas de Prompt Engineering](#aula-8-estratégias-práticas-de-prompt-engineering)
+- [Aula 9: RAG (Retrieval-Augmented Generation)](#aula-9-rag-retrieval-augmented-generation)
 
 ## Aula 1: Introdução à Geração de Respostas e Tokenização na Prática
 
@@ -294,3 +295,41 @@ Um desdobramento mais aprofundado do *Zero-Shot*. Consiste em dar instruções e
 * **Como funciona:** *"Explique o conceito de inflação. Use uma linguagem simples para leigos. O texto deve ter exatamente três parágrafos curtos. Não use jargões financeiros em inglês."*
 * **Vantagens:** Cria um padrão fácil de replicar, com um estilo direto. Modelos como ChatGPT e DeepSeek respondem incrivelmente bem a parâmetros rígidos.
 * **Desvantagens:** Requer um usuário avançado. Em casos reais, um prompt de *Instruction Tuning* corporativo pode chegar a ter 3 ou 4 páginas apenas de restrições e regras lógicas, o que exige um esforço grande de documentação por parte do engenheiro de prompt.
+
+## Aula 9: RAG (Retrieval-Augmented Generation)
+
+- [ Sumário ](#sumário)
+
+Nesta aula, abordamos o **RAG (Retrieval-Augmented Generation)**, a estratégia definitiva para resolver a maior deficiência técnica das LLMs: a defasagem temporal de conhecimento e a incapacidade de acessar dados privados ou atualizados.
+
+### 1. O Problema das LLMs Puras
+Como visto anteriormente, após o treinamento, uma LLM fica com o conhecimento "congelado" no tempo. Treinar uma LLM continuamente para mantê-la atualizada com as notícias diárias ou dados voláteis de uma empresa é financeiramente e computacionalmente inviável.
+* **A Consequência:** Se você perguntar a uma LLM pura sobre o fechamento contábil de ontem ou sobre uma notícia do dia anterior, ela não saberá a resposta e tentará alucinar (inventar) ou dar uma resposta evasiva.
+
+### 2. O que é RAG?
+RAG (Geração Aumentada por Recuperação) é uma arquitetura que atua como uma "ponte". Ela conecta o "cérebro" de geração de texto da LLM a um "banco de dados" externo, real e atualizado, antes de formular a resposta.
+* **Fontes Externas:** A LLM passa a ler bases de conhecimento da empresa (documentos internos, PDFs em um *bucket* S3, APIs, históricos do *Teams*/*Slack*) ou a própria internet em tempo real.
+
+### 3. A Arquitetura do RAG (Os 5 Passos do Pipeline)
+O processo do RAG acontece em milissegundos nos bastidores. Ele é dividido em cinco etapas arquiteturais:
+
+#### Passo 1: Query (Entrada do Usuário)
+O processo começa com a pergunta em linguagem natural do usuário (ex: *"Quais são as políticas de acesso remoto seguro da empresa?"*). Neste estágio, a LLM ainda não sabe a resposta.
+
+#### Passo 2: Geração de Embedding
+A pergunta do usuário é convertida em um **Embedding** (um vetor matemático denso que representa o *significado* da frase).
+
+#### Passo 3: Retriever (Busca Semântica na Base Vetorial)
+O sistema acessa um Banco de Dados Vetorial (onde todos os documentos da empresa já foram picotados e convertidos em Embeddings previamente). Ele usa cálculos matemáticos (como Similaridade de Cosseno) para encontrar os documentos que têm o significado mais próximo à pergunta do usuário.
+* *Nota Crucial:* Não é uma busca burra por palavra-chave (`Ctrl+F`). A query *"acesso remoto seguro"* vai encontrar um documento que fala sobre *"VPN Corporativa"*, pois a máquina entende a semântica vetorial entre os dois temas, mesmo sem haver palavras em comum.
+
+#### Passo 4: Construção do Prompt (O Enriquecimento)
+O sistema pega os pedaços de texto (evidências) encontrados no banco de dados e os "injeta" de forma invisível no prompt original. 
+* O prompt escondido que vai para a LLM fica parecido com isto: *"Usuário perguntou: 'Quais são as políticas de acesso remoto seguro?'. Baseado nestes documentos encontrados: 'A empresa usa VPN. O acesso via celular exige atualização', formule a resposta"*.
+
+#### Passo 5: Geração da Resposta (LLM em Ação)
+Só agora o motor da LLM entra em ação. Ela utiliza toda a sua fluência gramatical (Transformers/Decoder) para ler o contexto mastigado e gerar uma resposta humanizada, precisa e 100% ancorada nos dados reais da empresa, eliminando as alucinações.
+
+### 4. Dica Prática de Prompting com RAG na Internet
+Quando for usar ferramentas com RAG embutido para a web (como ChatGPT Plus ou Perplexity), não deixe o sistema buscar na internet de forma solta, pois ele pode puxar informações de blogs não confiáveis.
+* **Direcione o Retriever:** Force o modelo a buscar nos lugares certos usando instruções claras: *"Busque na internet as últimas notícias sobre o evento X, mas restrinja sua busca apenas aos domínios das revistas científicas A e B ou jornais C e D."*
