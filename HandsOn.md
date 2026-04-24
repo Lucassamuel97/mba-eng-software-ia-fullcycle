@@ -3,7 +3,12 @@
 ## Sumário
 
 - [Aula 1: Introdução à Geração de Respostas e Tokenização na Prática](#aula-1-introdução-à-geração-de-respostas-e-tokenização-na-prática)
-- [Aula 2: Top K e Top P na Geração de Textos](#aula-2-top-k-e-top-p-na-geração-de-textos)
+
+- [Aula 2: Temperatura nas LLMs](#aula-2-temperatura-nas-llms)
+
+- [Aula 3: Top K e Top P na Geração de Textos](#aula-3-top-k-e-top-p-na-geração-de-textos)
+
+- [Aula 4: Arquiteturas e Tipos de Modelos (Foco em Encoder-Only)](#aula-4-arquiteturas-e-tipos-de-modelos-foco-em-encoder-only)
 
 
 ## Aula 1: Introdução à Geração de Respostas e Tokenização na Prática
@@ -68,7 +73,7 @@ A Temperatura funciona, na maioria das plataformas, em uma escala que vai de 0.0
 > **💡 A Analogia da Biblioteca:** Imagine pedir um livro sobre Direito para um especialista em uma biblioteca. Com temperatura 0.1, ele vai direto na prateleira de Direito e traz um *Vade Mecum*. Com temperatura 1.0, a criatividade dele aumenta, e ele pode trazer o *Vade Mecum*, mas junto trará um livro do Harry Potter para tentar fazer uma correlação criativa e inusitada sobre as leis da magia.
 
 
-## Aula 2: Top K e Top P na Geração de Textos
+## Aula 3: Top K e Top P na Geração de Textos
 - [ Sumário ](#sumário)
 
 Esta aula aprofunda o entendimento sobre como as LLMs escolhem as palavras durante a geração de texto. Exploramos as técnicas de amostragem estatística **Top K** e **Top P**, que inserem o grau de aleatoriedade necessário para evitar que as respostas fiquem robóticas, repetitivas ou sem sentido.
@@ -101,3 +106,40 @@ Diferente do Top K (que limita a *quantidade* de palavras), o Top P usa como lim
   * Campo (8%) -> *Soma parcial acumulada: 83%*
   * Deserto (7%) -> *Soma parcial acumulada: 90%*
   * *Observação:* Neste cenário, as opções viáveis se encerram em "Deserto", pois a meta somada de 90% das probabilidades foi exatamente atingida. Qualquer token que vier abaixo (e que represente os 10% restantes da distribuição total) será ignorado pelo motor na tomada de decisão.
+
+## Aula 4: Arquiteturas e Tipos de Modelos (Foco em Encoder-Only)
+- [ Sumário ](#sumário)
+
+Esta aula avança para a categorização formal das arquiteturas de Inteligência Artificial baseadas em Transformers. A intenção é organizar os conceitos aprendidos até aqui e detalhar quando, como e por que utilizar cada tipo específico de modelo.
+
+### 1. As Três Ramificações dos Transformers
+Após o lançamento do artigo *"Attention is All You Need"* (Google, 2017), ficou claro que usar a arquitetura completa do Transformer (que une um *Encoder* e um *Decoder*) era muito "pesado" e ineficiente para certas tarefas. A partir daí, o mercado dividiu a arquitetura em três tipos principais:
+1. **Encoder-Only** (Apenas o Codificador).
+2. **Decoder-Only** (Apenas o Decodificador).
+3. **Encoder-Decoder** (A arquitetura completa).
+
+O foco desta aula é destrinchar os modelos **Encoder-Only**.
+
+### 2. O que é a Arquitetura Encoder-Only?
+A arquitetura Encoder-Only utiliza apenas a primeira metade do Transformer original. 
+* **Objetivo Principal:** **Compreensão Textual profunda**, e não a geração/criação de textos. 
+* **Como funciona:** Diferente do GPT (que tenta adivinhar sempre a *próxima* palavra olhando para o passado), o modelo Encoder-Only não prevê o próximo token. Ele utiliza a **Atenção Bidirecional**, ou seja, ele lê e analisa a frase inteira de uma só vez, olhando simultaneamente para a esquerda (passado) e para a direita (futuro) de cada palavra.
+* **O Pioneiro:** O modelo **BERT** (*Bidirectional Encoder Representations from Transformers*), lançado pelo Google em 2018, foi o primeiro grande modelo desta categoria.
+
+### 3. Como o Modelo é Treinado?
+O treinamento foca em forçar a IA a entender o contexto como um todo:
+* **Tokenização e Embeddings:** O texto vira vetor e cada palavra ganha um "carimbo" de posição.
+* **Atenção Bidirecional:** A IA calcula o peso relativo de cada palavra em relação a todas as outras na frase.
+* **MLM (Masked Language Model):** A principal técnica de treino. Esconde-se propositalmente algumas palavras no meio do texto (como um texto com lacunas), e o modelo deve deduzir qual é a palavra correta baseando-se no contexto geral (o que vem antes e depois da lacuna).
+
+### 4. Casos de Uso (Quando usar Encoder-Only?)
+Sempre que a tarefa for **classificar, extrair ou comparar dados**, os modelos Encoder-Only serão mais rápidos, precisos e baratos que modelos geradores como o ChatGPT.
+* **Classificação de Sentimentos:** Analisar se os e-mails de clientes ou comentários em redes sociais sobre uma marca são positivos, neutros ou negativos.
+* **NER (Named Entity Recognition):** Extrair e categorizar informações de um texto. (Ex: Em *"Steve Jobs fundou a Apple em Cupertino"*, a IA extrai e classifica Steve Jobs como *Pessoa*, Apple como *Organização* e Cupertino como *Local*).
+* **Busca Semântica e Similaridade Vetorial:** Transformar documentos em vetores para buscar informações pelo *significado*, e não por palavras-chave exatas. (Ex: Entender matematicamente que as frases *"como fazer um bolo"* e *"receita para preparar um bolo"* possuem a mesma intenção).
+
+### 5. A Família de Modelos BERT
+Além do BERT original, surgiram variações otimizadas para diferentes necessidades:
+* **RoBERTa:** Uma versão aprimorada e mais robusta, treinada com muito mais dados e processamento do que o BERT original.
+* **DistilBERT:** Uma versão menor, mais rápida e mais barata, ideal para ambientes com restrição computacional (embora perca um pouco de precisão).
+* **ALBERT:** Versão altamente eficiente que compartilha parâmetros internamente. É mais rápida na execução (*inferência*) e consegue resultados superiores, mas o treinamento é mais complexo.
