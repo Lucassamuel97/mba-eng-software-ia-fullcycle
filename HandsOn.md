@@ -14,6 +14,10 @@
 
 - [Aula 6: Aprofundando em Embeddings e Similaridade Vetorial](#aula-6-aprofundando-em-embeddings-e-similaridade-vetorial)
 
+- [Aula 7: Fundamentos e Estratégias de Prompt Engineering](#aula-7-fundamentos-e-estratégias-de-prompt-engineering)
+
+- [Aula 8: Estratégias Práticas de Prompt Engineering](#aula-8-estratégias-práticas-de-prompt-engineering)
+
 ## Aula 1: Introdução à Geração de Respostas e Tokenização na Prática
 
 Esta aula marca o início de um novo módulo. Após compreender os conceitos fundamentais, a arquitetura e os desafios das LLMs, o foco agora é entender **como** a máquina gera suas respostas e como podemos manipulá-la (tunar seus parâmetros) para obter o resultado exato que precisamos.
@@ -220,4 +224,73 @@ Com a interface rodando, foram realizados testes inserindo frases para avaliar o
 * **Teste 4 (O "Ponto Cego" da Máquina):**
   * Frase 1: *"Hoje cedo meu cachorro passou mal pois comeu algo que **não** deveria."*
   * Frase 2: *"Hoje cedo meu cachorro passou mal pois comeu algo que deveria."*
-  * *Resultado:* A similaridade é quase de 100%. **Por quê?** Porque a máquina não "entende" a lógica da frase. Para o cálculo vetorial, a presença de quase todos os tokens exatos (cachorro, comer, passar mal) torna as frases matematicamente idênticas, mesmo que o significado prático/humano (o uso da negação "não") altere totalmente o sentido. Isso demonstra uma das limitações práticas de depender exclusivamente da similaridade de tokens sem análise profunda de
+  * *Resultado:* A similaridade é quase de 100%. **Por quê?** Porque a máquina não "entende" a lógica da frase. Para o cálculo vetorial, a presença de quase todos os tokens exatos (cachorro, comer, passar mal) torna as frases matematicamente idênticas, mesmo que o significado prático/humano (o uso da negação "não") altere totalmente o sentido. Isso demonstra uma das limitações práticas de depender exclusivamente da similaridade de tokens sem análise profunda de raciocínio lógico.
+
+## Aula 7: Fundamentos e Estratégias de Prompt Engineering
+
+- [ Sumário ](#sumário)
+
+Esta aula introduz o módulo final do curso, que consolida todo o conhecimento teórico prévio e o direciona para a aplicação prática, focando em eficiência, redução de custos e maximização de resultados através da Engenharia de Prompts (*Prompt Engineering*), RAG e *Fine-Tuning*.
+
+### 1. O que é Prompt Engineering?
+Embora pareça simples — afinal, trata-se de escrever instruções em texto —, a Engenharia de Prompts vai muito além da escrita coloquial. É a arte e a técnica de formular diretrizes extremamente claras, específicas e estruturadas em linguagem natural para "nichar" (direcionar) o comportamento da IA, garantindo que o modelo produza exatamente o resultado desejado.
+* **O Mito da Simplicidade:** Muitos acreditam saber "promptar" apenas por usar o ChatGPT no dia a dia. Contudo, em ambientes corporativos ou tarefas críticas, um prompt vago (ex: *"Me ajude com o resumo deste texto"*) gera resultados genéricos e imprevisíveis.
+* **A Estruturação (O Óbvio Precisa Ser Dito):** Um prompt eficiente delimita parâmetros. Exemplo: *"Resuma o texto abaixo em até 5 linhas, usando linguagem simples e destacando os três principais argumentos."*
+
+### 2. Por que Prompt Engineering é tão Importante?
+Antes de pensar em treinar um modelo do zero ou alterar a arquitetura dos *Transformers*, o *Prompt Engineering* deve ser a primeira linha de ação. Ele se sustenta em quatro pilares fundamentais:
+
+#### A. Eficiência Sem Necessidade de Retreino (Custo-Benefício)
+* Alterar os pesos de uma rede neural (re-treinar) ou fazer um *Fine-Tuning* é um processo demorado, complexo e caro. 
+* Um prompt bem escrito altera radicalmente a saída da IA de forma quase gratuita e instantânea. Ele "esculpe" o comportamento do modelo utilizando a base de conhecimento que ele já possui.
+
+#### B. Aumento Drástico na Precisão
+* Como as LLMs têm um fator de aleatoriedade (temperatura, top K/P), fazer a mesma pergunta vaga 10 vezes gerará 10 respostas diferentes.
+* Em tarefas críticas (como gerar códigos de programação, responder a clientes de uma empresa ou dar diagnósticos), não há espaço para alucinações. O *Prompt Engineering* reduz a margem de erro, forçando a IA a seguir trilhos lógicos pré-definidos.
+
+#### C. Economia de Tokens (Redução de Custos Financeiros)
+* Em APIs pagas corporativas (ou limites de uso de ferramentas gratuitas), o custo é calculado pela quantidade de tokens lidos e gerados.
+* Um prompt aberto faz a IA "tagarelar", gerando parágrafos desnecessários e consumindo muitos tokens. Um prompt instrutivo, que exige respostas curtas e diretas, economiza recursos computacionais e dinheiro.
+
+#### D. Controle, Testes e Automação
+* Prompts estruturados permitem a realização de Testes A/B (ex: testar se um prompt com tom "amigável" converte mais vendas que um prompt com tom "urgente").
+* A consistência gerada por bons prompts é vital para automatizar fluxos de trabalho em larga escala dentro de sistemas de TI empresariais.
+
+## Aula 8: Estratégias Práticas de Prompt Engineering
+
+- [ Sumário ](#sumário)
+
+Dando continuidade ao estudo de *Prompt Engineering*, esta aula explora cinco técnicas estruturadas de como se comunicar com a Inteligência Artificial para obter resultados otimizados, avaliando as vantagens e desvantagens de cada abordagem.
+
+### 1. Zero-Shot Prompting (O Tiro Certo)
+É a abordagem mais comum e direta do dia a dia. Você dá uma instrução e a IA responde imediatamente, sem receber exemplos prévios de como deve fazer a tarefa.
+* **Como funciona:** "Me dê a receita de um bolo de cenoura" ou "Classifique o sentimento da frase: 'Estou muito feliz com o produto'".
+* **Vantagens:** É rápido, simples e econômico no uso de tokens. Funciona excelentemente bem para tarefas nas quais as LLMs já são naturalmente boas e amplamente treinadas (ex: tradução, classificação de sentimentos, resumos simples).
+* **Desvantagens:** Pode gerar respostas vagas, fora do formato esperado ou demasiadamente genéricas, já que o modelo tem que adivinhar a intenção oculta do usuário.
+
+### 2. Few-Shot Prompting (Aprendizado por Exemplo)
+Nesta estratégia, você "treina" o modelo dentro do próprio prompt, fornecendo exemplos de *Input* (Entrada) e *Output* (Saída) antes de fazer a sua pergunta real.
+* **Como funciona:** > *Analise o sentimento das frases:*
+  > *Exemplo 1: "O produto quebrou rápido" -> Negativo*
+  > *Exemplo 2: "Amei a entrega" -> Positivo*
+  > *Agora analise esta: "O preço foi justo, mas demorou muito a chegar"*
+* **Vantagens:** O modelo aprende o padrão e o formato exato que você deseja. Reduz drasticamente as alucinações e funciona muito bem para tarefas ambíguas ou altamente específicas do seu nicho.
+* **Desvantagens:** Ocupa muitos tokens (o que encarece o uso em APIs corporativas) e exige um trabalho cuidadoso humano para selecionar exemplos realmente bons e sem viés.
+
+### 3. Chain of Thought - CoT (Cadeia de Pensamento)
+Como já vimos em aulas anteriores, as LLMs não "pensam", apenas calculam a próxima palavra. O *CoT* força o modelo a externalizar a lógica matemática/racional passo a passo antes de dar o veredito final.
+* **Como funciona:** Você insere no comando a frase: *"Pense passo a passo antes de chegar à solução"*.
+* **Vantagens:** É vital para problemas matemáticos, lógicos ou de múltiplas etapas de raciocínio. Aumenta a precisão absurdamente e, se o modelo errar, você consegue ler o raciocínio dele e ver exatamente em qual passo a matemática "desandou".
+* **Desvantagens:** A resposta final fica gigantesca (cheia do "raciocínio interno" do modelo), o que gasta mais tempo e consome consideravelmente mais tokens (custo alto em APIs).
+
+### 4. Role-Based Prompting (Assumindo uma Persona)
+Aqui, instruímos a IA a incorporar um personagem, um especialista ou uma persona corporativa antes de responder.
+* **Como funciona:** *"A partir de agora, você é um advogado trabalhista sênior com 20 anos de experiência. Explique de forma clara os direitos de um estagiário segundo a CLT."*
+* **Vantagens:** Muda completamente o tom de voz, o vocabulário e a profundidade da resposta. É excelente para criar *chatbots* de atendimento ao cliente que soem institucionais ou criar textos com a mesma "voz" de um ator ou jornalista específico.
+* **Desvantagens:** Requer refinamento constante. A IA pode ficar tão imersa no "papel" que pode se recusar a responder questões fora do seu nicho assumido, exigindo tempo de teste para calibrar a persona perfeita.
+
+### 5. Instruction Tuning Prompting (Diretrizes Diretas)
+Um desdobramento mais aprofundado do *Zero-Shot*. Consiste em dar instruções estruturadas, diretas e limitadoras em um único comando, definindo regras rígidas de saída.
+* **Como funciona:** *"Explique o conceito de inflação. Use uma linguagem simples para leigos. O texto deve ter exatamente três parágrafos curtos. Não use jargões financeiros em inglês."*
+* **Vantagens:** Cria um padrão fácil de replicar, com um estilo direto. Modelos como ChatGPT e DeepSeek respondem incrivelmente bem a parâmetros rígidos.
+* **Desvantagens:** Requer um usuário avançado. Em casos reais, um prompt de *Instruction Tuning* corporativo pode chegar a ter 3 ou 4 páginas apenas de restrições e regras lógicas, o que exige um esforço grande de documentação por parte do engenheiro de prompt.
