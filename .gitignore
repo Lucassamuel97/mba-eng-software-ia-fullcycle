@@ -7,3 +7,4 @@ langchain/exemplos/*.pyd
 langchain/exemplos/*.sqlite3
 langchain/exemplos/.DS_Store
 langchain/exemplos/*.egg-info/
+.vscode/
