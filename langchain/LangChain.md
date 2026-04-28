@@ -73,8 +73,19 @@ Com a evolução do framework, a biblioteca principal foi desmembrada para facil
 
 
 # Resumo: Exemplos Práticos e Aplicações da LangChain
-* **[1-hello-world.py](exemplos/1-fundamentos/1-hello-world.py)**: Exemplo básico de invocação de um modelo Gemini com LangChain.
-* **[2-init-chat-model.py](exemplos/1-fundamentos/2-init-chat-model.py)**: Inicialização de modelo via `init_chat_model`, com abstração de provedor.
-* **[3-prompt-template.py](exemplos/1-fundamentos/3-prompt-template.py)**: Criação e formatação de prompt com variável dinâmica.
-* **[4-chat-prompt-template.py](exemplos/1-fundamentos/4-chat-prompt-template.py)**: Montagem de mensagens `system` e `user` com `ChatPromptTemplate` e chamada do modelo.
-* **[1-iniciando-com-chains.py](exemplos/2-chains-e-processamento/1-iniciando-com-chains.py)**: Composição de chain com LCEL (`prompt | model`) e execução com `invoke`.
+* **[1-hello-world.py](exemplos/1-fundamentos/1-hello-world.py)**: Invoca o modelo Gemini diretamente com `ChatGoogleGenerativeAI` e imprime o texto retornado.
+* **[2-init-chat-model.py](exemplos/1-fundamentos/2-init-chat-model.py)**: Inicializa um chat model via `init_chat_model`, abstraindo o provedor, e faz uma chamada simples.
+* **[3-prompt-template.py](exemplos/1-fundamentos/3-prompt-template.py)**: Cria um `PromptTemplate` com variavel dinamica e faz a formatacao do texto.
+* **[4-chat-prompt-template.py](exemplos/1-fundamentos/4-chat-prompt-template.py)**: Monta mensagens `system` e `user` com `ChatPromptTemplate`, inspeciona as mensagens e invoca o modelo.
+* **[1-iniciando-com-chains.py](exemplos/2-chains-e-processamento/1-iniciando-com-chains.py)**: Compoe um pipeline LCEL com `prompt | model` e executa via `invoke`.
+* **[2-chains-com-decorators.py](exemplos/2-chains-e-processamento/2-chains-com-decorators.py)**: Usa `@chain` para criar uma etapa customizada (quadrado) e encadeia com prompt e LLM.
+* **[3-runnable-lambda.py](exemplos/2-chains-e-processamento/3-runnable-lambda.py)**: Demonstra `RunnableLambda` transformando string em inteiro e executando com `invoke`.
+* **[4-pipeline-de-processamento.py](exemplos/2-chains-e-processamento/4-pipeline-de-processamento.py)**: Pipeline de traducao + resumo com `PromptTemplate` e `StrOutputParser`.
+* **[5-sumarizacao.py](exemplos/2-chains-e-processamento/5-sumarizacao.py)**: Faz chunking de texto longo e resume o conteudo em uma unica chamada.
+* **[6-sumarizacao-com-map-reduce.py](exemplos/2-chains-e-processamento/6-sumarizacao-com-map-reduce.py)**: Implementa sumarizacao em duas fases (map e reduce) com LLM.
+* **[7-pipeline-de-sumarizacao.py](exemplos/2-chains-e-processamento/7-pipeline-de-sumarizacao.py)**: Constroi pipeline LCEL completo de map-reduce com `RunnableLambda` e `StrOutputParser`.
+* **[1-agente-react-e-tools.py](exemplos/3-agentes-e-tools/1-agente-react-e-tools.py)**: Cria um agente ReAct com tools locais (calculadora e busca mock) e prompt customizado.
+* **[2-agente-react-usando-prompt-hub.py](exemplos/3-agentes-e-tools/2-agente-react-usando-prompt-hub.py)**: Usa prompt do LangChain Hub para ReAct e executa agente com tool mock.
+* **[1-armazenamento-de-historico.py](exemplos/4-gerenciamento-de-memoria/1-armazenamento-de-historico.py)**: Adiciona memoria de conversa por sessao com `RunnableWithMessageHistory`.
+* **[2-historico-baseado-em-sliding-window.py](exemplos/4-gerenciamento-de-memoria/2-historico-baseado-em-sliding-window.py)**: Limita o historico com sliding window usando `trim_messages` antes do prompt.
+* **[1-carregamento-usando-WebBaseLoader.py](exemplos/5-loaders-e-banco-de-dados-vetoriais/1-carregamento-usando-WebBaseLoader.py)**: Arquivo reservado para demonstrar carregamento com `WebBaseLoader`.
