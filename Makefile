@@ -82,3 +82,61 @@ run-search-vector: build
 
 run-role-prompting: build
 	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) promp-engineering/1-tipos-de-prompts/0-Role-prompting.py
+
+
+run: build
+	@FILE=$$(whiptail \
+		--title "LangChain Exemplos" \
+		--menu "Escolha um exemplo para executar:" \
+		25 100 15 \
+		"1" "1-fundamentos/1-hello-world.py" \
+		"2" "1-fundamentos/2-init-chat-model.py" \
+		"3" "1-fundamentos/3-prompt-template.py" \
+		"4" "1-fundamentos/4-chat-prompt-template.py" \
+		"5" "2-chains-e-processamento/1-iniciando-com-chains.py" \
+		"6" "2-chains-e-processamento/2-chains-com-decorators.py" \
+		"7" "2-chains-e-processamento/3-runnable-lambda.py" \
+		"8" "2-chains-e-processamento/4-pipeline-de-processamento.py" \
+		"9" "2-chains-e-processamento/5-sumarizacao.py" \
+		"10" "2-chains-e-processamento/6-sumarizacao-com-map-reduce.py" \
+		"11" "2-chains-e-processamento/7-pipeline-de-sumarizacao.py" \
+		"12" "3-agentes-e-tools/1-agente-react-e-tools.py" \
+		"13" "3-agentes-e-tools/2-agente-react-usando-prompt-hub.py" \
+		"14" "4-gerenciamento-de-memoria/1-armazenamento-de-historico.py" \
+		"15" "4-gerenciamento-de-memoria/2-historico-baseado-em-sliding-window.py" \
+		"16" "5-loaders-e-banco-de-dados-vetoriais/1-carregamento-usando-WebBaseLoader.py" \
+		"17" "5-loaders-e-banco-de-dados-vetoriais/2-carregamento-de-pdf.py" \
+		"18" "5-loaders-e-banco-de-dados-vetoriais/3-ingestion-pgvector.py" \
+		"19" "5-loaders-e-banco-de-dados-vetoriais/4-search-vector.py" \
+		"20" "promp-engineering/1-tipos-de-prompts/0-Role-prompting.py" \
+		3>&1 1>&2 2>&3); \
+	STATUS=$$?; \
+	if [ $$STATUS -eq 0 ]; then \
+		case $$FILE in \
+			1) FILE_PATH="langchain/exemplos/1-fundamentos/1-hello-world.py" ;; \
+			2) FILE_PATH="langchain/exemplos/1-fundamentos/2-init-chat-model.py" ;; \
+			3) FILE_PATH="langchain/exemplos/1-fundamentos/3-prompt-template.py" ;; \
+			4) FILE_PATH="langchain/exemplos/1-fundamentos/4-chat-prompt-template.py" ;; \
+			5) FILE_PATH="langchain/exemplos/2-chains-e-processamento/1-iniciando-com-chains.py" ;; \
+			6) FILE_PATH="langchain/exemplos/2-chains-e-processamento/2-chains-com-decorators.py" ;; \
+			7) FILE_PATH="langchain/exemplos/2-chains-e-processamento/3-runnable-lambda.py" ;; \
+			8) FILE_PATH="langchain/exemplos/2-chains-e-processamento/4-pipeline-de-processamento.py" ;; \
+			9) FILE_PATH="langchain/exemplos/2-chains-e-processamento/5-sumarizacao.py" ;; \
+			10) FILE_PATH="langchain/exemplos/2-chains-e-processamento/6-sumarizacao-com-map-reduce.py" ;; \
+			11) FILE_PATH="langchain/exemplos/2-chains-e-processamento/7-pipeline-de-sumarizacao.py" ;; \
+			12) FILE_PATH="langchain/exemplos/3-agentes-e-tools/1-agente-react-e-tools.py" ;; \
+			13) FILE_PATH="langchain/exemplos/3-agentes-e-tools/2-agente-react-usando-prompt-hub.py" ;; \
+			14) FILE_PATH="langchain/exemplos/4-gerenciamento-de-memoria/1-armazenamento-de-historico.py" ;; \
+			15) FILE_PATH="langchain/exemplos/4-gerenciamento-de-memoria/2-historico-baseado-em-sliding-window.py" ;; \
+			16) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/1-carregamento-usando-WebBaseLoader.py" ;; \
+			17) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/2-carregamento-de-pdf.py" ;; \
+			18) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/3-ingestion-pgvector.py" ;; \
+			19) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/4-search-vector.py" ;; \
+			20) FILE_PATH="promp-engineering/1-tipos-de-prompts/0-Role-prompting.py" ;; \
+		esac; \
+		clear; \
+		echo "Executando $$FILE_PATH"; \
+		$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) $$FILE_PATH; \
+	else \
+		echo "Execução cancelada."; \
+	fi
