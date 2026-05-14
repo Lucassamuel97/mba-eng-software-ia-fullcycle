@@ -12,6 +12,8 @@
 
 - [Aula 5: Role Prompting (Prompt de Persona)](#aula-5-role-prompting-prompt-de-persona)
 
+- [Aula 6: Exemplo Prático de Role Prompting (LangChain)](#aula-6-exemplo-prático-de-role-prompting-langchain)
+
 ## Aula 1: Introdução e overview da disciplina
 
 Esta aula inaugural estabelece as bases de funcionamento do MBA, destacando a flexibilidade da ementa. O objetivo é permitir que os encontros ao vivo acompanhem as constantes inovações da área, como *prompt engineering* e novos workflows, sem ficar preso estritamente ao cronograma das aulas gravadas.
@@ -125,3 +127,33 @@ Esta aula explora a técnica de definir um papel ou função específica para o 
 
 ### 5. Conclusão Técnica
 O Role Prompting não é uma "fórmula mágica" para melhorar respostas automaticamente. Sua eficácia depende da relação entre a **complexidade do modelo** (grandes vs. pequenos) e a **especificidade do escopo** definido.
+
+## Aula 6: Exemplo Prático de Role Prompting (LangChain)
+
+Nesta aula, o conceito de *Role Prompting* é demonstrado na prática através de um script Python utilizando a biblioteca **LangChain** e o modelo GPT-4.
+
+---
+
+### 1. Estrutura do Experimento
+Para visualizar a diferença entre os papéis (roles), foram definidos três tipos de mensagens:
+* **System Prompt:** Define as instruções iniciais e o comportamento base do modelo.
+* **User Prompt:** A interação ou pergunta do usuário ("Explique recursão em 50 palavras").
+* **Assistant:** A resposta gerada pela IA.
+
+### 2. Comparação de Personas (System Prompts)
+O experimento utilizou dois perfis opostos para a mesma pergunta:
+
+| Perfil | Características da Instrução | Resultado Esperado |
+| :--- | :--- | :--- |
+| **Professor Universitário** | Técnico, formal, uso de definições conceituais e pseudocódigo. | Resposta sofisticada, termos como "caso base" e "terminação de processo". |
+| **Aluno de Ensino Médio** | Linguagem simples, uso de exemplos e analogias. | Explicação didática, uso de analogias (ex: espelhos reflexivos) e gírias naturais. |
+
+### 3. Implementação e Observações Técnicas
+* **Ferramentas:** Uso de uma função utilitária (`printLLMResult`) para exibir o prompt e a resposta de forma colorida, facilitando o debug visual.
+* **Tokens:** Acompanhamento da quantidade de tokens de entrada e saída para monitorar o custo e a eficiência da chamada.
+* **Impacto no Modelo:** A demonstração prova que o *System Prompt* altera drasticamente não apenas o conteúdo, mas o **tom** e a **didática** da resposta.
+
+### 4. Conclusões Chave
+* **Especificidade é fundamental:** Um papel genérico (ex: "Cozinheiro") é menos eficiente que um papel detalhado (ex: "Cozinheiro especialista em steaks americanos apimentados").
+* **Flexibilidade de Posicionamento:** Embora o *Role Prompting* seja comumente definido no *System Prompt*, ele também pode ser inserido ou redefinido no *User Prompt* durante a conversa.
+* **Contextualização Semântica:** Definir a persona ajuda a IA a desambiguar termos (ex: identificar que "Go" se refere à linguagem de programação e não ao verbo, caso o papel seja de um Engenheiro de Software).
