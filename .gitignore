@@ -9,6 +9,6 @@ langchain/exemplos/.DS_Store
 langchain/exemplos/*.egg-info/
 .vscode/
 .env
-
-
+progamacaodeestudos.md
+prompt-engineering/1-tipos-de-prompts/__pycache__
 
