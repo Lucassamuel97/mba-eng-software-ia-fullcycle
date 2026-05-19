@@ -81,14 +81,13 @@ run-search-vector: build
 	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/4-search-vector.py
 
 run-role-prompting: build
-	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) promp-engineering/1-tipos-de-prompts/0-Role-prompting.py
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/0-Role-prompting.py
 
 run-zero-shot: build
-	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) promp-engineering/1-tipos-de-prompts/1-zero-shot.py
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/1-zero-shot.py
 
 run-one-few-shot: build
-	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) promp-engineering/1-tipos-de-prompts/2-one-few-shot.py
-
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py
 
 
 run: build
@@ -115,9 +114,10 @@ run: build
 		"17" "5-loaders-e-banco-de-dados-vetoriais/2-carregamento-de-pdf.py" \
 		"18" "5-loaders-e-banco-de-dados-vetoriais/3-ingestion-pgvector.py" \
 		"19" "5-loaders-e-banco-de-dados-vetoriais/4-search-vector.py" \
-		"20" "promp-engineering/1-tipos-de-prompts/0-Role-prompting.py" \
-		"21" "promp-engineering/1-tipos-de-prompts/1-zero-shot.py" \
-		"22" "promp-engineering/1-tipos-de-prompts/2-one-few-shot.py" \
+		"20" "prompt-engineering/1-tipos-de-prompts/0-Role-prompting.py" \
+		"21" "prompt-engineering/1-tipos-de-prompts/1-zero-shot.py" \
+		"22" "prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py" \
+		"23" "prompt-engineering/1-tipos-de-prompts/3-CoT.py" \
 		3>&1 1>&2 2>&3); \
 	STATUS=$$?; \
 	if [ $$STATUS -eq 0 ]; then \
@@ -141,9 +141,10 @@ run: build
 			17) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/2-carregamento-de-pdf.py" ;; \
 			18) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/3-ingestion-pgvector.py" ;; \
 			19) FILE_PATH="langchain/exemplos/5-loaders-e-banco-de-dados-vetoriais/4-search-vector.py" ;; \
-			20) FILE_PATH="promp-engineering/1-tipos-de-prompts/0-Role-prompting.py" ;; \
-			21) FILE_PATH="promp-engineering/1-tipos-de-prompts/1-zero-shot.py" ;; \
-			22) FILE_PATH="promp-engineering/1-tipos-de-prompts/2-one-few-shot.py" ;; \
+			20) FILE_PATH="prompt-engineering/1-tipos-de-prompts/0-Role-prompting.py" ;; \
+			21) FILE_PATH="prompt-engineering/1-tipos-de-prompts/1-zero-shot.py" ;; \
+			22) FILE_PATH="prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py" ;; \
+			23) FILE_PATH="prompt-engineering/1-tipos-de-prompts/3-CoT.py" ;; \
 		esac; \
 		clear; \
 		echo "Executando $$FILE_PATH"; \
