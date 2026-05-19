@@ -89,6 +89,9 @@ run-zero-shot: build
 run-one-few-shot: build
 	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py
 
+run-cot-self-consistency: build
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py
+
 
 run: build
 	@FILE=$$(whiptail \
@@ -118,6 +121,7 @@ run: build
 		"21" "prompt-engineering/1-tipos-de-prompts/1-zero-shot.py" \
 		"22" "prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py" \
 		"23" "prompt-engineering/1-tipos-de-prompts/3-CoT.py" \
+		"24" "prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py" \
 		3>&1 1>&2 2>&3); \
 	STATUS=$$?; \
 	if [ $$STATUS -eq 0 ]; then \
@@ -145,6 +149,7 @@ run: build
 			21) FILE_PATH="prompt-engineering/1-tipos-de-prompts/1-zero-shot.py" ;; \
 			22) FILE_PATH="prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py" ;; \
 			23) FILE_PATH="prompt-engineering/1-tipos-de-prompts/3-CoT.py" ;; \
+			24) FILE_PATH="prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py" ;; \
 		esac; \
 		clear; \
 		echo "Executando $$FILE_PATH"; \
