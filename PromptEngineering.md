@@ -14,6 +14,18 @@
 
 - [Aula 6: Exemplo Prático de Role Prompting (LangChain)](#aula-6-exemplo-prático-de-role-prompting-langchain)
 
+- [Aula 7: Zero-shot](#aula-7-zero-shot)
+
+- [Aula 8: Few-shot](#aula-8-few-shot)
+
+- [Aula 9: Chain of Thought](#aula-9-chain-of-thought)
+
+- [Aula 10: Chain of Thought com Self-consistency](#aula-10-chain-of-thought-com-self-consistency)
+
+- [Aula 11: Tree of Thought](#aula-11-tree-of-thought)
+
+- [Aula 12: Skeleton of Thought](#aula-12-skeleton-of-thought)
+
 ## Aula 1: Introdução e overview da disciplina
 
 Esta aula inaugural estabelece as bases de funcionamento do MBA, destacando a flexibilidade da ementa. O objetivo é permitir que os encontros ao vivo acompanhem as constantes inovações da área, como *prompt engineering* e novos workflows, sem ficar preso estritamente ao cronograma das aulas gravadas.
@@ -157,3 +169,84 @@ O experimento utilizou dois perfis opostos para a mesma pergunta:
 * **Especificidade é fundamental:** Um papel genérico (ex: "Cozinheiro") é menos eficiente que um papel detalhado (ex: "Cozinheiro especialista em steaks americanos apimentados").
 * **Flexibilidade de Posicionamento:** Embora o *Role Prompting* seja comumente definido no *System Prompt*, ele também pode ser inserido ou redefinido no *User Prompt* durante a conversa.
 * **Contextualização Semântica:** Definir a persona ajuda a IA a desambiguar termos (ex: identificar que "Go" se refere à linguagem de programação e não ao verbo, caso o papel seja de um Engenheiro de Software).
+
+```execute o exemplo com "make run" e selecione a opção 20-prompt-engineering/1-tipos-de-prompts/0-Role-prompting.py ```
+
+## Aula 7: Zero-shot:
+
+Esta aula mostra como formular instruções diretas sem fornecer exemplos: o modelo responde apenas com base na instrução.
+
+- **Descrição:** O modelo recebe a tarefa sem exemplos prévios e tem que generalizar apenas pela instrução.
+- **Exemplo de prompt:** "Resuma o texto abaixo em uma frase clara e objetiva. Texto: \"...\""
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/1-zero-shot.py`
+- **Como executar:**
+```
+make run-zero-shot
+# ou
+python prompt-engineering/1-tipos-de-prompts/1-zero-shot.py
+```
+## Aula 8: Few-shot:
+
+Nesta aula introduzimos exemplos no prompt para guiar o comportamento do modelo (poucos exemplos — few-shot).
+
+- **Descrição:** Fornece 1–5 exemplos de entrada→saída no prompt para demonstrar o formato desejado antes da nova tarefa.
+- **Exemplo de prompt:** "Exemplo1: Entrada: \"2+2\" → Saída: \"4\"; Exemplo2: Entrada: \"3*3\" → Saída: \"9\"; Agora: Entrada: \"5-2\" →"
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py`
+- **Como executar:**
+```
+make run-one-few-shot
+# ou
+python prompt-engineering/1-tipos-de-prompts/2-one-few-shot.py
+```
+## Aula 9: Chain of Thought:
+
+Aqui pedimos explicitamente que o modelo exponha seu raciocínio (cadeia de pensamento) passo a passo para tarefas complexas.
+
+- **Descrição:** Solicita que o modelo descreva os passos intermediários antes de dar a conclusão, útil em problemas de raciocínio ou matemática.
+- **Exemplo de prompt:** "Pense passo a passo: qual a soma de 47 + 58? Mostre o raciocínio e o resultado."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/3-CoT.py`
+- **Como executar:**
+```
+python prompt-engineering/1-tipos-de-prompts/3-CoT.py
+# ou via menu
+make run  # escolha a opção correspondente (menu 23)
+```
+## Aula 10: Chain of Thought com Self-consistency:
+
+Combina CoT com múltiplas amostras de raciocínio independentes e escolhe a resposta mais consistente entre elas.
+
+- **Descrição:** Gera várias trajetórias de raciocínio (amostras) para a mesma pergunta e agrega as respostas, reduzindo erros aleatórios.
+- **Exemplo de prompt:** "Gere 5 raciocínios independentes passo a passo para resolver: qual é 23×17? Agrupe respostas e escolha a mais frequente."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py`
+- **Como executar:**
+```
+make run-cot-self-consistency
+# ou
+python prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py
+```
+## Aula 11: Tree of Thought:
+
+Explora múltiplos ramos de pensamento (árvore), avaliando e podando caminhos promissores antes de escolher a solução.
+
+- **Descrição:** Em vez de uma única cadeia, expande alternativas em cada passo (nós da árvore), avalia e seleciona os melhores ramos.
+- **Exemplo de prompt:** "Explore caminhos alternativos para resolver: planejar rota mínima que passe por A,B,C — expanda duas ações por passo e escolha o melhor ramo."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/4-ToT.py`
+- **Como executar:**
+```
+make run-tot
+# ou
+python prompt-engineering/1-tipos-de-prompts/4-ToT.py
+```
+## Aula 12: Skeleton of Thought:
+
+Primeiro pede um esqueleto (sumário dos passos), depois solicita a expansão detalhada de cada etapa — combina rapidez com clareza.
+
+- **Descrição:** Solicita uma estrutura concisa dos passos (skeleton) e em seguida pede a expansão detalhada de cada item.
+- **Exemplo de prompt:** "1) Liste os passos principais para resolver X (esqueleto). 2) Expanda cada passo com detalhes práticos."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/5-SoT.py`
+- **Como executar:**
+```
+make run-sot
+# ou
+python prompt-engineering/1-tipos-de-prompts/5-SoT.py
+```
