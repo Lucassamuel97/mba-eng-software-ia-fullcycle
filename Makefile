@@ -10,7 +10,7 @@ PY ?= python
 	run-armazenamento-de-historico run-historico-baseado-em-sliding-window \
 	run-carregamento-usando-webbaseloader run-carregamento-de-pdf \
 	run-ingestion-pgvector run-search-vector run-role-prompting \
-	run-zero-shot run-one-few-shot run-cot-self-consistency run-tot run-sot
+	run-zero-shot run-one-few-shot run-cot-self-consistency run-tot run-sot run-react
 
 build:
 	$(DOCKER_COMPOSE) build $(SERVICE)
@@ -99,6 +99,9 @@ run-tot: build
 run-sot: build
 	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/5-SoT.py
 
+run-react: build
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/6-ReAct.py
+
 
 run: build
 	@FILE=$$(whiptail \
@@ -131,6 +134,7 @@ run: build
 		"24" "prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py" \
 		"25" "prompt-engineering/1-tipos-de-prompts/4-ToT.py" \
 		"26" "prompt-engineering/1-tipos-de-prompts/5-SoT.py" \
+		"27" "prompt-engineering/1-tipos-de-prompts/6-ReAct.py" \
 		3>&1 1>&2 2>&3); \
 	STATUS=$$?; \
 	if [ $$STATUS -eq 0 ]; then \
@@ -160,7 +164,8 @@ run: build
 			23) FILE_PATH="prompt-engineering/1-tipos-de-prompts/3-CoT.py" ;; \
 			24) FILE_PATH="prompt-engineering/1-tipos-de-prompts/3.1-CoT-Self-consistency.py" ;; \
 			25) FILE_PATH="prompt-engineering/1-tipos-de-prompts/4-ToT.py" ;; \
-			26) FILE_PATH="prompt-engineering/1-tipos-de-prompts/5-SoT.py" ;; \\
+			26) FILE_PATH="prompt-engineering/1-tipos-de-prompts/5-SoT.py" ;; \
+			27) FILE_PATH="prompt-engineering/1-tipos-de-prompts/6-ReAct.py" ;; \
 		esac; \
 		clear; \
 		echo "Executando $$FILE_PATH"; \

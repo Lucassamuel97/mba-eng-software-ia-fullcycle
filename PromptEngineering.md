@@ -250,3 +250,15 @@ make run-sot
 # ou
 python prompt-engineering/1-tipos-de-prompts/5-SoT.py
 ```
+
+## Aula 12: ReAct:
+Nesta aula, o modelo é instruído a agir (Action) e raciocinar (Reasoning) de forma intercalada, permitindo que ele execute ações intermediárias (ex: buscar dados) antes de concluir a resposta.
+
+- **Descrição:** O modelo alterna entre raciocinar e agir, podendo realizar ações como consultas a APIs ou bancos de dados durante o processo de resposta.
+- **Exemplo de prompt:** "Raciocine e aja: para responder 'Qual é a capital da França?', primeiro raciocine sobre o país, depois aja buscando a informação e finalmente conclua com a resposta."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/6-ReAct.py`
+- **Como executar:**
+```make run-react
+# ou
+python prompt-engineering/1-tipos-de-prompts/6-ReAct.py
+```
