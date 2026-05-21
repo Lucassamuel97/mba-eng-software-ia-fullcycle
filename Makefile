@@ -10,7 +10,8 @@ PY ?= python
 	run-armazenamento-de-historico run-historico-baseado-em-sliding-window \
 	run-carregamento-usando-webbaseloader run-carregamento-de-pdf \
 	run-ingestion-pgvector run-search-vector run-role-prompting \
-	run-zero-shot run-one-few-shot run-cot-self-consistency run-tot run-sot run-react
+	run-zero-shot run-one-few-shot run-cot-self-consistency run-tot run-sot run-react \
+	run-prompt-chaining
 
 build:
 	$(DOCKER_COMPOSE) build $(SERVICE)
@@ -102,6 +103,9 @@ run-sot: build
 run-react: build
 	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/6-ReAct.py
 
+run-prompt-chaining: build
+	$(DOCKER_COMPOSE) run --rm $(SERVICE) $(PY) prompt-engineering/1-tipos-de-prompts/7-Prompt-channing.py
+
 
 run: build
 	@FILE=$$(whiptail \
@@ -135,6 +139,7 @@ run: build
 		"25" "prompt-engineering/1-tipos-de-prompts/4-ToT.py" \
 		"26" "prompt-engineering/1-tipos-de-prompts/5-SoT.py" \
 		"27" "prompt-engineering/1-tipos-de-prompts/6-ReAct.py" \
+		"28" "prompt-engineering/1-tipos-de-prompts/7-Prompt-channing.py" \
 		3>&1 1>&2 2>&3); \
 	STATUS=$$?; \
 	if [ $$STATUS -eq 0 ]; then \
@@ -166,6 +171,7 @@ run: build
 			25) FILE_PATH="prompt-engineering/1-tipos-de-prompts/4-ToT.py" ;; \
 			26) FILE_PATH="prompt-engineering/1-tipos-de-prompts/5-SoT.py" ;; \
 			27) FILE_PATH="prompt-engineering/1-tipos-de-prompts/6-ReAct.py" ;; \
+			28) FILE_PATH="prompt-engineering/1-tipos-de-prompts/7-Prompt-channing.py" ;; \
 		esac; \
 		clear; \
 		echo "Executando $$FILE_PATH"; \

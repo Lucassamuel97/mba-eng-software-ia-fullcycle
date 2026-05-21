@@ -262,3 +262,15 @@ Nesta aula, o modelo é instruído a agir (Action) e raciocinar (Reasoning) de f
 # ou
 python prompt-engineering/1-tipos-de-prompts/6-ReAct.py
 ```
+
+## Aula 13: Prompt Chaining:
+Aqui encadeamos múltiplos prompts, onde a saída de um é a entrada do próximo, permitindo construir fluxos de trabalho complexos e modulares.
+
+- **Descrição:** Cria uma sequência de prompts onde cada etapa depende da resposta anterior, facilitando a construção de processos mais complexos.
+- **Exemplo de prompt:** "Prompt 1: Resuma o artigo X. Prompt 2: Com base no resumo, gere perguntas de compreensão. Prompt 3: Responda às perguntas geradas."
+- **Arquivo de exemplo:** `prompt-engineering/1-tipos-de-prompts/7-Prompt-chaining.py`
+- **Como executar:**
+```make run-prompt-chaining
+# ou
+python prompt-engineering/1-tipos-de-prompts/7-Prompt-chaining.py
+```
