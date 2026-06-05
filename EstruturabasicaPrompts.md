@@ -8,6 +8,8 @@
 
 - [Aula 3: Minha IA produziu um Lixo](#aula-3-minha-ia-produziu-um-lixo)
 
+- [Aula 4: Prompts no processo de desenvolvimento](#aula-4-prompts-no-processo-de-desenvolvimento)
+
 
 ## Aula 1: Estruturação de Prompts
 
@@ -160,3 +162,57 @@ Esta aula trata uma saída ruim da IA não como fim do processo, mas como **insu
 * **De improviso a ativo:** Erros documentados viram guidelines, exemplos e restrições reutilizáveis — um ativo do projeto.
 * **Benefícios:** reduz dependência de memória individual, acelera onboarding de novos chats e melhora consistência entre desenvolvimento, agentes e geração de documentos.
 * **Realismo:** Não elimina falhas (modelos continuam probabilísticos), mas **diminui reincidência** e encurta o caminho até uma saída útil. O ganho é acumulado ao longo do tempo, não em uma única interação.
+
+## Aula 4: Prompts no processo de desenvolvimento
+
+Esta aula muda o critério de otimização: em desenvolvimento, **contexto suficiente vale mais que economia de tokens**. O foco passa a ser recortar o codebase (branches/leafs, modularização, documentação local) para dar à IA contexto certo com fronteiras explícitas de navegação.
+
+---
+
+### 1. Não economizar tokens em desenvolvimento
+* **Contexto > economia:** Em software, contexto costuma valer mais do que reduzir tokens.
+* **Domínio interdependente:** Uma mudança pequena pode depender de convenções locais, fluxo entre módulos e restrições implícitas do projeto.
+* **Risco de cortar cedo:** Reduzir contexto cedo demais faz a IA interpretar errado o problema ou propor alterações desconectadas. O critério é **"fornecer contexto suficiente para a tarefa"**, não "usar menos tokens".
+
+### 2. Trade-offs entre custo, uso e previsibilidade
+* **Custo ≠ só tokens:** Depende também do **modelo de cobrança** da ferramenta.
+* **Consumo percebido:** Em IDEs e assistentes integrados, o custo aparece como plano de uso, limite operacional ou assinatura — não como contagem por token.
+* **Decisão prática:** Em vez de otimizar cada token, comparar **previsibilidade de custo, produtividade e qualidade**. A escolha certa é a que sustenta o workflow com menos surpresa operacional.
+
+### 3. Comparação entre planos e ferramentas
+* **Mesmos resultados, custos distintos:** Ferramentas diferentes entregam resultados parecidos com estruturas de custo muito diferentes.
+* **API vs. plano fixo:** API pode ficar cara em uso intensivo; plano fixo dá previsibilidade financeira mesmo sem ser barato em valor absoluto.
+* **Entrada gratuita/limites generosos:** úteis para experimentação e validação antes de escalar.
+* **Comparação relevante:** Não "qual é melhor em abstrato", mas **"qual combinação de custo, limite e qualidade atende este time agora"**.
+
+### 4. Contexto necessário para a tarefa
+* **Não exponha tudo:** Nem toda tarefa exige o codebase inteiro.
+* **Recorte seguro:** Entregar o contexto necessário sem abrir escopo desnecessário — indicar onde começa a investigação, quais módulos importam, qual fluxo seguir e o que ignorar.
+* **Ganho:** Estruturar esse recorte melhora a previsibilidade ao reduzir liberdade de navegação e interpretação.
+
+### 5. Branches e leafs no codebase
+* **Codebase como árvore:** Orienta a IA por ramificações, em vez de despejar todos os arquivos de uma vez.
+* **Branches vs. leafs:** *Branches* são caminhos/agrupamentos de componentes; *leafs* são pontos terminais, onde a implementação concreta costuma estar.
+* **Tarefa localizada:** Instruir a IA a seguir apenas uma ramificação específica até os leafs relevantes — restringe a busca, reduz ruído e evita contaminar a solução com partes irrelevantes.
+
+### 6. Modularização para restringir contexto
+* **Caso de uso determina a estrutura:** Em desenvolvimento, isso significa **modularizar também o contexto** fornecido à IA.
+* **Isolamento:** Componentes desacoplados permitem trabalhar em um pedaço do sistema sem exigir compreensão global.
+* **Módulo como mecanismo de prompting:** Quanto melhor o módulo delimita responsabilidades, mais fácil instruir a IA a permanecer **naquela bolha**.
+
+### 7. Documentação local e instruções por módulo
+* **Menos ambiguidade no recorte:** Documentação e instruções próprias por módulo permitem à IA operar com mais segurança dentro do escopo.
+* **O que registrar:** fluxo esperado, limites do módulo, convenções e pontos de integração permitidos.
+* **Contexto distribuído:** Em vez de um prompt central gigantesco para tudo, distribui-se contexto útil ao longo da estrutura do projeto — impedindo que o modelo "escape" para outras áreas.
+
+### 8. Estruturação para previsibilidade
+* **Vem da organização, não só do texto:** A previsibilidade depende de organizar sistema e contexto para que a IA saiba **por onde começar, até onde ir e o que ignorar**.
+* **Camada operacional do controle de escopo:** Além de limitar comportamento, limita-se a **superfície de leitura** do codebase.
+* **Prompt previsível:** combina contexto suficiente com **fronteiras explícitas de navegação** — reduz respostas dispersas e melhora aderência ao fluxo real de engenharia.
+
+### 9. Aplicação prática no workflow
+1. **Indique o ponto de entrada:** módulo de entrada, a ramificação relevante e o fluxo a seguir até os arquivos terminais.
+2. **Anexe só o local:** se o sistema for modular, junte apenas a documentação e instruções daquele trecho, deixando explícito que o restante deve ser ignorado.
+3. **Defina a saída:** peça o formato adequado ao workflow já definido, mantendo escopo e revisão controláveis.
+
+> A combinação entre **contexto suficiente** e **recorte estrutural** é o que torna o uso da IA viável em codebases grandes.
