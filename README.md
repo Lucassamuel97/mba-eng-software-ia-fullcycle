@@ -14,6 +14,6 @@ Este repositório contém os materiais e recursos relacionados ao MBA em Engenha
 
 ### Disciplina: Prompt Engineering
 - [Módulo 1 - Iniciando com Prompt Engineering](PromptEngineering.md)
-
+- [Módulo 2 - Estrutura básica de Prompts](EstruturabasicaPrompts.md)
 
 

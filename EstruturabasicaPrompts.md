@@ -4,7 +4,9 @@
 
 - [Aula 1: Estruturação de Prompts](#aula-1-estruturação-de-prompts)
 
+- [Aula 2: Uma simples correção de Bug](#aula-2-uma-simples-correção-de-bug)
 
+- [Aula 3: Minha IA produziu um Lixo](#aula-3-minha-ia-produziu-um-lixo)
 
 
 ## Aula 1: Estruturação de Prompts
@@ -44,3 +46,117 @@ A estrutura adequada nasce do **objetivo operacional** do prompt:
 * **Aprender observando:** Analisar prompts prontos ajuda a identificar padrões recorrentes de estruturação.
 * **Não é cópia cega:** Serve para perceber como diferentes tipos de problema pedem diferentes arranjos de instruções.
 * **Repertório:** Com o tempo, permite **diagnosticar prompts confusos** e reorganizá-los de forma mais intencional.
+
+## Aula 2: Uma simples correção de Bug
+
+Esta aula usa um cenário concreto de correção de bug para mostrar como a falta de limites no prompt gera **proatividade excessiva** do modelo e como a estruturação intencional (barreiras de comportamento, limites de escopo e saída definida) mantém a entrega previsível.
+
+---
+
+### 1. Proatividade excessiva do modelo
+* **O problema:** Um prompt mal delimitado transforma uma correção simples em uma alteração ampla demais.
+* **Sintomas:** O modelo corrige o bug pedido, mas **também** refatora funções, reescreve testes, adiciona documentação e aplica padrões em arquivos fora do objetivo.
+* **Custo real:** Parece "tecnicamente melhor", mas piora o fluxo da equipe — uma PR que deveria validar uma troca de `>` por `>=` passa a exigir revisão extensa.
+
+### 2. Impacto no code review e no workflow
+* **Desvio de escopo:** O problema central não é a qualidade do código, e sim o desvio de escopo no processo de entrega.
+* **Sobrecarga do revisor:** Mudanças espalhadas em vários arquivos transformam uma correção pontual em uma **refatoração implícita**, aumentando tempo, atrito e risco percebido.
+* **Atraso de entrega:** Pode atrasar a entrada de um bugfix urgente em produção, mesmo sem introduzir defeitos. **Previsibilidade de revisão importa tanto quanto a correção.**
+
+### 3. Ambiguidade operacional no prompt
+* **Falha operacional:** A ambiguidade aqui aparece como falta de fronteiras, não só de clareza.
+* **Exemplo problemático:** "Valide a função, entenda o problema e faça a correção" informa intenção, mas não impõe limites.
+* **Efeito colateral:** Como o modelo tenta ser útil, interpreta o espaço aberto como **permissão** para melhorar o contexto ao redor.
+
+### 4. Barreira de comportamento
+* **Definição:** Parte do prompt que restringe **explicitamente** o que o modelo pode e não pode fazer.
+* **Por que existe:** Contém a proatividade excessiva entre versões e famílias de modelos, cujo comportamento muda com o tempo.
+* **Exemplo de barreira:** "Corrigir apenas o bug, não refatorar, não alterar arquivos fora do escopo, não reescrever testes além do necessário."
+
+### 5. Limites do prompt
+* **Definir antes, não corrigir depois:** Limitar é estabelecer o escopo **antes** da execução, não consertar o excesso após o fato.
+* **Tipos de limite:** quantidade de arquivos, tipo de mudança permitida, proibição de melhorias oportunistas e foco exclusivo na causa do bug.
+* **Objetivo:** Não é "melhorar o módulo", mas resolver uma condição errada sem expandir a intervenção. Quanto mais explícito o recorte, menor a chance de a PR crescer sem necessidade.
+
+### 6. Formato e saída esperada
+* **Contrato de entrega:** Definir a saída impede que o modelo invente a forma de resposta.
+* **Exemplo de saída:** patch mínimo, lista de arquivos alterados, justificativa da mudança — e nada além disso.
+* **Sem isso:** O modelo escolhe sozinho como responder e pode embutir mudanças extras por considerá-las úteis.
+
+### 7. Variação entre versões de modelos
+* **Iniciativa muda com a versão:** Mesmo com o prompt igual, modelos diferentes têm graus distintos de proatividade.
+* **Centrado vs. agressivo:** Um modelo "centrado" executa só o pedido; outro tenta otimizar todo o código ao redor do bug.
+* **Conclusão:** Um prompt suficiente em uma versão pode falhar em outra — a estruturação intencional reduz essa dependência do "temperamento" do modelo.
+
+### 8. Estruturação intencional no caso de uso de desenvolvimento
+* **A estrutura segue o caso de uso:** Correção de bug exige composição orientada a **controle de escopo** e **previsibilidade de revisão**.
+* **Separar com clareza:** problema, limites de atuação e formato da resposta.
+* **Redefinição de "utilidade":** Em desenvolvimento, útil não é maximizar mudanças positivas; é produzir a **menor alteração correta** para o objetivo atual.
+
+### 9. Passo a passo prático para uma correção de bug
+1. **Descreva o bug de forma localizável:** qual função está errada, qual condição falha e qual o comportamento esperado após a correção.
+2. **Imponha a barreira de comportamento:** alterar apenas o necessário — sem refatorar, sem reorganizar código, sem expandir documentação, sem mexer em arquivos fora do escopo.
+3. **Declare a saída esperada:** patch mínimo, arquivos alterados e explicação curta da correção.
+
+> Essa combinação transforma um pedido aberto em uma **instrução operacional revisável**.
+
+### 10. Consequência prática: PRs pequenas e previsíveis
+* **Não é só estética:** PRs pequenas preservam a revisão rápida e reduzem o custo cognitivo do time.
+* **Com limites + saída definida:** menor chance de mudanças laterais; o code review volta a refletir o objetivo original.
+* **Ganho real:** Não elimina o comportamento probabilístico da IA, mas melhora a previsibilidade entre execuções e versões — em engenharia, isso vale mais do que uma refatoração não solicitada.
+
+## Aula 3: Minha IA produziu um Lixo
+
+Esta aula trata uma saída ruim da IA não como fim do processo, mas como **insumo de diagnóstico**. A partir dos erros, constrói-se uma base de conhecimento (guidelines, exemplos e restrições) que reduz reincidência e transforma o aprendizado local em ativo do projeto.
+
+---
+
+### 1. Saída ruim como insumo de projeto
+* **Não encerrar na frustração:** Uma resposta ruim deve **iniciar um diagnóstico**, não terminar o trabalho.
+* **Code Review da saída:** Mapear falhas concretas — bibliotecas antigas, arquivos grandes demais, funções desnecessárias, implementação abandonada no meio, quebra de padrões do projeto.
+* **De reclamação a especificação:** O mapeamento transforma o "ficou um lixo" difuso em **problema observável e corrigível**.
+
+### 2. A metáfora da IA como funcionário novo
+* **Expectativa ajustada:** A IA é como um funcionário no primeiro dia — erra por não conhecer regras locais, convenções do time, versões de dependências e limites de escopo. Isso se repete a cada novo chat.
+* **Muda o foco:** De "a ferramenta falhou" para "o processo de instrução ainda está incompleto".
+* **Efeito prático:** Passa-se a **treinar o sistema com regras explícitas**, em vez de esperar alinhamento implícito.
+
+### 3. Documentar erros para treinar prompts futuros
+* **Erro recorrente vira instrução permanente:** Cada falha repetida pode se tornar uma regra fixa.
+* **Exemplos:** Importou pacote obsoleto? Registre a regra correta, mostre o import errado e o certo, e exija consultar a documentação antes de escolher bibliotecas. Cria funções desnecessárias? Adicione verificação obrigatória de redundância após cada implementação.
+* **Memória operacional:** Documentar reduz repetição de falhas e cria **memória fora do modelo**.
+
+### 4. Guidelines como restrições reutilizáveis
+* **Definição:** Regras curtas e acionáveis que orientam comportamento recorrente do modelo.
+* **Exemplos:** limitar tamanho de arquivo, exigir funções limpas, pedir reaproveitamento de código existente, obrigar retomada de contexto após interrupção.
+* **Diferencial:** Diferente de uma correção pontual no chat, a guideline é escrita para ser **reutilizada** — transforma aprendizado local em padrão de trabalho.
+
+### 5. Few-shot no contexto do erro corrigido
+* **Definição:** Fornecer **poucos exemplos** para induzir o padrão desejado.
+* **Aplicação:** Mostrar explicitamente um import incorreto e outro correto, ou exemplificar a forma esperada de saída.
+* **Por que funciona:** O modelo deixa de ter só uma regra abstrata e passa a ter **pares concretos de comparação** para imitar — útil quando certo/errado depende de convenções da stack ou do projeto.
+
+### 6. Chain of Thought como encadeamento de verificação
+* **Estrutura de passos:** Instruções como "após criar qualquer função, revise se ela é realmente necessária" forçam uma sequência operacional.
+* **Foco aqui:** Menos como raciocínio interno do modelo e mais como roteiro: **implementar → revisar → comparar com o existente → manter**.
+* **Resultado:** Reduz respostas impulsivas, aumenta autocorreção e contém a proliferação de código desnecessário.
+
+### 7. Skeleton of Thoughts e especificação da saída
+* **Definição:** Orientar a estrutura do pensamento/resposta por meio de um **esqueleto explícito**.
+* **Combinação com exemplos:** Delimita não só o conteúdo, mas a **organização** da resposta.
+* **Quando ajuda:** Quando a IA entende a tarefa, mas entrega em formato confuso ou difícil de revisar. Ganho principal: **previsibilidade estrutural**.
+
+### 8. Estrutura clara evita que a base de prompts vire bagunça
+* **Prompt é artefato projetado — a base também:** A base de conhecimento criada a partir dos erros precisa de organização.
+* **Risco do crescimento:** Conforme guidelines, exemplos e restrições crescem, um arquivo desestruturado gera **mais ambiguidade**, não mais controle.
+* **Mesmo cuidado dos testes:** clareza, separação de responsabilidades e manutenção contínua. Mais informação só ajuda quando está organizada.
+
+### 9. Limites de comportamento aplicados ao fluxo real
+* **Função de treinamento acumulativo:** Os limites de comportamento ganham aqui caráter permanente, não só correção do erro atual.
+* **Exemplo:** Se a IA abandona um arquivo ao ser interrompida, a regra futura deve ser: terminar o arquivo atual antes de mudar de direção, ou corrigir e **retomar do ponto onde parou**.
+* **Objetivo:** Reduzir bugs introduzidos pelo próprio fluxo conversacional — deixa de ser "responder melhor" e passa a ser **operar melhor dentro do workflow**.
+
+### 10. Base de conhecimento de prompts como ativo
+* **De improviso a ativo:** Erros documentados viram guidelines, exemplos e restrições reutilizáveis — um ativo do projeto.
+* **Benefícios:** reduz dependência de memória individual, acelera onboarding de novos chats e melhora consistência entre desenvolvimento, agentes e geração de documentos.
+* **Realismo:** Não elimina falhas (modelos continuam probabilísticos), mas **diminui reincidência** e encurta o caminho até uma saída útil. O ganho é acumulado ao longo do tempo, não em uma única interação.
