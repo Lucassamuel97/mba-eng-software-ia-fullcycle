@@ -12,6 +12,8 @@
 
 - [Aula 5: Utilização em larga escala](#aula-5-utilização-em-larga-escala)
 
+- [Aula 6: Guidelines e trade-offs](#aula-6-guidelines-e-trade-offs)
+
 
 ## Aula 1: Estruturação de Prompts
 
@@ -259,3 +261,49 @@ Esta aula contrasta o **uso pontual** (onde contexto amplo é desejável) com o 
 * **Variáveis de produto:** Custo, latência e qualidade devem ser avaliados como variáveis de produto, não só técnicas.
 * **Quando o caso de uso deixa de fazer sentido:** Se a resposta é lenta demais, cara demais ou melhora pouco frente à alternativa enxuta, o problema é **econômico**, não só técnico.
 * **Escalar IA com viabilidade:** Projetar prompts para produção exige pensar em sustentabilidade do serviço, experiência do usuário e margem de operação. **Escalar IA não é só fazer funcionar; é fazer funcionar de modo viável.**
+
+## Aula 6: Guidelines e trade-offs
+
+Esta aula trata a escolha entre **zero-shot e few-shot** como uma **conta mensurável**, não uma preferência. A decisão de prompt vira decisão de produto: pesar qualidade contra custo recorrente, latência e criticidade da tarefa.
+
+---
+
+### 1. Zero-shot em tarefas simples e de alto volume
+* **Escolha padrão:** Para tarefas simples, genéricas e sem domínio muito específico.
+* **Exemplos:** validar JSON, identificar elementos de uma frase, resumir texto curto — funcionam sem exemplos porque o modelo já reconhece o padrão.
+* **Vantagem em escala:** Menos tokens por requisição → **menor custo agregado e menor latência**.
+
+### 2. Quando few-shot passa a valer a pena
+* **Justificativa:** Domínios com muitas especificidades ou quando o formato esperado precisa ser moldado com precisão.
+* **Exemplos como demonstração:** Retomando a ideia de saída esperada — "dado X, retorne Y" — os exemplos mostram concretamente o comportamento desejado.
+* **Preço operacional:** Mais aderência ao padrão, mas custo extra em **tokens, tempo de resposta e processamento**.
+
+### 3. Exemplos como mecanismo de controle de saída
+* **Mais que "ajudar":** Um exemplo **codifica explicitamente** o padrão de resposta a reproduzir.
+* **Controle de formato:** Few-shot controla formato, estrutura e adequação da saída em domínios sensíveis ou específicos.
+* **De onde vem o ganho:** O modelo não precisa **inferir sozinho** qual resposta seria correta naquele contexto.
+
+### 4. Trade-off quantitativo entre qualidade e custo
+* **Trate como conta, não preferência:** A decisão zero-shot vs. few-shot é mensurável.
+* **A pergunta certa:** Se zero-shot dá 86% de assertividade com custo base e few-shot dá 90% com custo 20% maior, pergunte **"quanto custa cada ponto percentual adicional de acerto?"** — não "qual é melhor?".
+* **Resultado:** Transforma prompt engineering em decisão mensurável de produto e operação.
+
+### 5. Cálculo do custo por ponto de assertividade
+* **Exemplo numérico:** Sistema a US$ 10 mil/mês com zero-shot vs. US$ 12 mil/mês com few-shot.
+* **Conta:** Ganho de **4 pontos percentuais** por **US$ 2 mil** adicionais → **cada 1% extra custa US$ 500**.
+* **Retorno marginal:** Pagar mais só faz sentido se o impacto do **erro evitado** justificar esse valor.
+
+### 6. Decisão de prompt como decisão entre áreas
+* **Não é só do desenvolvedor:** A escolha afeta orçamento, experiência do usuário e risco operacional.
+* **Traduzir para o negócio:** Pagar mais para reduzir erro **ou** aceitar mais erro com processos de mitigação.
+* **Amplia o problema:** Conecta prompt engineering a produto, finanças e operação — além da escrita do prompt.
+
+### 7. Mitigação e criticidade da tarefa
+* **Nem todo erro pesa igual:** A assertividade necessária depende da **criticidade** da tarefa.
+* **Tolerante a falhas:** Com mecanismos de mitigação, pode ser racional aceitar mais erro para economizar custo e latência.
+* **Tarefas sensíveis:** O ganho de assertividade justifica prompts mais caros — e até **90% pode ser insuficiente**.
+
+### 8. Prompt engineering como decisão estratégica
+* **Além do texto:** Envolve escolher o nível de contexto e exemplificação compatível com a **escala de uso**.
+* **Instrumentos com efeitos distintos:** Zero-shot e few-shot têm impactos econômicos e operacionais diferentes, alterando a viabilidade do sistema.
+* **Projetar prompts inclui:** raciocinar sobre **custo recorrente, tempo de resposta e valor de negócio** do ganho de qualidade.
