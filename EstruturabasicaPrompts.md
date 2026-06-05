@@ -10,6 +10,8 @@
 
 - [Aula 4: Prompts no processo de desenvolvimento](#aula-4-prompts-no-processo-de-desenvolvimento)
 
+- [Aula 5: Utilização em larga escala](#aula-5-utilização-em-larga-escala)
+
 
 ## Aula 1: Estruturação de Prompts
 
@@ -216,3 +218,44 @@ Esta aula muda o critério de otimização: em desenvolvimento, **contexto sufic
 3. **Defina a saída:** peça o formato adequado ao workflow já definido, mantendo escopo e revisão controláveis.
 
 > A combinação entre **contexto suficiente** e **recorte estrutural** é o que torna o uso da IA viável em codebases grandes.
+
+## Aula 5: Utilização em larga escala
+
+Esta aula contrasta o **uso pontual** (onde contexto amplo é desejável) com o **uso em larga escala** (onde economia de tokens vira requisito de viabilidade). Em produção, o tamanho do prompt deixa de ser só decisão técnica e passa a ser **decisão arquitetural, financeira e de produto**.
+
+---
+
+### 1. Uso pontual vs. uso em larga escala
+* **Não há estrutura única:** A mesma estrutura de prompt não serve igualmente a todos os cenários.
+* **Uso pontual:** Em desenvolvimento ou exploração, o objetivo é maximizar entendimento e qualidade, mesmo com contexto amplo.
+* **Restrição que muda:** Em uso pontual, a restrição principal é **não estourar a janela de contexto** — não reduzir o prompt a qualquer custo. O critério muda quando a interação é multiplicada por volume.
+
+### 2. Processos de exploração aceitam contexto maior
+* **O que são:** Cenários em que o usuário ainda descobre o problema, o espaço de solução ou o que precisa perguntar.
+* **Mais contexto faz sentido:** Permitir que a IA pesquise no código-fonte e na internet para produzir algo contextualizado (documentação, entendimento técnico).
+* **Por que tolera prompts pesados:** Não roda milhares de vezes em paralelo — o custo extra existe, mas não domina a decisão quando a execução é esporádica.
+
+### 3. Economia de tokens como requisito de escala
+* **De otimização a viabilidade:** Em produção em larga escala, economizar tokens deixa de ser otimização e vira **requisito de viabilidade**.
+* **Efeito multiplicador:** Cada token de entrada/saída é multiplicado pelo volume de chamadas — um excesso pequeno por requisição vira custo mensal capaz de inviabilizar o produto.
+* **Decisão arquitetural:** Um prompt excelente em uso humano pontual pode ser **economicamente ruim** quando executado milhares ou milhões de vezes.
+
+### 4. Latência cresce com prompts mais pesados
+* **Causas:** Prompts longos e instruções que exigem mais processamento (pensar passo a passo, revisar etapas) aumentam a latência.
+* **Impacto em produção:** Afeta tempo de resposta percebido, throughput do sistema e necessidade de infraestrutura.
+* **Atraso acumulado:** O problema não é esperar alguns segundos a mais, mas **acumular atraso** em cada chamada de um fluxo repetido em escala. Sofisticação de prompt é custo operacional de **tempo**, não só de tokens.
+
+### 5. API por token muda a lógica de decisão
+* **Assinatura esconde o custo marginal:** Em ferramentas pagas por assinatura, o custo de cada interação parece invisível.
+* **API torna explícito:** A cobrança por milhão de tokens de entrada/saída revela quanto cada requisição consome, forçando mais disciplina no desenho do prompt.
+* **Prompt como unidade de custo:** Reduzir verbosidade, instruções redundantes e contexto desnecessário passa a ser **parte do design do sistema**.
+
+### 6. Trade-off entre custo, latência e qualidade
+* **Não dá para maximizar tudo:** Em escala, busca-se o ponto em que a **qualidade é suficiente** para o caso de uso sem empurrar custo e latência a níveis desproporcionais.
+* **A pergunta certa:** Não é se um prompt maior melhora um pouco a resposta, mas se essa melhora **justifica o impacto** quando multiplicada pelo volume.
+* **Exemplo:** Um ganho marginal de assertividade pode não compensar milhares de dólares extras por mês.
+
+### 7. Decisão de produto, não só de engenharia
+* **Variáveis de produto:** Custo, latência e qualidade devem ser avaliados como variáveis de produto, não só técnicas.
+* **Quando o caso de uso deixa de fazer sentido:** Se a resposta é lenta demais, cara demais ou melhora pouco frente à alternativa enxuta, o problema é **econômico**, não só técnico.
+* **Escalar IA com viabilidade:** Projetar prompts para produção exige pensar em sustentabilidade do serviço, experiência do usuário e margem de operação. **Escalar IA não é só fazer funcionar; é fazer funcionar de modo viável.**
