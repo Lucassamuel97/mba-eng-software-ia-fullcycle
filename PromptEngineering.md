@@ -26,6 +26,28 @@
 
 - [Aula 12: Skeleton of Thought](#aula-12-skeleton-of-thought)
 
+### Conceitos Importantes
+
+- [Revisitando conceitos](#revisitando-conceitos)
+
+- [Context Window para Prompt Engineering](#context-window-para-prompt-engineering)
+
+- [Context Window vs memória, custo e latência](#context-window-vs-memória-custo-e-latência)
+
+- [Janela de contexto vs parâmetros](#janela-de-contexto-vs-parâmetros)
+
+- [Truncamento](#truncamento)
+
+- [Sumarização](#sumarização)
+
+- [Sliding window](#sliding-window)
+
+- [Prompt Caching](#prompt-caching)
+
+- [Batch Prompting](#batch-prompting)
+
+- [Demonstração prática para batch prompting](#demonstração-prática-para-batch-prompting)
+
 ## Aula 1: Introdução e overview da disciplina
 
 Esta aula inaugural estabelece as bases de funcionamento do MBA, destacando a flexibilidade da ementa. O objetivo é permitir que os encontros ao vivo acompanhem as constantes inovações da área, como *prompt engineering* e novos workflows, sem ficar preso estritamente ao cronograma das aulas gravadas.
@@ -274,3 +296,173 @@ Aqui encadeamos múltiplos prompts, onde a saída de um é a entrada do próximo
 # ou
 python prompt-engineering/1-tipos-de-prompts/7-Prompt-chaining.py
 ```
+
+# Conceitos Importantes
+
+Este bloco aprofunda os fundamentos que sustentam o Prompt Engineering na prática: como o modelo "enxerga" o texto (janela de contexto), como isso afeta custo e latência, e quais técnicas usamos para caber e otimizar informação dentro desses limites.
+
+## Revisitando conceitos
+
+Antes de avançar para os fundamentos de contexto, esta aula recapitula os pilares já vistos para garantir uma base sólida.
+
+---
+
+### 1. Por que revisitar?
+* **Consolidação:** As técnicas de prompt (Role, Zero/Few-shot, CoT, ToT etc.) só fazem sentido quando combinadas com o entendimento de **como o modelo processa o texto**.
+* **Ponte para o próximo bloco:** Os conceitos a seguir (janela de contexto, custo, latência) são **transversais** — afetam todas as técnicas anteriores.
+
+### 2. Ideias-chave retomadas
+* **O prompt é a "linguagem de programação" probabilística:** orienta o comportamento sem regras rígidas de `if/else`.
+* **Qualidade > quantidade:** mais texto nem sempre é melhor; ruído degrada a resposta.
+* **Tudo tem custo:** cada palavra enviada e gerada consome **tokens**, que se traduzem em **dinheiro e tempo**.
+
+## Context Window para Prompt Engineering
+
+Esta aula define o conceito central que limita e molda toda interação com um LLM: a **janela de contexto** (*context window*).
+
+---
+
+### 1. O que é a Janela de Contexto?
+* **Definição:** É a quantidade máxima de **tokens** (entrada + saída) que o modelo consegue processar em uma única requisição.
+* **Token:** Unidade básica de texto (≈ ¾ de uma palavra em inglês; em português costuma ser um pouco mais "caro"). Inclui palavras, partes de palavras, pontuação e espaços.
+* **Memória de curto prazo:** A janela funciona como a "memória de trabalho" do modelo. Tudo o que não cabe nela, simplesmente **não existe** para o modelo naquela chamada.
+
+### 2. Por que importa para o Prompt Engineering?
+* **Orçamento de tokens:** Todo prompt deve ser pensado como um orçamento limitado — System Prompt, histórico, exemplos (few-shot), documentos e a resposta competem pelo mesmo espaço.
+* **Priorização:** Informação relevante deve estar dentro da janela; o engenheiro de prompt decide o que entra, o que resume e o que descarta.
+* **Posição importa:** Modelos tendem a dar mais atenção ao início e ao fim do contexto (*lost in the middle*); informação crítica enterrada no meio pode ser ignorada.
+
+## Context Window vs memória, custo e latência
+
+Aqui conectamos o tamanho do contexto às três variáveis práticas que mais impactam aplicações reais: **memória, custo e latência**.
+
+---
+
+### 1. Janela de Contexto ≠ Memória Persistente
+* **Sem estado (stateless):** O modelo **não lembra** de conversas anteriores por si só. A "memória" de um chat é uma ilusão criada ao **reenviar o histórico** a cada requisição.
+* **Consequência:** Conversas longas crescem o prompt continuamente, consumindo mais janela a cada turno.
+
+### 2. Impacto no Custo
+* **Cobrança por token:** A maioria das APIs cobra por **tokens de entrada** e **tokens de saída** (geralmente a saída é mais cara).
+* **Efeito cumulativo:** Reenviar todo o histórico em cada turno faz o custo crescer de forma quase **quadrática** ao longo de uma conversa longa.
+* **Otimização:** Prompts enxutos e técnicas de compressão (resumo, sliding window) reduzem diretamente a conta.
+
+### 3. Impacto na Latência
+* **Mais tokens = mais lento:** Quanto maior o contexto, mais tempo o modelo leva para processar a entrada (*prefill*) e gerar a resposta.
+* **Trade-off central:** Há um equilíbrio entre **fornecer contexto suficiente** (qualidade) e **manter o prompt curto** (velocidade e custo).
+
+## Janela de contexto vs parâmetros
+
+Esta aula desfaz uma confusão comum: **tamanho da janela de contexto** e **número de parâmetros** são coisas diferentes.
+
+---
+
+### 1. Definindo cada um
+* **Parâmetros:** São os "pesos" aprendidos durante o treinamento (ex: 7B, 70B). Representam o **conhecimento e a capacidade de raciocínio** internalizados do modelo — fixos após o treino.
+* **Janela de contexto:** É quanto texto o modelo consegue **ler de uma vez** em tempo de uso (inferência) — sua memória de trabalho temporária.
+
+### 2. A Analogia
+* **Parâmetros = "inteligência/educação"** da pessoa (o que ela já sabe).
+* **Janela de contexto = "mesa de trabalho"** (quantos documentos ela consegue ter abertos à frente ao mesmo tempo).
+* Uma pessoa muito inteligente com uma mesa minúscula tem dificuldade com tarefas longas; uma mesa enorme não compensa falta de conhecimento.
+
+### 3. Por que não confundir?
+* **Janela grande ≠ modelo melhor:** Um modelo pode ter contexto enorme e ainda raciocinar mal (poucos parâmetros).
+* **Decisão de engenharia:** A escolha do modelo deve pesar **ambos** — capacidade (parâmetros) e capacidade de "ler tudo" (contexto) — conforme a tarefa.
+
+## Truncamento
+
+Primeira das técnicas para lidar com o limite da janela: simplesmente **cortar** o que não cabe.
+
+---
+
+### 1. O que é?
+* **Definição:** Quando o conteúdo excede a janela de contexto, partes do texto são **removidas** (normalmente as mais antigas) para caber no limite.
+* **Onde ocorre:** Pode ser feito automaticamente pela aplicação/SDK ou manualmente pelo desenvolvedor.
+
+### 2. Vantagens e Riscos
+* **Vantagem:** Simples e barato de implementar; garante que a requisição não estoure o limite.
+* **Risco:** **Perda de informação** — instruções iniciais ou detalhes importantes podem ser descartados, causando respostas inconsistentes ou "esquecimento" de regras.
+
+### 3. Boas práticas
+* **Proteja o essencial:** Mantenha o System Prompt e instruções críticas fora da zona de corte.
+* **Use como último recurso:** Quando possível, prefira **sumarização** ou **sliding window** para preservar a semântica.
+
+## Sumarização
+
+Em vez de cortar, **condensar**: substituir trechos longos por um resumo que preserva o essencial.
+
+---
+
+### 1. O que é?
+* **Definição:** Técnica em que partes do contexto (ex: histórico antigo da conversa ou documentos) são **resumidas** por um modelo antes de seguir o fluxo.
+* **Objetivo:** Reduzir tokens **mantendo o significado**, ao contrário do truncamento que simplesmente descarta.
+
+### 2. Como é aplicada
+* **Resumo do histórico:** Conversas longas têm seus turnos antigos comprimidos em um resumo curto, liberando espaço na janela.
+* **Resumo de documentos:** Textos extensos (RAG, manuais) são condensados antes de entrar no prompt.
+* **Recursivo:** Em fluxos longos, pode-se resumir resumos progressivamente.
+
+### 3. Trade-offs
+* **Ganho:** Mantém o "fio da meada" gastando menos tokens.
+* **Custo extra:** A sumarização em si é **uma chamada adicional** ao modelo (custo/latência).
+* **Risco:** Detalhes finos podem se perder no resumo; é preciso calibrar o quão agressivo ele é.
+
+## Sliding window
+
+Técnica de "janela deslizante": manter apenas uma **janela móvel** das mensagens mais recentes.
+
+---
+
+### 1. O que é?
+* **Definição:** Mantém-se no contexto apenas as **N interações mais recentes** (ou os últimos N tokens), descartando as antigas conforme a conversa avança.
+* **Analogia:** Como uma janela que desliza sobre o texto, sempre mostrando a parte mais atual.
+
+### 2. Quando usar
+* **Conversas contínuas:** Chatbots e assistentes onde o contexto **recente** é o mais relevante.
+* **Custo previsível:** O tamanho do prompt permanece **estável** ao longo do tempo, evitando crescimento ilimitado.
+
+### 3. Limitações
+* **Esquecimento do início:** Informações antigas (ex: o nome do usuário dado no começo) saem da janela.
+* **Combinação comum:** Frequentemente usada **junto com sumarização** — resume-se o que sai da janela para não perder tudo, e mantém-se o recente em detalhe.
+
+## Prompt Caching
+
+Mecanismo de otimização que **reaproveita** partes repetidas do prompt entre requisições para economizar custo e tempo.
+
+---
+
+### 1. O que é?
+* **Definição:** Permite **armazenar em cache** trechos estáticos e reutilizados do prompt (ex: System Prompt longo, instruções, documentos de referência, exemplos few-shot).
+* **Como funciona:** Em vez de reprocessar o mesmo prefixo a cada chamada, o provedor reutiliza o processamento já feito (o *prefill* daquele trecho).
+
+### 2. Benefícios
+* **Redução de custo:** Tokens em cache costumam ser **significativamente mais baratos** que tokens normais de entrada.
+* **Redução de latência:** O modelo pula o reprocessamento da parte cacheada, respondendo mais rápido.
+* **Ideal para:** Aplicações que repetem o mesmo contexto-base em muitas chamadas (agentes, RAG com instruções fixas, atendimento).
+
+### 3. Boas práticas
+* **Estável no início:** Coloque o conteúdo **fixo e reutilizável no começo** do prompt; o que muda (a pergunta do usuário) vai no final.
+* **Atenção ao TTL:** O cache tem **tempo de vida** limitado; consultas espaçadas podem perder o benefício.
+* **Varia por provedor:** Cada API (OpenAI, Gemini, Anthropic/Claude) implementa o caching com regras e preços próprios — consultar a documentação específica.
+
+## Batch Prompting
+
+Técnica para processar **vários itens de uma só vez**, reduzindo o número de chamadas e o overhead.
+
+---
+
+### 1. O que é?
+* **Definição:** Em vez de uma requisição por item, agrupam-se **múltiplas tarefas/perguntas em um único prompt** (ou em um lote enviado de uma vez).
+* **Objetivo:** Diluir o **custo fixo** (instruções, System Prompt) entre vários itens e reduzir o número de round-trips.
+
+### 2. Vantagens
+* **Economia:** Instruções comuns são enviadas **uma vez** para todo o lote, não repetidas por item.
+* **Throughput:** Processa grandes volumes (ex: classificar 100 frases) de forma mais eficiente.
+* **Menos latência agregada:** Menos chamadas de rede para a mesma quantidade de trabalho.
+
+### 3. Cuidados
+* **Formatação rígida:** É essencial pedir saída estruturada (ex: JSON com índices) para **mapear cada resposta ao seu item**.
+* **Limite da janela:** O lote inteiro precisa caber no context window (entrada + saída esperada).
+* **Contaminação entre itens:** Itens no mesmo prompt podem se influenciar; tarefas muito sensíveis podem exigir isolamento.
+
