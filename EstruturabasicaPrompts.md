@@ -14,6 +14,10 @@
 
 - [Aula 6: Guidelines e trade-offs](#aula-6-guidelines-e-trade-offs)
 
+- [Aula 7: System vs User Prompt](#aula-7-system-vs-user-prompt)
+
+- [Aula 8: Exemplo estruturado de prompts](#aula-8-exemplo-estruturado-de-prompts)
+
 
 ## Aula 1: Estruturação de Prompts
 
@@ -307,3 +311,105 @@ Esta aula trata a escolha entre **zero-shot e few-shot** como uma **conta mensur
 * **Além do texto:** Envolve escolher o nível de contexto e exemplificação compatível com a **escala de uso**.
 * **Instrumentos com efeitos distintos:** Zero-shot e few-shot têm impactos econômicos e operacionais diferentes, alterando a viabilidade do sistema.
 * **Projetar prompts inclui:** raciocinar sobre **custo recorrente, tempo de resposta e valor de negócio** do ganho de qualidade.
+
+## Aula 7: System vs User Prompt
+
+Esta aula separa as duas camadas de instrução: o **System Prompt** (regras globais e duradouras) e o **User Prompt** (pedido específico da vez). Entender essa hierarquia explica a consistência do agente — e também suas vulnerabilidades (jailbreak e prompt injection).
+
+---
+
+### 1. System Prompt como camada de controle global
+* **Regras permanentes:** Define comportamento, tom e restrições gerais — funciona como **manual de instrução** do agente.
+* **Diferença de posicionamento:** Retomando os limites de comportamento, aqui as regras ficam na **camada global** da conversa, não no pedido pontual.
+* **Base estável:** Tende a mudar pouco e serve de fundação para múltiplas interações.
+
+### 2. User Prompt como pedido específico da vez
+* **Instrução variável:** Descreve o que o usuário quer **naquele momento**.
+* **Quem é o "usuário":** Pode ser uma pessoa, outro software ou outro agente de IA — qualquer um enviando a solicitação operacional da vez.
+* **Função:** Não redefine a identidade do agente; **aciona uma tarefa concreta** dentro das regras já estabelecidas. O User carrega a intenção imediata; o System define **como** executá-la.
+
+### 3. Prioridade entre camadas de instrução
+* **Hierarquia:** Muitos modelos tratam o System Prompt com **prioridade maior** que o User Prompt.
+* **Efeito:** O pedido específico é interpretado **à luz** das regras globais, em vez de substituí-las livremente.
+* **Por que existe:** Dá consistência ao comportamento. Sem ela, cada nova mensagem poderia reconfigurar o agente e reduzir a previsibilidade.
+
+### 4. Comportamento do modelo e obediência imperfeita
+* **Combinação de camadas:** O comportamento resulta de instruções globais + pedidos locais, mas a combinação **não é mecanicamente garantida**.
+* **Natureza probabilística:** Mesmo com separação clara, a execução segue sujeita à probabilidade do modelo.
+* **Utilidade real:** A arquitetura do prompt **melhora a consistência sem garantir obediência absoluta** — reduz ambiguidade e torna o desvio mais controlável.
+
+### 5. Jailbreak como tentativa de quebrar a camada global
+* **Definição:** Tentativa de fazer o modelo **abandonar ou contornar** instruções que deveriam permanecer válidas (ex: regras do System Prompt).
+* **Exemplo típico:** Ordenar que o modelo "ignore as instruções anteriores" e responda de outra forma.
+* **Ponto central:** O ataque é à **hierarquia entre camadas** — quando funciona, o pedido local passa a corroer a política global.
+
+### 6. Prompt Injection como manipulação indireta das instruções
+* **Definição:** Induzir o modelo a reinterpretar ou ignorar instruções por meio de **conteúdo inserido** na interação.
+* **Diferença para configuração legítima:** A injeção introduz **comandos concorrentes** que desviam o comportamento ao longo do fluxo.
+* **Limite da defesa:** Separar System e User é **necessário, mas insuficiente** — a estrutura organiza autoridade, mas entradas maliciosas ainda podem tentar reescrevê-la.
+
+### 7. Regra prática para estruturar prompts
+* **System Prompt:** o que deve valer de forma **ampla e duradoura** — regras de comportamento, tom e restrições gerais.
+* **User Prompt:** o que **muda conforme a tarefa** — perguntas, tarefas e solicitações do momento.
+* **Ordem de construção:** Primeiro define-se **quem o agente é e como deve agir**; depois, **o que ele precisa fazer agora**. Isso prepara a próxima etapa: organizar seções internas dentro de cada camada.
+
+## Aula 8: Exemplo estruturado de prompts
+
+Esta aula mostra, na prática, como organizar um prompt em **seções explícitas** usando o caso de geração de testes em Node.js + Jest. Cada bloco (persona, objetivo, entrada, saída, critérios, ambiguidades, instruções negativas, tratamento de erro) torna a intenção auditável e o prompt reutilizável como artefato.
+
+---
+
+### 1. Estrutura em seções
+* **Blocos explícitos:** Organizar instruções em blocos, em vez de um texto corrido.
+* **Benefícios:** reduz ambiguidade, facilita manutenção e torna o prompt **reutilizável**.
+* **Ganho real:** Não é "falar mais", mas **separar intenção, contexto e restrições** de forma auditável.
+
+### 2. Persona e escopo
+* **Define quem e até onde:** Quem o modelo deve ser na tarefa e seus limites.
+* **Exemplo Node/Jest:** Agente especializado em `Node.js` e testes com `Jest`, **proibido de refatorar** o código original.
+* **Função:** Enquadramento operacional — orienta competência esperada e **limita comportamento** ao mesmo tempo.
+
+### 3. Objetivo
+* **Direto e específico:** A tarefa precisa ser descrita sem margem.
+* **Amplo demais:** "Escreva testes para o código abaixo".
+* **Controlado:** "Escreva testes unitários para a função abaixo usando Jest, cobrindo entradas válidas e inválidas" — informa tipo, ferramenta e cobertura mínima, evitando que o modelo infira sozinho.
+
+### 4. Entrada separada e mínima
+* **Só o necessário:** A entrada contém apenas o preciso para resolver a tarefa.
+* **Separação visual:** A função alvo entra em um **bloco próprio**, sem misturar código com instruções de objetivo.
+* **Efeito:** Evita que o modelo confunda **dado de entrada com regra de execução**.
+
+### 5. Formato de saída
+* **De previsibilidade a seção explícita:** O formato de saída vira um bloco da estrutura.
+* **Exemplo:** Exigir um objeto JSON com campos como `testFile` e `coverageNotes` reduz respostas fora do padrão e facilita integração com agentes/programas.
+* **Não é obrigatório JSON:** Mas formatos com **regras claras** diminuem variação e tornam a resposta processável.
+
+### 6. Critérios de qualidade
+* **Define o que é "bom" antes da execução:** O que conta como resposta aceitável.
+* **Exemplo:** Testes precisam rodar com `npm test` sem ajustes, cobrir casos válidos e inválidos e não usar bibliotecas além de `Jest`.
+* **Sem isso:** O modelo pode cumprir a tarefa **na aparência**, mas falhar no que importa para aceitação técnica.
+
+### 7. Ambiguidades e pressupostos
+* **Como agir sem informação:** Especifica o comportamento quando faltar dado necessário.
+* **Exemplo:** Sem a versão do Node, assumir `Node 18` e registrar no campo `assumptions`.
+* **Valor:** Transforma **inferências implícitas em pressupostos declarados** — melhora revisão, rastreabilidade e confiança.
+
+### 8. Instruções negativas
+* **O que não pode acontecer:** Lista explicitamente o que deve ficar fora da resposta.
+* **Exemplo:** Proibir explicações ou comentários fora do JSON, impedindo que o modelo "enfeite" a saída e quebre o contrato.
+* **Útil na saída:** Onde pequenas variações já inviabilizam automação.
+
+### 9. Tratamento de erro
+* **Falha como resposta estruturada:** Define o que fazer quando a tarefa não puder ser cumprida.
+* **Exemplo:** Retornar um JSON com `statusError` e a explicação do problema, em vez de improvisar algo parcialmente inválido.
+* **Benefício:** Mais útil para **depuração e fluxos automatizados**.
+
+### 10. Exemplo completo aplicado ao caso Node/Jest
+* **Ordem das seções:** `Persona and Scope` → objetivo → entrada → formato de saída → critérios → ambiguidades → instruções negativas → tratamento de erro.
+* **Força da estrutura:** Não é prometer o "melhor prompt do mundo", mas tornar a intenção **explícita e reaproveitável**.
+* **Comparação:** "Gere o teste disso aqui" aumenta a chance de sair do padrão; seções que definem papel, tarefa, dados, qualidade e exceções tornam o comportamento **muito mais previsível**.
+
+### 11. Reutilização como ativo
+* **Custo inicial, retorno futuro:** Prompts estruturados dão trabalho, mas esse custo compra **reutilização**.
+* **Como testes e documentação:** Acumulam valor no projeto — deixam de ser texto descartável e viram base reaproveitável entre tarefas, agentes e programas.
+* **Intencionalidade persistente:** Você para de começar do zero e passa a **evoluir um padrão**.
