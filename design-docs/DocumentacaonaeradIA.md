@@ -6,6 +6,8 @@
 
 - [Aula 2: Tipos de documentação e Design Docs](#aula-2-tipos-de-documentação-e-design-docs)
 
+- [Aula 3: PRDs - Product Requirement Document](#aula-3-prds---product-requirement-document)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -99,3 +101,64 @@ Esta aula organiza a documentação de software em uma **taxonomia funcional**: 
 * **Vago vs. delimitado:** Pedir "gere um design doc" é vago; pedir um documento técnico de arquitetura, infraestrutura ou operação produz saídas mais úteis porque a categoria já delimita o conteúdo.
 * **Prompt operacionaliza a taxonomia:** O enquadramento por categoria transforma o prompt em mecanismo de aplicação da taxonomia documental.
 * **Quanto mais claro o enquadramento:** Maior a chance de a IA **gerar e manter** artefatos consistentes.
+
+## Aula 3: PRDs - Product Requirement Document
+
+Esta aula apresenta o **PRD** como o documento de produto que explicita **o quê** está sendo construído, **por quê** existe e qual valor entrega. Mesmo não sendo um design doc, ele entra **antes** dos documentos técnicos por fornecer o contexto que a IA precisa para interpretar o projeto. A aula define quando algo merece um PRD, seus níveis de granularidade (produto, módulo, feature) e seu papel como transferência de contexto explícito para uma IA que não conhece o produto.
+
+---
+
+### 1. PRD no fluxo de documentação orientado por IA
+* **Documento de produto:** Explicita o que está sendo construído, por que existe e qual valor entrega.
+* **Vem antes do técnico:** Embora não seja um design doc, entra **antes** dos documentos técnicos porque a IA precisa desse contexto para interpretar corretamente o projeto.
+* **Sem essa camada:** O modelo tende a inferir objetivos apenas a partir de código ou pedidos isolados, aumentando a ambiguidade.
+* **Papel central:** Servir como **base de contextualização** para pessoas e para IA.
+
+### 2. Documento de produto versus documento técnico
+* **Separação melhora o contexto:** Retomando a distinção produto × design docs, o ponto novo é que ela **eleva a qualidade do contexto** fornecido à IA.
+* **O que o PRD não faz:** Não descreve como implementar em termos de arquitetura, componentes ou infraestrutura — mas pode incluir questões técnicas relevantes para alinhar produto e engenharia.
+* **Intenção ≠ implementação:** Evita misturar os dois e preserva a função de cada artefato.
+* **Efeito:** Partindo de um PRD claro, os design docs passam a responder ao **problema certo**.
+
+### 3. Quando algo merece um PRD
+* **Critério de valor:** Deve existir quando há **entrega de valor percebido** para o usuário ou para o negócio.
+* **Evita formalismo excessivo:** Impede transformar qualquer requisito funcional em documento formal e concentra esforço no que altera objetivos, métricas, escopo ou impacto.
+* **Limiar:** Iniciativas que geram dúvidas relevantes, têm alto valor percebido ou exigem alinhamento entre áreas já se aproximam do ponto em que um PRD faz sentido.
+* **Unidade de produto:** O documento trata o item como unidade de produto, não apenas como tarefa de implementação.
+
+### 4. Feature relevante como subproduto
+* **Nem toda feature merece PRD:** Especialmente quando é apenas mais um requisito funcional dentro de algo maior.
+* **A exceção:** Quando a feature é tão expressiva que funciona como **subproduto** — objetivo próprio, métricas próprias, escopo próprio e impacto alto.
+* **Risco de não isolar:** Tratá-la como uma linha em um documento geral reduz clareza e dificulta o alinhamento.
+* **Função do PRD:** Isolar a feature para que **valor e limites** fiquem explícitos.
+
+### 5. Clareza de escopo, objetivos e métricas
+* **Mensurável e delimitado:** Um PRD útil organiza o item como algo mensurável e com fronteiras claras.
+* **O que explicitar:** objetivos, escopo e formas de medir resultado — evitando que uma iniciativa relevante vire descrição vaga de intenção.
+* **Beneficia coordenação e IA:** A clareza ajuda o alinhamento produto × engenharia e reduz as **suposições implícitas** da IA.
+* **Sem delimitação:** Quando não fica claro o que está dentro e fora, o contexto perde valor operacional.
+
+### 6. Granularidade de PRD
+* **Níveis diferentes:** PRDs existem em granularidades distintas.
+* **PRD de produto:** Cobre o produto como um todo — mais amplo e menos detalhado.
+* **PRD de módulo:** Aprofunda uma parte relevante da aplicação.
+* **PRD de feature:** Foca uma entrega específica com contexto próprio.
+* **Escolha do nível:** Depende do tamanho da iniciativa e da autonomia conceitual do recorte — evita documentos genéricos demais ou fragmentação excessiva.
+
+### 7. Produto, módulo e feature como níveis possíveis
+* **Coexistência:** Um mesmo software pode ter um PRD macro do produto e PRDs específicos para módulos ou features críticas.
+* **EPIC como aproximação:** O termo pode aparecer como equivalente ao nível de módulo no vocabulário de produto, mesmo sem correspondência exata em todos os contextos.
+* **O que importa:** Reconhecer quando uma parte do sistema concentra **valor, complexidade de alinhamento ou identidade** suficiente para merecer documentação própria.
+* **Resultado:** O PRD vira ferramenta de organização de contexto, não burocracia fixa.
+
+### 8. PRD como apoio direto ao desenvolvedor
+* **Não é exclusivo de PMs:** Desenvolvedores também podem participar da criação do documento.
+* **Quando ajuda:** Ao aumentar clareza sobre a feature a ser construída, especialmente em iniciativas de alto impacto ou escopo sensível.
+* **Valor em ambientes com IA:** O documento torna **explícito** o contexto que o time já conhece informalmente.
+* **Aparente redundância:** O que parece óbvio para pessoas experientes ainda é **informação ausente** para a IA.
+
+### 9. Contexto explícito para uma IA que não conhece o produto
+* **O problema simples:** O time conhece o produto, mas a IA não.
+* **Registrar o óbvio não é desperdício:** É a forma de transferir **intenção, valor e limites** para um agente que entra sem histórico do projeto.
+* **Ordem correta:** Antes de pedir **como** construir algo, é preciso explicitar **o que** esse algo é e **por que** existe.
+* **Efeito:** Essa ordem melhora a qualidade das respostas técnicas geradas depois.

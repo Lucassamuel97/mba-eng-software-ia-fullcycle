@@ -19,7 +19,7 @@ Este repositório contém os materiais e recursos relacionados ao MBA em Engenha
 
 ### Disciplina: Design Docs com IA
 
-- [Módulo 1 - Documentação na era da IA](DocumentacaonaeradIA.md)
+- [Módulo 1 - Documentação na era da IA](design-docs/DocumentacaonaeradIA.md)
 
 
 
