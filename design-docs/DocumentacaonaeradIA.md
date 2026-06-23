@@ -1,0 +1,52 @@
+# Módulo - Documentação na era da IA
+
+## Sumário
+
+- [Aula 1: Documentação como parte do desenvolvimento](#aula-1-documentação-como-parte-do-desenvolvimento)
+
+
+## Aula 1: Documentação como parte do desenvolvimento
+
+Esta aula reposiciona a documentação: ela deixa de ser um artefato preparatório ou burocrático e passa a **participar diretamente do desenvolvimento**. Na era da IA, o documento é lido por modelos para orientar implementação, manutenção e planejamento — aproximando-se do papel dos testes automatizados como preservador de conhecimento e como insumo operacional dentro do workflow.
+
+---
+
+### 1. Documentação como parte do desenvolvimento
+* **Deixa de ser artefato burocrático:** A documentação não é mais apenas um passo preparatório ou um custo de processo.
+* **Participa da implementação:** Por ser legível por modelos, ela orienta diretamente implementação, manutenção e planejamento.
+* **Paralelo com os testes:** Assim como testes automatizados, a documentação **preserva conhecimento útil ao longo do tempo** e reduz erro em mudanças futuras.
+
+### 2. IA como consumidora de documentação
+* **Contexto operacional:** Modelos de IA usam a documentação como **contexto** para executar trabalho técnico.
+* **Geração mais assertiva:** Com contexto claro, a IA não depende apenas de inferência a partir do código-fonte ou de prompts curtos — e gera código mais alinhado.
+* **Novo valor:** A documentação não serve só para registrar decisões humanas; serve para **alimentar um agente** que produz com base nelas.
+
+### 3. A analogia do novo chat como funcionário novo
+* **Cada chat começa do zero:** Um novo chat se comporta como um funcionário recém-chegado — não conhece domínio, restrições, objetivos nem convenções locais.
+* **Código não basta:** O código ajuda, mas não substitui a visão explícita do sistema, das intenções e dos limites do produto.
+* **Ambientação mais curta:** A documentação reduz o tempo de onboarding e aumenta a confiança de que a IA **entendeu o projeto** antes de propor mudanças.
+
+### 4. Documentação como ativo de longo prazo
+* **Continua útil depois da criação:** Um documento bem escrito segue valioso muito tempo depois, desde que permaneça alinhado ao sistema.
+* **Paralelo com testes antigos:** Assim como um teste antigo ainda protege contra regressão, um documento antigo ainda **fornece contexto** para novas interações com IA.
+* **Ativo acumulativo:** Isso transforma documentação em ativo que acumula valor, e não em **custo descartável**.
+
+### 5. Geração de documentação com IA
+* **IA não gera só código:** Ela também **acelera a produção de documentação**.
+* **Mais rapidez, consistência e cobertura:** O ganho aparece quando o time sabe quais tipos de documento quer produzir e como orientar essa geração.
+* **Os dois lados do ciclo:** O valor real surge quando a IA apoia tanto **implementar** quanto **documentar**.
+
+### 6. Documento vivo viabilizado por workflow com IA
+* **Sempre desejável, raramente sustentado:** A ideia de documento vivo existe há tempo, mas dificilmente se mantinha de forma manual.
+* **Atualização incorporada ao fluxo:** Com um workflow bem definido, sempre que uma feature é desenvolvida ou o software é alterado, a IA recebe a tarefa de **revisar e atualizar** os documentos afetados.
+* **Menos dependência de disciplina:** O documento deixa de depender só de esforço manual e passa a ser mantido como **parte do processo**.
+
+### 7. Atualização automática após mudanças no software
+* **Ciclo de sincronização contínua:** Quando a IA gera o código e depois atualiza a documentação com base nesse mesmo código, cria-se um ciclo que mantém os dois lados alinhados.
+* **Reduz a defasagem:** Esse ciclo combate o principal motivo pelo qual documentos perdem valor — a distância entre sistema e documentação.
+* **Condição necessária:** Funciona apenas com um **workflow explícito** que trate a atualização documental como etapa obrigatória da mudança.
+
+### 8. Workflow de documentação na era da IA
+* **Entrada e saída:** A documentação entra no workflow nos dois sentidos — primeiro como **contexto** para um desenvolvimento mais assertivo, depois como **artefato regenerado** para refletir o que foi implementado.
+* **Documentação operacional:** Ela não apenas descreve o sistema; **participa ativamente da sua evolução**.
+* **Fluxo completo:** Esse ciclo torna o documento parte do processo de engenharia, e não um anexo desconectado dele.
