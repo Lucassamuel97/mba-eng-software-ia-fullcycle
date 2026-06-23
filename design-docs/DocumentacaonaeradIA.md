@@ -8,6 +8,8 @@
 
 - [Aula 3: PRDs - Product Requirement Document](#aula-3-prds---product-requirement-document)
 
+- [Aula 4: Seções de um PRD](#aula-4-seções-de-um-prd)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -162,3 +164,70 @@ Esta aula apresenta o **PRD** como o documento de produto que explicita **o quê
 * **Registrar o óbvio não é desperdício:** É a forma de transferir **intenção, valor e limites** para um agente que entra sem histórico do projeto.
 * **Ordem correta:** Antes de pedir **como** construir algo, é preciso explicitar **o que** esse algo é e **por que** existe.
 * **Efeito:** Essa ordem melhora a qualidade das respostas técnicas geradas depois.
+
+## Aula 4: Seções de um PRD
+
+Esta aula detalha a **anatomia típica de um PRD**, tratando suas seções como uma estrutura **flexível**, não um template rígido. Cada bloco (visão, contexto, público, objetivos, escopo, requisitos, estratégia, riscos, KPIs, stakeholders) cobre uma parte do contexto necessário para "contar a história do produto" — mas a presença e o detalhamento de cada seção variam conforme tamanho, granularidade e necessidade real de alinhamento.
+
+---
+
+### 1. Flexibilidade estrutural do PRD
+* **Não é template rígido:** Não há campos obrigatórios nem nomenclatura fixa.
+* **Seções variam:** Conforme o tamanho da iniciativa, o nível de granularidade e a necessidade real de alinhamento.
+* **Omissão contextual:** Em projetos pequenos, partes podem ser omitidas sem prejuízo; em iniciativas amplas, a ausência costuma reduzir clareza.
+* **Ponto central:** Cobrir o contexto necessário para contar a história do produto de forma útil para o time e para a IA.
+
+### 2. Visão e propósito
+* **Ideia central:** Registra a ideia do produto e a razão de sua existência.
+* **Responde a justificativa:** Qual problema ou direção estratégica motiva a iniciativa, sem entrar em implementação técnica.
+* **Referência de intenção:** Quando decisões posteriores geram dúvida, a visão ajuda a verificar se o produto continua coerente com o motivo original.
+
+### 3. Contexto do produto e oportunidade
+* **Cenário e benefício:** Explica em que contexto o produto surge e qual ganho pode gerar para a organização.
+* **Mercado ou interno:** Vale para produtos de mercado e soluções internas, desde que haja ganho operacional, estratégico ou econômico.
+* **Sem enquadramento:** O documento vira apenas uma lista de desejos; com ele, cada decisão se vincula a uma **necessidade real do negócio**.
+
+### 4. Público e personas
+* **Público:** Identifica quem será afetado ou atendido pelo produto.
+* **Personas:** Transformam o público em perfis concretos de uso — por faixa etária, domínio técnico, idioma, rotina, tipo de problema ou papéis internos de um departamento.
+* **Objetivo real:** Não é inventar personagens por formalidade, mas explicitar **para quem** o produto faz sentido e quais necessidades orientam decisões.
+
+### 5. Objetivos e métricas
+* **Objetivo + medição:** Os objetivos definem o que a iniciativa quer alcançar e precisam vir acompanhados de **medição verificável**.
+* **Sem forma de observar:** Um objetivo sem medição não orienta priorização nem valida sucesso.
+* **PRD auditável:** Métricas permitem saber se o produto avançou na direção esperada ou apenas gerou entrega sem impacto.
+
+### 6. Escopo
+* **Função estrutural:** Dentro do PRD, o escopo delimita **fronteiras explícitas**.
+* **Dentro e fora:** Informa o que faz parte do produto e o que fica de fora, evitando crescimento por expectativa implícita.
+* **Sem limite declarado:** Times diferentes passam a assumir versões diferentes do mesmo projeto.
+
+### 7. Requisitos de alto nível
+* **Capacidades macro:** Descrevem o que o produto deve oferecer, sem decompor fluxos técnicos ou regras detalhadas.
+* **Exemplo e-commerce:** Vender camisetas, permitir escolha de cor, realizar checkout e viabilizar entrega são **capacidades**, não especificações de implementação.
+* **Transição:** Organiza o produto em blocos funcionais amplos e prepara a passagem para documentos mais detalhados.
+
+### 8. Estratégia e fases de desenvolvimento
+* **Da intenção à execução:** Registra como a iniciativa pretende sair da ideia para a realização.
+* **Conteúdo:** Pode incluir fases, marcos ou sequência de evolução, ajudando o time a entender ordem, dependências e prioridades.
+* **Evita o monolito:** Mesmo sem detalhe técnico, impede tratar o produto como um pacote único entregue de uma vez só.
+
+### 9. Riscos
+* **Fatores de comprometimento:** Documentam o que pode afetar prazo, valor, adoção ou viabilidade.
+* **Antecipar, não listar tudo:** Servem para prever incertezas relevantes, não qualquer possibilidade genérica de problema.
+* **Maturidade na decisão:** Explicitar riscos permite avaliar trade-offs com mais maturidade, em vez de planejar como se o cenário fosse estável.
+
+### 10. KPIs
+* **Indicadores de progresso:** Acompanham se a iniciativa avança corretamente ou se já atingiu o resultado esperado.
+* **Observável:** Diferente de uma meta genérica, um KPI precisa ser monitorável durante o desenvolvimento ou após a entrega.
+* **Sucesso monitorável:** Essencial para decidir continuidade, ajuste de rota ou encerramento.
+
+### 11. Stakeholders
+* **Quem tem interesse:** Pessoas ou papéis diretamente interessados — desenvolvimento, produto, liderança executiva e demais áreas impactadas.
+* **Reduz ruído:** Torná-los explícitos esclarece quem influencia decisões, valida entregas e precisa ser consultado.
+* **Documento não é só do produto:** Evita que o PRD seja lido como assunto exclusivo do time de produto.
+
+### 12. Leitura correta dessa estrutura
+* **Anatomia típica, não checklist:** A lista representa um PRD amplo, não um modelo universal obrigatório.
+* **Detalhe varia com a granularidade:** Um PRD macro tende a ser mais amplo e menos minucioso que um PRD de feature.
+* **O que realmente importa:** A utilidade depende menos do nome exato das seções e mais da **presença das informações** necessárias para contextualizar o produto.
