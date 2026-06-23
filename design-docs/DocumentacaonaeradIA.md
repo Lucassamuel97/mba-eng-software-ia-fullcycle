@@ -4,6 +4,8 @@
 
 - [Aula 1: Documentação como parte do desenvolvimento](#aula-1-documentação-como-parte-do-desenvolvimento)
 
+- [Aula 2: Tipos de documentação e Design Docs](#aula-2-tipos-de-documentação-e-design-docs)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -50,3 +52,50 @@ Esta aula reposiciona a documentação: ela deixa de ser um artefato preparatór
 * **Entrada e saída:** A documentação entra no workflow nos dois sentidos — primeiro como **contexto** para um desenvolvimento mais assertivo, depois como **artefato regenerado** para refletir o que foi implementado.
 * **Documentação operacional:** Ela não apenas descreve o sistema; **participa ativamente da sua evolução**.
 * **Fluxo completo:** Esse ciclo torna o documento parte do processo de engenharia, e não um anexo desconectado dele.
+
+## Aula 2: Tipos de documentação e Design Docs
+
+Esta aula organiza a documentação de software em uma **taxonomia funcional**: cada categoria responde a uma pergunta diferente do projeto (o quê, por quê, como, onde, como manter, como trabalhar). A distinção central separa **documentação de produto** (intenção) de **design docs** (decisão técnica), tratando design docs como um guarda-chuva de artefatos técnicos com públicos e finalidades distintos.
+
+---
+
+### 1. Taxonomia dos tipos de documentação
+* **Cada categoria, uma pergunta:** A documentação se organiza melhor quando cada tipo responde a uma questão específica do projeto.
+* **Camadas principais:** **produto** define o que será construído e por quê; **design e arquitetura** definem como implementar; **infraestrutura** define onde e com quais recursos provisionar; **operacional** cobre como manter a aplicação; **conhecimento e referência** registram como trabalhar no contexto do sistema.
+* **Evita misturar objetivos:** Essa separação impede que documentos combinem propósitos incompatíveis e melhora a comunicação entre produto, engenharia e operação.
+
+### 2. Documentação de produto versus Design Docs
+* **Fronteira principal:** Está entre **intenção de produto** e **decisão técnica**.
+* **Produto:** Descreve escopo, objetivo e motivação — não detalha a estrutura técnica de implementação.
+* **Design docs:** Começam quando a discussão sai do "o quê" e "por quê" e entra no "como", "onde", "como manter" e "como trabalhar".
+* **Não são sinônimos:** O capítulo trata **PRD** como documento de produto e **design docs** como documentos técnicos complementares.
+
+### 3. Design Docs como guarda-chuva de documentos técnicos
+* **Não é um documento único:** Design docs formam um **conjunto de artefatos técnicos** com finalidades diferentes, não um documento universal.
+* **O que entra:** documentos de design e arquitetura, infraestrutura, operação e conhecimento técnico de referência — todos orientam construção, provisão, manutenção e evolução.
+* **Risco de generalizar:** Chamar qualquer documento de "design doc" apaga diferenças importantes de **público, profundidade e uso**.
+* **Ganho:** Tratá-los como categoria técnica ajuda a escolher formato, nível de detalhe e momento de criação de cada documento.
+
+### 4. Mapeamento funcional: o quê, por quê, como, onde, como manter, como trabalhar
+* **Mapa simples resolve ambiguidade:** produto → **o quê e por quê**; design e arquitetura → **como**; infraestrutura → **onde e com o quê**; operacional → **como manter**; conhecimento e referência → **como trabalhar**.
+* **Vocabulário comum:** Esse mapeamento funciona como linguagem compartilhada do time e reduz a confusão sobre o papel de cada artefato.
+* **Documento que responde tudo:** Tende a ficar genérico, redundante ou difícil de manter.
+* **Separar por função:** Torna a documentação mais útil tanto para pessoas quanto para sistemas de IA.
+
+### 5. Implicações práticas para o projeto
+* **Necessidades diferentes, decisões diferentes:** Cada tipo de documentação exige escolhas próprias de escopo, timing e granularidade.
+* **Sem repetição desnecessária:** Um documento técnico não precisa repetir toda a justificativa de produto; um documento de produto não precisa antecipar detalhes de provisionamento ou operação.
+* **Tipo antes do template:** O tamanho e a profundidade dependem da situação — **o tipo correto de documento vem antes do template correto**.
+* **Visão crítica:** Evita produzir artefatos extensos, mas pouco acionáveis.
+
+### 6. IA apoiando geração e manutenção de documentação
+* **Contexto organizado por categoria:** Retomando a documentação como contexto operacional para IA, o avanço aqui é **organizar esse contexto por tipo documental**.
+* **Geração mais coerente:** Com tipos bem delimitados, a IA gera artefatos alinhados ao objetivo de cada um, em vez de misturar requisitos, arquitetura e operação.
+* **Manutenção mais simples:** Atualizar um documento fica mais fácil quando seu papel está claramente definido.
+* **Resultado:** Estrutura documental clara melhora tanto a produção quanto a **preservação do contexto** ao longo do tempo.
+
+### 7. Prompt Engineering aplicado à documentação
+* **Instrução determina qualidade:** O documento gerado depende de instruir a IA sobre **tipo, objetivo, escopo e profundidade** do artefato.
+* **Vago vs. delimitado:** Pedir "gere um design doc" é vago; pedir um documento técnico de arquitetura, infraestrutura ou operação produz saídas mais úteis porque a categoria já delimita o conteúdo.
+* **Prompt operacionaliza a taxonomia:** O enquadramento por categoria transforma o prompt em mecanismo de aplicação da taxonomia documental.
+* **Quanto mais claro o enquadramento:** Maior a chance de a IA **gerar e manter** artefatos consistentes.
