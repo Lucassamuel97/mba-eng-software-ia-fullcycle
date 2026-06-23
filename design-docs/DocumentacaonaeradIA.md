@@ -10,6 +10,8 @@
 
 - [Aula 4: Seções de um PRD](#aula-4-seções-de-um-prd)
 
+- [Aula 5: PRDs de Alto Nível](#aula-5-prds-de-alto-nível)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -231,3 +233,44 @@ Esta aula detalha a **anatomia típica de um PRD**, tratando suas seções como 
 * **Anatomia típica, não checklist:** A lista representa um PRD amplo, não um modelo universal obrigatório.
 * **Detalhe varia com a granularidade:** Um PRD macro tende a ser mais amplo e menos minucioso que um PRD de feature.
 * **O que realmente importa:** A utilidade depende menos do nome exato das seções e mais da **presença das informações** necessárias para contextualizar o produto.
+
+## Aula 5: PRDs de Alto Nível
+
+Esta aula apresenta o **PRD de alto nível** como o recorte mais amplo da documentação de produto: um artefato **macro** que enquadra a iniciativa como produto antes de qualquer decomposição em módulos, EPICs ou features. Sua estrutura nasce de um conjunto de **perguntas estratégicas** que conectam o produto à direção da empresa — e a capacidade de respondê-las é o próprio critério de clareza do projeto.
+
+---
+
+### 1. PRD de alto nível como artefato macro
+* **Recorte mais amplo:** É o nível mais abrangente da documentação de produto.
+* **Sem detalhe operacional:** Não entra no detalhamento de uma feature; **enquadra a iniciativa como produto** e expõe o contexto macro que orienta decisões posteriores.
+* **Valor em projetos grandes:** Importa sobretudo quando várias decisões dependem de uma **visão comum** antes da decomposição em módulos, EPICs ou features.
+* **Sem enquadramento:** O time pode até executar entregas, mas segue sem clareza sobre o que está construindo como produto.
+
+### 2. Perguntas estratégicas como estrutura do documento
+* **Documento como conjunto de perguntas:** O nível alto pode ser entendido pelas questões que o produto precisa responder.
+* **Exemplos:** por que o produto existe, o que se quer alcançar, o que entra e o que fica fora, para quem se constrói, qual problema é resolvido, como os objetivos serão perseguidos, quais capacidades gerais são necessárias, como reconhecer o sucesso, o que pode dar errado, qual roadmap orienta a evolução, quem participa e como tudo se conecta à estratégia da empresa.
+* **Não é questionário solto:** Funciona como **estrutura de raciocínio** para consolidar visão, direção e critérios de decisão.
+
+### 3. Caráter estratégico do nível alto
+* **Antecede a implementação:** Muitas perguntas são estratégicas porque vêm antes da execução — e às vezes nem nascem no time de desenvolvimento.
+* **Decisões top-down:** Parte delas pode vir de liderança, diretoria ou da estratégia mais ampla da empresa.
+* **Útil ao desenvolvedor:** Em vez de reduzir o valor do documento, isso **explicita premissas** que normalmente chegariam de forma implícita.
+* **Sem registro:** A execução técnica passa a depender de interpretação parcial.
+
+### 4. Conexão entre produto e estratégia da empresa
+* **Produto não é item isolado:** No PRD macro, ele aparece como **resposta a uma direção maior** da empresa.
+* **A pergunta relevante:** Não é só "o que vamos construir", mas "por que isso merece existir nesta organização agora".
+* **Justifica prioridade:** Essa conexão fundamenta investimento e trade-offs e dá sentido a objetivos, riscos e métricas.
+* **Sem vínculo:** Um produto pode parecer coerente localmente e ainda estar **desalinhado com a estratégia global**.
+
+### 5. Roadmap e papéis como enquadramento macro
+* **Organização no tempo e nas pessoas:** O documento mostra como a iniciativa se organiza no tempo e quem participa dela.
+* **Roadmap macro:** Não é cronograma detalhado de execução, mas uma **visão de evolução** em etapas ou direções.
+* **Papéis:** Tornam explícito quem influencia, decide, valida ou executa partes da iniciativa, reduzindo ambiguidade organizacional.
+* **Foco:** É um enquadramento de **coordenação e alinhamento**, não de especificação técnica.
+
+### 6. Clareza como critério de qualidade do PRD macro
+* **Perguntas sem resposta = falta de clareza:** Se as questões centrais não podem ser respondidas, o problema não é documental, mas de clareza sobre o próprio projeto.
+* **Importância para a IA:** Retomando o uso de PRD para IA, o modelo depende desse contexto para interpretar a iniciativa **antes de qualquer design doc**.
+* **Menos inferência implícita:** Um documento macro bem formulado melhora a qualidade das decisões derivadas.
+* **Próximo passo:** Descer do enquadramento estratégico para o nível em que uma **feature específica** passa a exigir seu próprio contexto.

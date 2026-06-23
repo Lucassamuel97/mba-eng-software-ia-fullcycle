@@ -15,8 +15,8 @@ Tempo total de estudo: 25 minutos e 23 segundos (25:23)
 - [x] Documentação na era da IA — 04:42
 - [X] Tipos de documentação e Design Docs — 05:42
 - [X] PRDs - Product Requirement Document — 07:26
-- [ ] Seções de um PRD — 04:44
-- [ ] PRDs de Alto Nivel — 02:49
+- [X] Seções de um PRD — 04:44
+- [X] PRDs de Alto Nivel — 02:49
 
 ## 24/06/2026 (Quarta-feira)
 Tempo total de estudo: 28 minutos e 57 segundos (28:57)
