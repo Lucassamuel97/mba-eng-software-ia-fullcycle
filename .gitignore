@@ -12,3 +12,8 @@ langchain/exemplos/*.egg-info/
 progamacaodeestudos.md
 prompt-engineering/1-tipos-de-prompts/__pycache__
 
+# Ambientes virtuais Python
+.venv/
+venv/
+__pycache__/
+
