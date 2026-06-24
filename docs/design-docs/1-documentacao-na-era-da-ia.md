@@ -18,6 +18,8 @@
 
 - [Aula 8: Exemplo 1 de PRD (Catálogo de Produtos)](#aula-8-exemplo-1-de-prd-catálogo-de-produtos)
 
+- [Aula 9: Exemplo 2 de PRD e JSON Opcional (Rate Limiter)](#aula-9-exemplo-2-de-prd-e-json-opcional-rate-limiter)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -483,3 +485,72 @@ Esta aula aterrissa a teoria em um **PRD de feature concreto**, usando um **cat�
 * **Riscos plausíveis:** Produto sem estoque aparecer como disponível, divergência de preço, navegação lenta.
 * **Por que antecipar:** O PRD precisa prever falhas plausíveis **antes** do desenho técnico detalhado.
 * **Ganho real:** Não é burocracia — é **reduzir surpresa** durante construção e evolução da feature.
+
+## Aula 9: Exemplo 2 de PRD e JSON Opcional (Rate Limiter)
+
+Esta aula percorre um **segundo PRD de feature concreto** — um **rate limiter centralizado** — em um cenário mais técnico, e introduz a ideia de exportar o mesmo documento em **JSON**. Markdown serve à leitura humana; JSON dá estrutura legível por máquina para alimentar agentes, pipelines e validações. As duas saídas coexistem: legibilidade para pessoas, contrato estruturado para sistemas.
+
+> 📄 **Exemplo de referência:** o PRD completo está em [PRD de Feature — Rate Limiter](/docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md). Compare com o [PRD de Feature — Catálogo de Produtos](/docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md) da aula anterior.
+
+---
+
+### 1. Rate limiter centralizado como feature de produto
+* **Cenário mais técnico:** Um serviço centralizado usado por todos os microserviços da plataforma.
+* **Função:** Controlar volume de requisições por chave de API e por IP, reduzindo sobrecarga e protegendo disponibilidade.
+* **Ganho da centralização:** A limitação deixa de ficar espalhada entre serviços e passa a ser **governada de forma consistente**.
+
+### 2. Objetivos e métricas aplicados ao exemplo
+* **Forma operacional:** Reduzir indisponibilidade, limitar abuso e preservar desempenho.
+* **Métricas concretas:** Tempo de indisponibilidade abaixo de um minuto, proporção de respostas 429 e latência **P95 < 150 ms**.
+* **Utilidade:** Transformam proteção de plataforma em algo **verificável**, não em intenção genérica de robustez.
+
+### 3. Escopo técnico e limites da entrega
+* **Incluso:** Limitação por chave de API e por IP, controle de burst, janela deslizante e retorno de bloqueio com status **429**.
+* **Fora do escopo:** Fila de prioridade, console em tempo real, API administrativa e operação multi-região.
+* **Proteção:** Impede que uma feature de proteção de tráfego vire **prematuramente** uma plataforma completa de governança.
+
+### 4. Fluxo principal e legibilidade para IA
+* **Encadeamento declarado:** Cliente envia requisição → rate limiter identifica o chamador → verifica o limite → permite ou bloqueia.
+* **Mais que lista de requisitos:** O fluxo dá entendimento humano e **contexto sequencial** para a IA, que infere menos e opera mais sobre comportamento declarado.
+* **Complemento:** Fluxos alternativos e erros previstos mostram o que acontece quando o limite já foi atingido.
+
+### 5. Headers padrão de rate limit
+* **Limitação observável:** Tornam o comportamento explícito para os clientes que consomem a API.
+* **Sinais ao consumidor:** Em vez de um bloqueio opaco, o cliente recebe limite, uso e tempo de espera — reduzindo comportamento agressivo por desconhecimento.
+* **Contrato sem ambiguidade:** Em um PRD consumido por times e agentes, registrar os headers define claramente o contrato de resposta.
+
+### 6. Burst e janela deslizante
+* **Controle de burst:** Lida com picos curtos sem tratar todo excesso como abuso imediato.
+* **Janela deslizante:** Distribui a contagem ao longo do tempo com mais precisão que janelas fixas, reduzindo efeitos de borda e tornando a limitação mais justa.
+* **No exemplo:** Mostra que o rate limiter não é só "contar requisições", mas definir uma **política temporal** coerente com o uso real.
+
+### 7. Redis para contadores de janela
+* **Storage principal:** Operações rápidas, adequadas a estado efêmero em alta frequência.
+* **Necessidade central:** Registrar e consultar contagens por chave e por intervalo com **baixa latência** — combina com armazenamento em memória.
+* **Risco a documentar:** Se o Redis ficar indisponível, a política de limitação pode falhar ou bloquear incorretamente.
+
+### 8. Observabilidade com Prometheus e OpenTelemetry
+* **Mensurável e rastreável:** Tornam o rate limiter observável em produção.
+* **Prometheus:** Expõe e coleta métricas como volume de bloqueios, latência e taxa de erro.
+* **OpenTelemetry:** Instrumenta traces e sinais operacionais entre serviços.
+* **Por que importa:** Uma feature de proteção só é confiável quando se observa seu efeito real no tráfego e se diagnostica desvios.
+
+### 9. Arquitetura e trade-offs do exemplo
+* **Suficiente, sem virar design doc:** Microserviço dedicado, back-end em Go, Redis, middleware e integração HTTP com consumidores.
+* **Trade-offs explícitos:** Usar Go na implementação, Redis como armazenamento principal e REST como forma de exposição.
+* **Efeito:** Transforma preferências implícitas em **decisões rastreáveis**, úteis para o time e para automações.
+
+### 10. PRD exportado em JSON
+* **Mesma informação, outra forma:** O PRD em Markdown pode ser exportado em JSON para ganhar estrutura legível por máquina.
+* **Cada formato, um foco:** Markdown favorece leitura humana e revisão rápida; JSON favorece processamento sistemático, validação de campos, filtragem e consumo por agentes.
+* **Não substitui o texto:** O JSON funciona como **contrato estruturado** da mesma informação.
+
+### 11. JSON como formato para agentes de IA
+* **Campos previsíveis:** Agentes trabalham melhor com contexto organizado em campos do que com texto corrido.
+* **Acesso determinístico:** Objetivos, escopo, requisitos, riscos e critérios de aceitação ficam acessíveis sem interpretação livre, reduzindo ambiguidade.
+* **Quando ajuda:** Especialmente útil quando o PRD alimenta prompts, pipelines, validações ou geração de artefatos técnicos.
+
+### 12. Quando vale usar Markdown e quando vale usar JSON
+* **Markdown:** Forma mais prática para leitura, edição e discussão entre pessoas.
+* **JSON:** Vale mais quando o documento é consumido por agentes, filtrado programaticamente ou transformado em entrada padronizada para outras etapas.
+* **Não é exclusivo:** Manter as duas saídas preserva **legibilidade para humanos e estrutura para sistemas**.
