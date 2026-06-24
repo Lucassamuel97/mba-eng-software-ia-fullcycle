@@ -12,6 +12,8 @@
 
 - [Aula 5: PRDs de Alto Nível](#aula-5-prds-de-alto-nível)
 
+- [Aula 6: PRDs de Feature e casos de uso](#aula-6-prds-de-feature-e-casos-de-uso)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -274,3 +276,63 @@ Esta aula apresenta o **PRD de alto nível** como o recorte mais amplo da docume
 * **Importância para a IA:** Retomando o uso de PRD para IA, o modelo depende desse contexto para interpretar a iniciativa **antes de qualquer design doc**.
 * **Menos inferência implícita:** Um documento macro bem formulado melhora a qualidade das decisões derivadas.
 * **Próximo passo:** Descer do enquadramento estratégico para o nível em que uma **feature específica** passa a exigir seu próprio contexto.
+
+## Aula 6: PRDs de Feature e casos de uso
+
+Esta aula define **quando uma feature merece um PRD próprio** — não por existir no backlog, mas por concentrar **decisões de produto**. Usando o caso do login em dois cenários (commodity × plataforma estratégica), a aula mostra que o nome da funcionalidade não determina sua granularidade documental: o que decide é a **densidade de decisões de produto** ali concentradas.
+
+---
+
+### 1. Regra prática de decisão
+* **Não basta existir no backlog:** Uma feature merece PRD quando deixa de ser requisito funcional commodity e passa a **concentrar decisões de produto**.
+* **Sinais a observar:** valor percebido próprio, objetivos mensuráveis, impacto na experiência, regras específicas e trade-offs que precisam ser explicitados antes do design técnico.
+* **Quando não justifica:** Se a implementação segue um padrão conhecido, com decisões essencialmente técnicas, o item cabe como requisito funcional dentro de um PRD maior.
+* **Critério final:** Quando a feature vira uma **unidade real de decisão**, passa a justificar contexto documental próprio.
+
+### 2. Feature versus requisito funcional
+* **Requisito funcional:** Descreve uma capacidade necessária para o sistema operar — nem sempre com identidade de produto suficiente para virar documento separado.
+* **A virada:** Quando a funcionalidade deixa de ser "o sistema precisa fazer X" e passa a exigir objetivos, políticas, métricas, integrações e restrições de negócio.
+* **Risco de simplificar:** Tratá-la como simples linha de requisito **empobrece o contexto** disponível para o time e para a IA.
+* **Papel do PRD de feature:** Registrar esse contexto adicional **sem misturá-lo com implementação**.
+
+### 3. Caso 1: login commodity
+* **Pré-requisito técnico:** Um login básico pode ser apenas a porta de entrada da plataforma.
+* **Fluxo padrão:** Se segue o que frameworks já oferecem, não altera a proposta do produto, não inova e não exige decisões de produto.
+* **Enquadramento natural:** Requisito funcional de um sistema maior.
+* **PRD específico aqui:** Tende a gerar mais formalidade do que clareza — basta registrar que o sistema **precisa de autenticação**.
+
+### 4. Por que o caso 1 não justifica PRD próprio
+* **Não gera valor por si:** O login commodity apenas viabiliza o acesso, sem valor de negócio próprio.
+* **Decisões são técnicas:** Recaem sobre tecnologia, framework e configuração, não sobre posicionamento de produto.
+* **Pouca necessidade de contexto autônomo:** Reduz a demanda por objetivos próprios, métricas dedicadas ou escopo separado.
+* **Documento mais útil:** O **PRD macro**, com o login aparecendo como mais um requisito funcional.
+
+### 5. Caso 2: login como produto estratégico
+* **Muda de categoria:** Em uma plataforma multi-tenant com foco em segurança corporativa, o login ganha outro peso.
+* **Capacidades envolvidas:** single sign-on, autenticação de dois fatores, logout centralizado e políticas de acesso — com impacto em experiência, adoção e integrações.
+* **De detalhe a organizador de valor:** O login passa a estruturar uma parte relevante do que é entregue.
+* **Resultado:** Uma feature com **identidade própria** e decisões suficientes para merecer PRD específico.
+
+### 6. Compliance e multi-tenant como sinais de enquadramento
+* **Saída do commodity:** Compliance e multi-tenant indicam que a funcionalidade não é mais padronizada.
+* **Novas restrições:** Atender exigências corporativas, suportar múltiplos clientes, controlar regras distintas de acesso e servir de base compartilhada gera decisões que não cabem em uma linha de requisito.
+* **O que o documento precisa explicitar:** quem usa, quais políticas se aplicam, quais integrações são necessárias e quais riscos existem.
+* **Sem isso:** Time técnico e IA tendem a **subestimar a complexidade real** da feature.
+
+### 7. Objetivos de produto tornam a feature documentável
+* **Sucesso mensurável:** Reduzir fricção no login, aumentar adoção, diminuir acessos indevidos ou viabilizar integrações corporativas.
+* **Além de "funcionar":** Esses objetivos mostram que a feature existe para produzir **resultado observável** no negócio e na operação.
+* **Produto em escala menor:** Quando esse tipo de meta aparece, a feature deixa de ser só implementação.
+* **Função do PRD:** Organiza esse raciocínio **antes** que o design técnico transforme tudo em componentes e fluxos.
+
+### 8. Utilidade do PRD de feature para desenvolvedores
+* **Clareza mesmo sem papel de produto:** Desenvolvedores ganham ao escrever ou consumir um PRD de feature.
+* **Menos inferência implícita:** O documento explicita por que a funcionalidade existe e melhora a contextualização usada pela IA em design docs, código e decisões auxiliares.
+* **Features estratégicas:** Evita tratar como detalhe técnico algo que afeta segurança, onboarding, integração e operação corporativa.
+* **Natureza do ganho:** Não é burocracia, é **precisão de contexto**.
+
+### 9. Síntese comparativa
+* **O nome não decide:** Nos dois casos existe "login", mas isso não determina a granularidade documental.
+* **Caso 1:** Capacidade necessária e padronizada → requisito funcional.
+* **Caso 2:** Plataforma de autenticação com impacto estratégico, regras próprias e valor de produto → PRD de feature.
+* **O que realmente decide:** A **densidade de decisões de produto** concentradas na entrega — não a tecnologia usada. Quando ela existe, o PRD de feature prepara o terreno para as seções que detalham escopo, objetivos, regras e restrições.
