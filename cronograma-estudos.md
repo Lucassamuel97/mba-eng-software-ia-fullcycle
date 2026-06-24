@@ -31,7 +31,7 @@ Tempo total de estudo: 28 minutos e 57 segundos (28:57)
 Tempo total de estudo: 26 minutos e 53 segundos (26:53)
 
 - [x] Documentos de Design e Arquitetura — 02:44
-- [ ] Documentos comuns — 06:47
+- [x] Documentos comuns — 06:47
 - [ ] High Level Design — 05:13
 - [ ] Exemplo de um High Level Design Document — 12:09
 
