@@ -20,6 +20,8 @@
 
 - [Aula 9: Exemplo 2 de PRD e JSON Opcional (Rate Limiter)](#aula-9-exemplo-2-de-prd-e-json-opcional-rate-limiter)
 
+- [Aula 10: Prompt para geração de PRD](#aula-10-prompt-para-geração-de-prd)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -554,3 +556,74 @@ Esta aula percorre um **segundo PRD de feature concreto** — um **rate limiter 
 * **Markdown:** Forma mais prática para leitura, edição e discussão entre pessoas.
 * **JSON:** Vale mais quando o documento é consumido por agentes, filtrado programaticamente ou transformado em entrada padronizada para outras etapas.
 * **Não é exclusivo:** Manter as duas saídas preserva **legibilidade para humanos e estrutura para sistemas**.
+
+## Aula 10: Prompt para geração de PRD
+
+Esta aula apresenta um **prompt de entrevista** que transforma a criação do PRD em um fluxo guiado: em vez de pedir "escreva um PRD", a IA **conduz perguntas etapa por etapa**, coleta contexto, confirma entendimento e só então consolida a saída em Markdown (e opcionalmente JSON). O prompt vira **infraestrutura de documentação assistida por IA** — um artefato ajustável, não uma peça fixa.
+
+> 📄 **Exemplo de referência:** o prompt completo está em [Prompt de Entrevista para Gerar PRD](/docs/design-docs/exemplos/ex_prompt_gerar_PRD.md), com papel, princípios de entrevista, processo em 12 etapas, estrutura JSON, defaults e o esqueleto de saída.
+
+---
+
+### 1. Prompt de entrevista como mecanismo de geração de PRD
+* **Fluxo guiado:** A IA conduz perguntas em vez de receber um comando genérico para "escrever um PRD".
+* **Coleta progressiva:** Reduz lacunas de contexto e força a captura das informações já definidas como necessárias em um PRD de feature.
+* **Controle do processo:** A IA não parte direto para a redação — primeiro extrai contexto, confirma entendimento e só depois consolida.
+* **Mais confiável:** Trata documentação como **coleta estruturada**, não como improviso textual.
+
+### 2. Uso do prompt como assistente configurado
+* **Onde usar:** Colado em qualquer IA conversacional ou encapsulado em um assistente configurado (ex: MyGPT).
+* **Vantagem do assistente:** Preserva comportamento estável entre usos — papel, regras de entrevista, formato de saída e restrições ficam persistidos.
+* **Fluxo operacional:** Colar o prompt, iniciar com "comece a entrevista comigo" e responder etapa por etapa.
+* **Documentação prévia:** Se existir, deve ser anexada no início para reduzir o número de perguntas.
+
+### 3. Regras operacionais do entrevistador de IA
+* **Por que existem:** Sem regras explícitas, a conversa produz respostas vagas, inconsistentes ou abertas demais.
+* **Regras centrais:** não fazer perguntas duplas, não inventar detalhes técnicos, resumir o que entendeu, pedir confirmação antes de avançar e sugerir formulações quando o usuário não tiver clareza.
+* **Papel da IA:** Funciona melhor como **facilitador estruturado** do raciocínio do que como autor autônomo do conteúdo.
+
+### 4. Fluxo step-by-step da entrevista
+* **Sequência fixa:** contexto e visão → problema/oportunidade → objetivos → métricas → escopo → requisitos → arquitetura/abordagem → decisões → trade-offs → dependências → riscos.
+* **Cada seção vira etapa:** Com perguntas específicas e confirmação intermediária, evitando misturar seções ou antecipar conclusões.
+* **Ganho principal:** **Rastreabilidade** — cada bloco do PRD final nasce de uma etapa explícita da conversa.
+
+### 5. Armazenamento interno em JSON durante a coleta
+* **JSON interno:** A IA mantém os campos já preenchidos em uma estrutura por chave, mesmo que o usuário não a veja.
+* **Por que ajuda:** Organiza a coleta, facilita validações e evita que respostas iniciais se percam no texto livre da sessão.
+* **Por que ocultar:** O foco do usuário deve ficar na **resposta semântica**, não na edição estrutural.
+* **No fim:** Essa estrutura interna é convertida em Markdown e, opcionalmente, exposta como JSON final.
+
+### 6. Checagem de consistência antes da saída final
+* **Revisão semântica:** Verifica se as respostas são coerentes, se há campos críticos ausentes e se alguma formulação está ambígua demais.
+* **Evita contradições:** Por exemplo, objetivos que contradizem o escopo ou critérios de aceitação sem relação com os requisitos.
+* **Interrompe quando preciso:** Em vez de um documento "completo" só na aparência, o processo pede esclarecimentos.
+* **Onde está a qualidade:** Depende menos da fluência da escrita e mais dessa **validação prévia**.
+
+### 7. Defaults inteligentes para campos desconhecidos
+* **O que são:** Valores sugeridos quando o usuário não sabe preencher — ex: latência **P95 < 150 ms**.
+* **Para que servem:** Evitar bloqueio na entrevista e oferecer um ponto de partida plausível, revisável depois.
+* **Duas condições de uso correto:** o valor deve ser apresentado **como sugestão** e o usuário deve poder alterá-lo antes da saída final.
+* **Risco sem isso:** Transformar hipótese provisória em requisito assumido como definitivo.
+
+### 8. Skeleton of thought e template de saída
+* **Template como esqueleto:** Define a forma do PRD em Markdown e orienta a geração (skeleton of thought).
+* **Preencher, não divagar:** A IA preenche uma estrutura já desenhada — seções, ordem e estilo delimitados.
+* **Benefício:** **Previsibilidade** — documentos diferentes ganham a mesma organização, facilitando revisão, comparação entre features e uso por agentes.
+* **Bônus:** Reduz variação desnecessária de formato entre execuções do mesmo prompt.
+
+### 9. Saída em Markdown e JSON opcional
+* **Saída principal:** PRD em português, em Markdown conforme o template.
+* **JSON opcional:** A IA pergunta se o usuário quer a exportação, com **chaves em inglês** e campos vazios omitidos.
+* **Dois consumidores:** Pessoas revisam melhor em Markdown; automações e agentes operam melhor sobre JSON.
+* **Por que opcional:** Evita atrito quando o objetivo imediato é apenas leitura e revisão humana.
+
+### 10. Reaproveitamento de documentação existente
+* **Documento como insumo:** Em vez de responder tudo do zero, o usuário fornece documentos prévios e a IA preenche o template com base neles.
+* **Pergunta só o que falta:** Reduz esforço, encurta a entrevista e melhora consistência com artefatos já aprovados.
+* **Novo papel da IA:** Atua como **consolidadora e identificadora de lacunas**, não apenas perguntadora serial.
+
+### 11. Revisão e adaptação do prompt
+* **Não é peça fixa:** É um artefato operacional ajustável ao tipo de produto, ao nível de detalhe e ao padrão documental do time.
+* **Três pontos de revisão:** se a entrevista perguntou o suficiente, se os defaults fazem sentido e se o template final é adequado ao contexto real.
+* **Ruído recorrente:** O ajuste correto é alterar a regra ou pergunta no prompt — não apenas editar o documento final à mão.
+* **Resultado:** Esse ciclo transforma o prompt em **infraestrutura de documentação assistida por IA**.

@@ -18,6 +18,7 @@
   - Exemplos de PRD
     - [PRD de Feature — Catálogo de Produtos](docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md)
     - [PRD de Feature — Rate Limiter](docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md)
+    - [Prompt de Entrevista para Gerar PRD](docs/design-docs/exemplos/ex_prompt_gerar_PRD.md)
 
 - **Referências**
   - [Atalhos do GitHub Copilot no VS Code](docs/referencias/atalhos-vscode-copilot.md)

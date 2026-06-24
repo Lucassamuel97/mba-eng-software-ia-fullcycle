@@ -25,7 +25,7 @@ Tempo total de estudo: 28 minutos e 57 segundos (28:57)
 - [x] Principais Seções em um PRD de Feature — 03:15
 - [x] Exemplo 1 de PRD — 07:13
 - [x] Exemplo 2 de PRD e JSON Opcional — 04:52
-- [ ] Prompt para geração de PRD — 06:55
+- [x] Prompt para geração de PRD — 06:55
 
 ## 25/06/2026 (Quinta-feira)
 Tempo total de estudo: 26 minutos e 53 segundos (26:53)
