@@ -418,7 +418,7 @@ Esta aula detalha a **estrutura mínima de um PRD de feature**: as seções que 
 
 Esta aula aterrissa a teoria em um **PRD de feature concreto**, usando um **catálogo de produtos** de e-commerce como caso. Cada seção já conhecida (resumo, público, objetivos, escopo, requisitos, arquitetura, riscos) ganha texto real do domínio, mostrando como a feature vira a **fonte única da verdade** do produto e como a forma de escrever (bullet points, requisitos numerados) torna o documento indexável para consulta e para IA.
 
-> 📄 **Exemplo de referência:** o PRD completo do catálogo está em [PRD de Feature — Catálogo de Produtos](/docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md). Para outra feature com a mesma estrutura, veja também [PRD de Feature — Rate Limiter](/docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md).
+> 📄 **Exemplo de referência:** o PRD completo do catálogo está em [PRD de Feature — Catálogo de Produtos](/docs/design-docs/templates-prd/ex_PRD_Feature_Catalogo_Produtos.md). Para outra feature com a mesma estrutura, veja também [PRD de Feature — Rate Limiter](/docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md).
 
 ---
 
@@ -492,7 +492,7 @@ Esta aula aterrissa a teoria em um **PRD de feature concreto**, usando um **cat�
 
 Esta aula percorre um **segundo PRD de feature concreto** — um **rate limiter centralizado** — em um cenário mais técnico, e introduz a ideia de exportar o mesmo documento em **JSON**. Markdown serve à leitura humana; JSON dá estrutura legível por máquina para alimentar agentes, pipelines e validações. As duas saídas coexistem: legibilidade para pessoas, contrato estruturado para sistemas.
 
-> 📄 **Exemplo de referência:** o PRD completo está em [PRD de Feature — Rate Limiter](/docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md). Compare com o [PRD de Feature — Catálogo de Produtos](/docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md) da aula anterior.
+> 📄 **Exemplo de referência:** o PRD completo está em [PRD de Feature — Rate Limiter](/docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md). Compare com o [PRD de Feature — Catálogo de Produtos](/docs/design-docs/templates-prd/ex_PRD_Feature_Catalogo_Produtos.md) da aula anterior.
 
 ---
 
@@ -561,7 +561,7 @@ Esta aula percorre um **segundo PRD de feature concreto** — um **rate limiter 
 
 Esta aula apresenta um **prompt de entrevista** que transforma a criação do PRD em um fluxo guiado: em vez de pedir "escreva um PRD", a IA **conduz perguntas etapa por etapa**, coleta contexto, confirma entendimento e só então consolida a saída em Markdown (e opcionalmente JSON). O prompt vira **infraestrutura de documentação assistida por IA** — um artefato ajustável, não uma peça fixa.
 
-> 📄 **Exemplo de referência:** o prompt completo está em [Prompt de Entrevista para Gerar PRD](/docs/design-docs/exemplos/ex_prompt_gerar_PRD.md), com papel, princípios de entrevista, processo em 12 etapas, estrutura JSON, defaults e o esqueleto de saída.
+> 📄 **Exemplo de referência:** o prompt completo está em [Prompt de Entrevista para Gerar PRD](/docs/design-docs/templates-prd/ex_prompt_gerar_PRD.md), com papel, princípios de entrevista, processo em 12 etapas, estrutura JSON, defaults e o esqueleto de saída.
 
 ---
 

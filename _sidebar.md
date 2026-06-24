@@ -16,10 +16,12 @@
 - **Design Docs com IA**
   - [Módulo 1 — Documentação na era da IA](docs/design-docs/1-documentacao-na-era-da-ia.md)
   - [Módulo 2 — Design e Arquitetura](docs/design-docs/2-design-e-arquitetura.md)
-  - Exemplos de PRD
-    - [PRD de Feature — Catálogo de Produtos](docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md)
-    - [PRD de Feature — Rate Limiter](docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md)
-    - [Prompt de Entrevista para Gerar PRD](docs/design-docs/exemplos/ex_prompt_gerar_PRD.md)
+  - Templates — PRD
+    - [PRD de Feature — Catálogo de Produtos](docs/design-docs/templates-prd/ex_PRD_Feature_Catalogo_Produtos.md)
+    - [PRD de Feature — Rate Limiter](docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md)
+    - [Prompt de Entrevista para Gerar PRD](docs/design-docs/templates-prd/ex_prompt_gerar_PRD.md)
+  - Templates — Design e Arquitetura
+    - [HLD — Rate Limiter](docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md)
 
 - **Referências**
   - [Atalhos do GitHub Copilot no VS Code](docs/referencias/atalhos-vscode-copilot.md)

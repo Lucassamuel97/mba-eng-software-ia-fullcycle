@@ -8,6 +8,8 @@
 
 - [Aula 3: High Level Design](#aula-3-high-level-design)
 
+- [Aula 4: Exemplo de um High Level Design Document](#aula-4-exemplo-de-um-high-level-design-document)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -187,3 +189,71 @@ Esta aula detalha o **HLD (High Level Design)** como o desenho da solução no n
 * **Guideline adaptável:** Muitos artefatos compartilham uma espinha dorsal parecida, mas cada contexto pede seções extras, ênfases ou nomenclaturas diferentes.
 * **Flexibilidade é parte do papel:** A arquitetura precisa refletir o **problema real**, não obedecer rigidamente a um modelo.
 * **Bom documento:** Preserva a cobertura das **decisões essenciais** e ajusta a forma ao contexto do sistema.
+
+## Aula 4: Exemplo de um High Level Design Document
+
+Esta aula aterrissa o HLD em um **exemplo concreto** — o mesmo **rate limiter** já visto como PRD, agora no nível arquitetural. O documento fixa objetivo, metas não funcionais (P95 < 5 ms), topologia (SDK in-process + Redis), estratégias, fluxo, modelo de chaves, segurança, observabilidade e riscos — tudo no nível que **orienta a solução sem virar Low Level Design**.
+
+> 📄 **Exemplo de referência:** o HLD completo está em [HLD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md). Compare com o [PRD de Feature — Rate Limiter](/docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md) para ver a mesma feature em níveis de abstração diferentes.
+
+---
+
+### 1. Objetivo arquitetural do rate limiter
+* **Problema conhecido, desenho nem tanto:** É um caso recorrente porque o conceito é familiar, mas a implementação e o desenho arquitetural nem sempre.
+* **O que o HLD fixa:** Um SDK embutido nos microserviços, escrito em Go, que limita acesso por **API key, IP e plano do cliente**.
+* **Papel do documento:** Transformar uma necessidade operacional em **responsabilidades, metas e fronteiras técnicas** sem descer ao código.
+
+### 2. Metas não funcionais e P95 abaixo de 5 ms
+* **Moldam a arquitetura:** As metas não funcionais vêm antes de qualquer detalhe de implementação.
+* **P95 < 5 ms (Redis):** 95% das verificações precisam terminar abaixo desse tempo, restringindo topologia, armazenamento e número de hops.
+* **Por que tão rígido:** O rate limiter fica no **caminho crítico** da chamada HTTP — se for lento, toda a plataforma herda essa latência.
+
+### 3. SDK in-process como middleware HTTP
+* **Integração in-process:** Funciona como middleware HTTP antes da lógica de negócio do serviço hospedeiro.
+* **Vantagem:** Reduz acoplamento com um serviço remoto dedicado e evita uma chamada de rede extra por requisição.
+* **Efeito prático:** A requisição entra → o middleware consulta identidade e política → decide permitir/negar → injeta headers → a lógica de negócio continua.
+
+### 4. Redis como estado compartilhado
+* **Por que Redis:** O limitador precisa de leitura e atualização rápidas, com compartilhamento entre múltiplas instâncias.
+* **Processo stateless:** O microserviço fica sem estado; contadores e janelas ficam em Redis (ou memória local em cenários específicos).
+* **Ganho:** Escalar horizontalmente os serviços sem perder a consistência básica do controle distribuído.
+
+### 5. Estratégias de limitação no nível do HLD
+* **Direção, não algoritmo:** Fixed window e token bucket aparecem para registrar a direção arquitetural, não para detalhar o algoritmo.
+* **Perfis distintos:** Fixed window serve a limites por janela temporal fixa; token bucket lida melhor com rajadas e recomposição gradual.
+* **O que o HLD explicita:** Estratégias diferentes atendem perfis diferentes de tráfego e influenciam a modelagem de estado e chaves.
+
+### 6. Topologia e componentes principais
+* **No nível necessário:** Componentes e interfaces aparecem apenas o suficiente para orientar a solução.
+* **Desenho:** Microserviço hospedeiro, SDK de rate limiting, Redis, telemetria e, em produção, eventual orquestração com Kubernetes.
+* **Coração do SDK:** Um **check síncrono** que recebe identidade, rota, método e plano, resolve a política e devolve decisão com metadados (`Retry-After`, headers de limite).
+
+### 7. Fluxo principal da requisição
+* **Entrada pelo middleware:** A requisição atinge o serviço e passa primeiro pelo SDK.
+* **Sequência:** compõe identidade (API key, tenant, IP, rota, método) → resolve política → consulta estado (Redis/memória) → decide.
+* **Saídas:** Limite excedido → `429 Too Many Requests`; aceito → segue, e a telemetria registra métricas, logs e tracing.
+
+### 8. PII na composição das chaves
+* **Risco no chaveamento:** Identificadores como IP e dados de cliente podem vazar informação sensível se gravados de forma ingênua.
+* **O que o HLD registra:** A **exigência** de não expor dados identificáveis nas estruturas de estado e observabilidade — sem definir a implementação exata.
+* **Por que importa:** A chave técnica usada para contagem também é um ponto potencial de **risco regulatório e operacional**.
+
+### 9. Hot keys em Redis
+* **O que são:** Muitas requisições concentrando leitura/escrita na mesma chave, gerando contenção e degradando latência.
+* **Quando surgem:** Clientes compartilhando um escopo global ou chaveamento que concentra tráfego em poucos identificadores.
+* **Por que registrar:** Afeta diretamente a meta de **P95** e pode exigir particionamento, melhor granularidade de chave ou revisão de política.
+
+### 10. Fallback open como decisão arquitetural
+* **O que é:** Liberar a requisição quando o mecanismo de limitação falha (ex: Redis indisponível).
+* **Decisão, não detalhe:** Troca rigor de proteção por **continuidade de acesso** em situações degradadas.
+* **Trade-off explícito:** Reduz risco de indisponibilidade para usuários legítimos, mas aceita exposição temporária a sobrecarga.
+
+### 11. Observabilidade e riscos no nível certo
+* **Já esperados no HLD:** Segurança, observabilidade e riscos arquiteturais; o avanço é vê-los **concretizados** no exemplo.
+* **Observabilidade:** Métricas, logs, tracing e integração com Prometheus e OpenTelemetry para acompanhar latência, falhas e decisões.
+* **Riscos principais:** Redis indisponível ou particionado, configuração incorreta bloqueando tráfego legítimo, hot keys e exposição de PII.
+
+### 12. Limite entre arquitetura e implementação
+* **Interfaces, não contratos finais:** Mostra `check`, contexto, identidade, escopo, decisão, `next`, `render` — sem detalhar contratos completos, campos finais ou código.
+* **Fronteira correta:** O leitor entende **como a solução se organiza**, quais decisões foram tomadas e onde estão os riscos, sem confundir HLD com Low Level Design.
+* **Próximo passo:** Quando for preciso definir estruturas exatas, contratos e regras operacionais, segue-se para um documento de **nível mais baixo**.
