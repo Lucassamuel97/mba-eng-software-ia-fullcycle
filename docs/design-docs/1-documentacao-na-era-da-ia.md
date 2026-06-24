@@ -14,6 +14,8 @@
 
 - [Aula 6: PRDs de Feature e casos de uso](#aula-6-prds-de-feature-e-casos-de-uso)
 
+- [Aula 7: Principais Seções em um PRD de Feature](#aula-7-principais-seções-em-um-prd-de-feature)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -336,3 +338,72 @@ Esta aula define **quando uma feature merece um PRD próprio** — não por exis
 * **Caso 1:** Capacidade necessária e padronizada → requisito funcional.
 * **Caso 2:** Plataforma de autenticação com impacto estratégico, regras próprias e valor de produto → PRD de feature.
 * **O que realmente decide:** A **densidade de decisões de produto** concentradas na entrega — não a tecnologia usada. Quando ela existe, o PRD de feature prepara o terreno para as seções que detalham escopo, objetivos, regras e restrições.
+
+## Aula 7: Principais Seções em um PRD de Feature
+
+Esta aula detalha a **estrutura mínima de um PRD de feature**: as seções que aumentam clareza operacional para uma entrega específica, já no nível de execução do time (e não no enquadramento estratégico do PRD macro). Usando o exemplo de um **rate limiter**, percorre os blocos que concentram as decisões necessárias para alinhar produto, desenvolvimento e IA antes da implementação.
+
+---
+
+### 1. Estrutura mínima de um PRD de feature
+* **Não replica o PRD macro:** Mantém apenas as seções que aumentam clareza operacional para a entrega.
+* **Diferença de tipo, não só de tamanho:** Sai do enquadramento estratégico e entra no **nível de execução** do time.
+* **Flexível, mas recorrente:** Alguns blocos aparecem com frequência porque concentram as **decisões mínimas** para alinhar produto, desenvolvimento e IA.
+
+### 2. Resumo da feature e contexto do problema
+* **Abre o documento:** Descrição curta do que está sendo construído e do problema que resolve.
+* **Evita lista solta:** Impede que a feature seja lida como requisitos sem causa nem finalidade.
+* **Exemplo rate limiter:** Não é "implementar limitação de requisições", mas registrar que há **excesso de acessos derrubando o sistema** e que a feature existe para conter isso.
+* **Efeito:** Com o contexto explícito, decisões posteriores deixam de depender de interpretação implícita.
+
+### 3. Objetivos e métricas no nível da feature
+* **Mais diretos e verificáveis:** No nível da feature, ficam mais concretos que no PRD macro.
+* **Formato típico:** Objetivos como bullet points declarando o resultado esperado; métricas definindo como confirmá-lo.
+* **Sucesso ≠ implementado:** A combinação impede considerar a feature bem-sucedida só porque foi construída.
+* **Critério real:** Impacto observável, não apenas conclusão técnica.
+
+### 4. Escopo
+* **Dentro e fora:** Delimita o que entra e o que fica de fora, reduzindo expansão informal durante a execução.
+* **Precisa ser objetivo:** Pequenas ambiguidades viram retrabalho técnico rapidamente.
+* **Protege a unidade da entrega:** O time sabe o que resolver agora e o que pertence a outra iniciativa.
+* **Sem fronteira:** A feature cresce por acúmulo de expectativas não registradas.
+
+### 5. Requisitos funcionais
+* **Capacidades concretas:** Descrevem quais recursos existirão e quais comportamentos o sistema deve suportar.
+* **O que registrar:** Se a feature exigir login, uma estratégia específica de storage ou outros componentes necessários, isso aparece aqui.
+* **Funcionalidade observável:** Organiza o que será entregue sem virar **desenho técnico detalhado**.
+
+### 6. Requisitos não funcionais
+* **Restrições de qualidade e operação:** Condições em que o sistema precisa funcionar — latência, disponibilidade, limites de indisponibilidade.
+* **Além do "o que faz":** Definem o "em que condições" a solução precisa operar.
+* **Exemplo rate limiter:** Exigir latência mínima e controlar o tempo máximo de indisponibilidade muda diretamente a **viabilidade da implementação**.
+* **Sem esse bloco:** A solução pode cumprir a função e ainda falhar no contexto real de uso.
+
+### 7. Fluxo do usuário
+* **Como a feature é usada:** Descreve interação e sequência de uso do ponto de vista do usuário.
+* **Detecta lacunas:** Torna explícito o caminho esperado, revelando distâncias entre requisito listado e experiência real.
+* **Evita capacidades isoladas:** Ajuda o time a entender ordem, dependência e lógica de uso entre os elementos.
+* **Para a IA:** Reduz inferências erradas sobre comportamento esperado.
+
+### 8. Dependências
+* **O que a feature precisa:** Outro sistema, módulo, serviço ou decisão prévia para existir ou funcionar.
+* **Não é autônoma:** Explicitá-las evita planejar a implementação como se não houvesse integrações ou pré-condições.
+* **Melhora coordenação:** Beneficia estimativa, priorização e alinhamento entre times.
+* **Para a IA:** Ajuda a não propor soluções desconectadas do ecossistema real do projeto.
+
+### 9. Critérios de aceitação
+* **Checklist de "pronto":** Condições que precisam estar satisfeitas para a feature ser considerada completa.
+* **De vago a verificável:** Transformam a noção subjetiva de concluído em condições objetivas, úteis para produto, desenvolvimento e testes.
+* **Referência de encerramento:** Substituem julgamento subjetivo por um critério explícito.
+* **Especialmente útil:** Quando a feature envolve múltiplas regras e pode parecer concluída antes de atender ao esperado.
+
+### 10. Riscos e considerações gerais
+* **Riscos de execução:** Conectados à construção concreta da feature, não ao enquadramento macro — incertezas que comprometem desenvolvimento, adoção ou comportamento.
+* **Considerações gerais:** Fechamento do documento; reúnem observações complementares que ainda influenciam decisão e implementação.
+* **Preserva nuances:** Mantém detalhes importantes sem forçar encaixes artificiais em blocos inadequados.
+
+### 11. Relação com desenvolvimento e com IA
+* **Próximo do cotidiano:** O PRD de feature organiza informações **diretamente acionáveis** para construir a entrega.
+* **Contexto para a IA:** Reduz ambiguidade sobre o que o código precisa resolver, quais limites respeitar e quais condições definem sucesso.
+* **Não substitui design docs:** Mas melhora muito a qualidade dos artefatos técnicos produzidos depois.
+* **Quanto mais explícito:** Menor a chance de time ou IA preencherem lacunas com **suposições erradas**.
