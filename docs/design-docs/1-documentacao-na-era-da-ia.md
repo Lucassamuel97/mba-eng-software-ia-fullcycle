@@ -16,6 +16,8 @@
 
 - [Aula 7: Principais Seções em um PRD de Feature](#aula-7-principais-seções-em-um-prd-de-feature)
 
+- [Aula 8: Exemplo 1 de PRD (Catálogo de Produtos)](#aula-8-exemplo-1-de-prd-catálogo-de-produtos)
+
 
 ## Aula 1: Documentação como parte do desenvolvimento
 
@@ -407,3 +409,77 @@ Esta aula detalha a **estrutura mínima de um PRD de feature**: as seções que 
 * **Contexto para a IA:** Reduz ambiguidade sobre o que o código precisa resolver, quais limites respeitar e quais condições definem sucesso.
 * **Não substitui design docs:** Mas melhora muito a qualidade dos artefatos técnicos produzidos depois.
 * **Quanto mais explícito:** Menor a chance de time ou IA preencherem lacunas com **suposições erradas**.
+
+## Aula 8: Exemplo 1 de PRD (Catálogo de Produtos)
+
+Esta aula aterrissa a teoria em um **PRD de feature concreto**, usando um **catálogo de produtos** de e-commerce como caso. Cada seção já conhecida (resumo, público, objetivos, escopo, requisitos, arquitetura, riscos) ganha texto real do domínio, mostrando como a feature vira a **fonte única da verdade** do produto e como a forma de escrever (bullet points, requisitos numerados) torna o documento indexável para consulta e para IA.
+
+> 📄 **Exemplo de referência:** o PRD completo do catálogo está em [exemplos/ex_PRD_Feature_Catalogo_Produtos.md](exemplos/ex_PRD_Feature_Catalogo_Produtos.md). Para outra feature com a mesma estrutura, veja também [exemplos/ex_PRD_Feature_Rate_Limiter.md](exemplos/ex_PRD_Feature_Rate_Limiter.md).
+
+---
+
+### 1. Catálogo de produtos como fonte única da verdade
+* **Identidade própria:** O catálogo vira feature quando centraliza informações críticas e alimenta múltiplos pontos do sistema.
+* **Mais que uma tabela:** Torna-se a **fonte única da verdade** para descrições, variações, preço, estoque e disponibilidade.
+* **Por que importa:** Reduz divergência entre áreas, evita planilhas paralelas e cria base confiável para vitrine, checkout e operação interna.
+* **No exemplo:** Toda leitura relevante de produto vem do **mesmo serviço oficial**.
+
+### 2. Resumo curto, mas semanticamente denso
+* **Condensa o essencial:** O que a feature faz, por que existe e quais partes do sistema dependem dela.
+* **No caso do catálogo:** Poucas linhas já deixam claro que há serviço central, APIs de leitura, painel interno e contexto proprietário — sem depender de plataformas prontas como Shopify ou VTEX.
+* **Valor para a IA:** A densidade inicial reduz inferência solta logo no começo do documento.
+* **Objetivo:** Permitir que qualquer agente, humano ou não, entenda rapidamente a **unidade de produto** a ser detalhada.
+
+### 3. Bullet points como estratégia de documentação
+* **Não é só estética:** Funcionam como **compressão semântica** para documentos operacionais.
+* **Ganho de leitura:** Melhoram escaneabilidade e ajudam a localizar público, cenários, problemas, escopo e restrições sem percorrer prosa longa.
+* **Para a IA:** Cada item carrega uma ideia mais isolada e referenciável, facilitando a segmentação de contexto.
+* **Quando mais vale:** Em documentos consultados repetidamente durante implementação e refinamento.
+
+### 4. Público, cenários e contexto do problema no caso do catálogo
+* **Seções ganham texto concreto:** O valor novo está em como cada bloco é preenchido no domínio.
+* **Público amplo:** Não só o cliente final, mas time comercial e operacional, além de serviços internos como carrinho e checkout.
+* **Cenários de uso:** Mostram a cadeia completa, da vitrine à compra, e exigem que alterações internas reflitam rápido no front-end.
+* **Resultado:** O catálogo vira **infraestrutura de produto**, não apenas cadastro administrativo.
+
+### 5. Objetivos conectados a métricas e metas
+* **Objetivo + métrica + meta:** Cada intenção precisa de indicador verificável e alvo numérico.
+* **Exemplo:** "Tornar o catálogo a única fonte de produto" → % de páginas servidas pelo catálogo oficial → meta de **100% da loja**.
+* **Outros casos:** Reduzir exposição de itens indisponíveis ou acelerar atualização comercial seguem a mesma lógica.
+* **Efeito:** Evita objetivos vagos e melhora priorização e validação posterior.
+
+### 6. Escopo e fora de escopo como mecanismo de redução de ambiguidade
+* **Concretizar os limites:** O ponto central é tornar as fronteiras explícitas.
+* **Dentro do escopo:** SKU, variações, preço, estoque, APIs de listagem e painel interno.
+* **Fora do escopo:** Checkout, frete, regras fiscais, multimoeda, CMS editorial e blog.
+* **Proteção:** Impede que o catálogo absorva responsabilidades de outros domínios e protege o design técnico de premissas erradas.
+
+### 7. SKU, vitrine e checkout no mesmo recorte funcional
+* **SKU como unidade estrutural:** Conecta cadastro, estoque, preço e compra.
+* **Vitrine:** Consome dados de leitura para exibir produto e disponibilidade.
+* **Checkout:** Depende de um **snapshot consistente** de preço, estoque e SKU no momento da compra.
+* **Por que juntar:** A feature precisa servir navegação **e** transação, mesmo sem incluir o checkout no escopo — registra-se a dependência funcional sem confundir fronteiras.
+
+### 8. Painel interno para o time comercial sem depender de engenharia
+* **Autonomia operacional:** Transfere para a área comercial a capacidade de publicar produto, alterar preço, ajustar estoque e controlar visibilidade.
+* **Sem gargalo técnico:** O negócio opera direto sobre o catálogo, sem depender de desenvolvedores.
+* **Conecta objetivo a capacidade:** Liga a meta de agilidade a uma funcionalidade concreta do sistema.
+* **No exemplo:** Essa autonomia é **valor de produto**, não detalhe de interface administrativa.
+
+### 9. Requisitos funcionais numerados para referência com IA
+* **Forma para uso operacional:** Numerar itens como RF-001, RF-002 cria uma **referência estável**.
+* **Ganho prático:** Pedir implementação, revisão, teste ou refinamento sem repetir o texto inteiro do requisito.
+* **Menos ambiguidade em prompts:** "Implemente o requisito funcional 001" aponta para um bloco específico.
+* **Resultado:** A numeração transforma o PRD em **contexto indexável**.
+
+### 10. Requisitos, arquitetura e validação em um fluxo de uso prático
+* **Requisito acionável:** Criar produto com nome, descrição e categorias já inclui fluxo principal, alternativas, erros previstos e prioridade.
+* **Não funcionais:** Restrições como **P95 < 150 ms**, alta disponibilidade, segurança, observabilidade e acessibilidade.
+* **Arquitetura mínima:** Microserviço dedicado, API em Go, PostgreSQL, indexação, painel em Next.js e integrações relevantes — **sem substituir o design doc**.
+* **Fechamento do ciclo:** Critérios de aceitação e estratégias de validação tornam o documento **base verificável** para entrega, testes e liberação.
+
+### 11. Trade-offs, dependências e riscos aplicados ao catálogo
+* **Decisões reais do domínio:** Isolar o catálogo em microserviço, usar PostgreSQL como fonte da verdade, depender de pipeline de imagens ou política de estoque.
+* **Riscos plausíveis:** Produto sem estoque aparecer como disponível, divergência de preço, navegação lenta.
+* **Por que antecipar:** O PRD precisa prever falhas plausíveis **antes** do desenho técnico detalhado.
+* **Ganho real:** Não é burocracia — é **reduzir surpresa** durante construção e evolução da feature.

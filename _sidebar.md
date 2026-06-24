@@ -15,6 +15,9 @@
 
 - **Design Docs com IA**
   - [Módulo 1 — Documentação na era da IA](docs/design-docs/1-documentacao-na-era-da-ia.md)
+  - Exemplos de PRD
+    - [PRD de Feature — Catálogo de Produtos](docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md)
+    - [PRD de Feature — Rate Limiter](docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md)
 
 - **Referências**
   - [Atalhos do GitHub Copilot no VS Code](docs/referencias/atalhos-vscode-copilot.md)
