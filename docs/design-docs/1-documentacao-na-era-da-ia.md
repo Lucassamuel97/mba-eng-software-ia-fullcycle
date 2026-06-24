@@ -414,7 +414,7 @@ Esta aula detalha a **estrutura mínima de um PRD de feature**: as seções que 
 
 Esta aula aterrissa a teoria em um **PRD de feature concreto**, usando um **catálogo de produtos** de e-commerce como caso. Cada seção já conhecida (resumo, público, objetivos, escopo, requisitos, arquitetura, riscos) ganha texto real do domínio, mostrando como a feature vira a **fonte única da verdade** do produto e como a forma de escrever (bullet points, requisitos numerados) torna o documento indexável para consulta e para IA.
 
-> 📄 **Exemplo de referência:** o PRD completo do catálogo está em [exemplos/ex_PRD_Feature_Catalogo_Produtos.md](exemplos/ex_PRD_Feature_Catalogo_Produtos.md). Para outra feature com a mesma estrutura, veja também [exemplos/ex_PRD_Feature_Rate_Limiter.md](exemplos/ex_PRD_Feature_Rate_Limiter.md).
+> 📄 **Exemplo de referência:** o PRD completo do catálogo está em [PRD de Feature — Catálogo de Produtos](/docs/design-docs/exemplos/ex_PRD_Feature_Catalogo_Produtos.md). Para outra feature com a mesma estrutura, veja também [PRD de Feature — Rate Limiter](/docs/design-docs/exemplos/ex_PRD_Feature_Rate_Limiter.md).
 
 ---
 
