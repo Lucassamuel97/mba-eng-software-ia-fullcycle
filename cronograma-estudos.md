@@ -47,7 +47,7 @@ Tempo total de estudo: 26 minutos e 16 segundos (26:16)
 Tempo total de estudo: 20 minutos e 22 segundos (20:22)
 
 - [x] Realizando Deep Research — 11:24
-- [ ] Adaptando Deep Research a um novo formato — 08:58
+- [x] Adaptando Deep Research a um novo formato — 08:58
 
 ## 30/06/2026 (Terça-feira)
 Tempo total de estudo: 27 minutos e 14 segundos (27:14)

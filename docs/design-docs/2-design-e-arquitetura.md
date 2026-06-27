@@ -20,6 +20,8 @@
 
 - [Aula 9: Realizando Deep Research](#aula-9-realizando-deep-research)
 
+- [Aula 10: Adaptando Deep Research a um novo formato](#aula-10-adaptando-deep-research-a-um-novo-formato)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -591,3 +593,58 @@ Esta aula apresenta o **deep research** como um modo em que a IA navega por font
 * **Boa base ≠ bom insumo operacional:** Uma pesquisa de 27 páginas pode ser excelente como base e ruim como entrada para o fluxo.
 * **Função da 2ª etapa:** Converter o conteúdo em uma estrutura compatível com os templates do time, inclusive para gerar FDDs depois.
 * **O valor:** Transformar **pesquisa bruta em contexto estruturado**, pronto para alimentar novos prompts e documentos.
+
+## Aula 10: Adaptando Deep Research a um novo formato
+
+Esta aula é a **Fase 2** do deep research: pegar a pesquisa bruta (PDF/Markdown) e **transpô-la** para um template estruturado de 16 seções, sem resumir. O ponto crítico é que a IA precisa **reorganizar, não condensar** — e a revisão humana cobra fidelidade estrutural e densidade técnica. O resultado é pesquisa virando **contexto reutilizável** que alimenta FDDs e demais documentos do pipeline.
+
+> 📄 **Exemplo de referência:** o prompt da **Fase 2** (reformatação para o *Deep Research Document* de 16 seções) está em [Prompt para Deep Research — Fase 2](/docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase2.md). Veja também a [Fase 1](/docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase1.md).
+
+---
+
+### 1. Reformatar sem perder conteúdo
+* **Rica, mas pouco operacional:** Uma Deep Research em PDF/Markdown serve mal a fluxos posteriores.
+* **Transpor, não resumir:** O objetivo é levar o **mesmo conteúdo** para um template estruturado que facilite consulta, revisão e reaproveitamento.
+* **Muda o prompt:** A IA precisa **reorganizar, não condensar** — se resumir demais, o documento vira só uma visão geral e perde valor técnico.
+
+### 2. Template com 16 seções como estrutura de trabalho
+* **Documento coringa:** Seções como contexto, fundamentos, conceitos-chave, panorama, arquiteturas, estratégias, algoritmos, tecnologias, boas práticas, métricas, casos de uso, riscos, segurança, tendências e impacto.
+* **Por que funciona:** Distribui a pesquisa em blocos previsíveis, facilitando localizar decisões e alimentar outros artefatos.
+* **Não é regra fixa:** As 16 seções são um ponto de partida adaptável ao tipo de projeto.
+* **Equilíbrio:** Padronização suficiente para reutilização, sem engessar o conteúdo.
+
+### 3. Procedimento prático no chat
+* **Fluxo direto:** Abrir um novo chat, colar o prompt de adaptação e anexar o PDF/Markdown da Deep Research.
+* **Instrução central:** Pedir **preservação integral** do conteúdo e adequação ao formato, sem resumo indevido.
+* **No rate limiter:** A pesquisa bruta vira um documento com arquiteturas, tipos de rate limiting, estratégias, algoritmos e referências por seção.
+* **Resultado:** Continua extenso, mas agora **navegável** e mais útil como insumo técnico.
+
+### 4. Avaliação crítica da saída da IA
+* **Tendência a resumir:** A IA tenta condensar documentos longos mesmo quando o prompt pede o contrário.
+* **O que revisar:** Se exemplos, estratégias, links, trechos técnicos e nuances foram preservados.
+* **Saída superficial:** A correção é **iterar o prompt**, repetir a geração ou trocar de modelo — não aceitar o texto como está.
+* **Critério de qualidade:** Não é elegância do texto, e sim **fidelidade estrutural e densidade técnica**.
+
+### 5. Escolha de modelo para documentos extensos
+* **Comportamento varia:** Modelos diferem em tarefas longas de reestruturação.
+* **O que comparar:** Capacidade de manter volume, detalhamento e aderência ao pedido de **não resumir**.
+* **Citações:** O Gemini é apontado como útil para saídas extensas (inclusive em cenários gratuitos); o ChatGPT pode resumir além do desejado em alguns casos.
+* **Decisão empírica:** Testar o mesmo insumo em mais de um modelo e avaliar qual preserva melhor.
+
+### 6. Pesquisa estruturada como insumo para outros documentos
+* **Mais que "texto bonito":** Transforma pesquisa crua em **contexto reutilizável**.
+* **O que habilita:** Servir de base para drafts de FDD, complementar prompts e reduzir a dependência de entrevistas quando o contexto já está consolidado.
+* **Compor em vez de começar do zero:** O fluxo passa a montar documentos a partir de insumos preparados.
+* **Efeito:** Menos fricção e melhor qualidade do rascunho inicial.
+
+### 7. Escopo explícito evita pesquisa desequilibrada
+* **Extensão não garante equilíbrio:** Uma Deep Research longa pode aprofundar demais alguns pontos e tratar mal outros decisivos.
+* **Pedido genérico:** Leva a cobertura desigual do que importa para design e implementação.
+* **Estruturar o escopo:** Distribui a atenção entre fundamentos, mecanismos, riscos, segurança e aplicação prática.
+* **Resultado:** Um documento mais útil para engenharia, não apenas mais longo.
+
+### 8. Documentação como pipeline de implementação
+* **Contexto acumulado:** Pesquisa técnica, documentos de alto nível, detalhes técnicos e guidelines somados dão à IA um contexto muito mais forte.
+* **O que permite:** Quebrar a implementação em partes, derivar tarefas, sugerir snippets e apoiar decisões com menos improviso.
+* **Não substitui programar:** Antecipa decisões e reduz ambiguidade na execução.
+* **Valor crescente:** Aumenta quando os documentos continuam sendo **atualizados** conforme o desenvolvimento avança.
