@@ -38,7 +38,7 @@ Tempo total de estudo: 26 minutos e 53 segundos (26:53)
 ## 26/06/2026 (Sexta-feira)
 Tempo total de estudo: 26 minutos e 16 segundos (26:16)
 
-- [ ] Prompt para High Level Design — 05:42
+- [x] Prompt para High Level Design — 05:42
 - [ ] Feature Design Doc — 04:24
 - [ ] Exemplo de um FDD — 10:54
 - [ ] Prompt para FDD — 05:16

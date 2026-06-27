@@ -10,6 +10,8 @@
 
 - [Aula 4: Exemplo de um High Level Design Document](#aula-4-exemplo-de-um-high-level-design-document)
 
+- [Aula 5: Prompt para High Level Design](#aula-5-prompt-para-high-level-design)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -257,3 +259,61 @@ Esta aula aterrissa o HLD em um **exemplo concreto** — o mesmo **rate limiter*
 * **Interfaces, não contratos finais:** Mostra `check`, contexto, identidade, escopo, decisão, `next`, `render` — sem detalhar contratos completos, campos finais ou código.
 * **Fronteira correta:** O leitor entende **como a solução se organiza**, quais decisões foram tomadas e onde estão os riscos, sem confundir HLD com Low Level Design.
 * **Próximo passo:** Quando for preciso definir estruturas exatas, contratos e regras operacionais, segue-se para um documento de **nível mais baixo**.
+
+## Aula 5: Prompt para High Level Design
+
+Esta aula mostra como um **prompt de entrevista guiada** acelera a produção do HLD: em vez de pedir texto livre, ele coleta contexto por perguntas estruturadas, usa PRD e documentos como insumo, gera um draft em um **template reutilizável** e roda checagem de consistência. A IA é **aceleradora, não autora única** — o raciocínio arquitetural continua humano.
+
+> 📄 **Exemplo de referência:** o prompt completo está em [Prompt para geração de um HLD](/docs/design-docs/templates-design-arquitetura/ex_prompt_gerar_HLD.md), com papel, princípios de entrevista, processo em 11 etapas, estrutura JSON, defaults e o esqueleto de saída. Veja o resultado aplicado no [HLD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md).
+
+---
+
+### 1. Entrevista guiada para gerar um HLD
+* **Conduz a coleta:** Em vez de pedir texto livre, faz perguntas estruturadas e transforma as respostas em um draft inicial.
+* **Cobre o esquecido:** Força seções que costumam ser puladas — riscos, observabilidade e interfaces públicas.
+* **Onde está o valor:** Não em automatizar a arquitetura inteira, mas em **organizar a extração de contexto** técnico de forma repetível.
+
+### 2. PRD e documentos complementares como insumo
+* **PRD como ponto de partida:** Evita que o HLD nasça só de respostas improvisadas durante a entrevista.
+* **Mais contexto, menos preenchimento:** Documentos técnicos, anotações de reunião e pesquisa prévia aproximam o draft da realidade do problema.
+* **O que pesa:** A qualidade depende menos da eloquência do prompt e mais da **densidade do contexto anexado**.
+
+### 3. Template reutilizável
+* **Fixa o formato antes da geração:** Contexto, arquitetura geral, componentes, fluxo de requisição, modelo de dados, interfaces públicas, escalabilidade, segurança, observabilidade e riscos.
+* **Evita inconsistência:** Impede texto solto ou reorganização do HLD a cada execução.
+* **Facilita o resto:** Revisão humana, comparação entre documentos e adaptação ao padrão interno do time.
+
+### 4. Defaults inteligentes no prompt
+* **O que são:** Valores ou decisões assumidas quando a informação ainda não foi fornecida, de forma controlada.
+* **Para que servem:** Reduzir fricção na geração inicial e evitar que o processo pare por falta de detalhes menores.
+* **Exigem revisão:** Aceleram o draft, mas uma suposição plausível ainda pode estar **errada** para a empresa ou a feature.
+
+### 5. JSON como formato operacional
+* **Estrutura manipulável:** Transforma seções do HLD em algo previsível e processável por ferramentas.
+* **O que habilita:** Validar campos, reaproveitar blocos, versionar estruturas e alimentar outros fluxos automatizados.
+* **Objetivo:** Não substituir a leitura humana, mas tornar a geração mais **consistente e integrável**.
+
+### 6. Checagem de consistência entre seções
+* **Verifica contradições:** Confere se as partes do HLD não se contradizem antes de finalizar o draft.
+* **Exemplo:** Se a arquitetura sugere um componente centralizado, o fluxo principal, os riscos e a escalabilidade precisam refletir essa escolha.
+* **Evita:** Documentos formalmente bonitos, mas **internamente incoerentes**.
+
+### 7. IA como aceleradora, não autora única
+* **No que acelera:** Estruturar perguntas, preencher o esqueleto e expandir partes técnicas recorrentes.
+* **Limite:** Não gera sozinha um documento confiável para contextos específicos de empresa, domínio e funcionalidade.
+* **Papel humano:** Decidir, corrigir, complementar e **remover generalizações inadequadas**.
+
+### 8. Adaptação ao fluxo de trabalho do time
+* **Não é peça fixa:** O prompt muda conforme o workflow, o tipo de projeto e a documentação já existente.
+* **Pontos de partida diferentes:** Em alguns casos a entrevista inicia o processo; em outros, começa-se com PRD, pesquisa técnica e um template parcialmente preenchido.
+* **Ganho:** Adaptar ao processo real reduz atrito e aumenta a utilidade do draft.
+
+### 9. Aplicação prática no exemplo de rate limiting
+* **Não redesenha a solução:** Reconstrói o HLD de rate limiting a partir de insumos, perguntas e um esqueleto.
+* **O que o prompt pede:** Objetivos técnicos, componentes, fluxo principal, riscos e preocupações transversais, usando o documento como referência estrutural.
+* **Mudança de modo:** O time passa da escrita manual integral para a **geração assistida** de um primeiro rascunho revisável.
+
+### 10. Workflow operacional de geração
+* **Fluxo recomendado:** reunir insumos → executar a entrevista guiada → gerar o draft no template → rodar checagem de consistência → revisar manualmente.
+* **Equilíbrio:** Reduz a fricção de começar do zero **sem terceirizar** o raciocínio arquitetural.
+* **Resultado esperado:** Não um documento final perfeito, mas um **draft inicial** mais mastigado e mais barato de evoluir.
