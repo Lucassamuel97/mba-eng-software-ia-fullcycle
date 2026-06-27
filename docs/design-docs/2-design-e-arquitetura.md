@@ -539,6 +539,8 @@ Esta aula fecha o trio de prompts mostrando como gerar um **FDD com apoio da IA*
 
 Esta aula apresenta o **deep research** como um modo em que a IA navega por fontes, cruza informações e produz uma pesquisa longa que vira **insumo técnico reutilizável** para os documentos seguintes. O foco prático é a **formulação do pedido**: um fluxo em **duas etapas** — entrevista curta que gera um resumo preparatório, depois a pesquisa longa — produz resultados muito melhores que um "pesquise sobre X" genérico.
 
+> 📄 **Exemplo de referência:** o prompt da **Fase 1** (entrevista de contexto que gera o resumo preparatório) está em [Prompt para Deep Research — Fase 1](/docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase1.md).
+
 ---
 
 ### 1. Deep research como navegação longa da IA

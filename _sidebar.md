@@ -25,6 +25,7 @@
     - [Prompt para geração de um HLD](docs/design-docs/templates-design-arquitetura/ex_prompt_gerar_HLD.md)
     - [FDD — Rate Limiter](docs/design-docs/templates-design-arquitetura/ex_FDD_Rate_Limiter.md)
     - [Prompt para geração de um FDD](docs/design-docs/templates-design-arquitetura/ex_prompt_gerar_FDD.md)
+    - [Prompt para Deep Research — Fase 1](docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase1.md)
 
 - **Referências**
   - [Atalhos do GitHub Copilot no VS Code](docs/referencias/atalhos-vscode-copilot.md)
