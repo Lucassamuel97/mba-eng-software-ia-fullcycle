@@ -12,6 +12,8 @@
 
 - [Aula 5: Prompt para High Level Design](#aula-5-prompt-para-high-level-design)
 
+- [Aula 6: Feature Design Doc](#aula-6-feature-design-doc)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -317,3 +319,61 @@ Esta aula mostra como um **prompt de entrevista guiada** acelera a produção do
 * **Fluxo recomendado:** reunir insumos → executar a entrevista guiada → gerar o draft no template → rodar checagem de consistência → revisar manualmente.
 * **Equilíbrio:** Reduz a fricção de começar do zero **sem terceirizar** o raciocínio arquitetural.
 * **Resultado esperado:** Não um documento final perfeito, mas um **draft inicial** mais mastigado e mais barato de evoluir.
+
+## Aula 6: Feature Design Doc
+
+Esta aula posiciona o **Feature Design Doc (FDD)** como o documento que desce do desenho arquitetural (HLD) para a **especificação operacional** da feature: comportamento em runtime, contratos reais, erros, fallbacks, configuração e critérios de aceite. Ele é a **ponte entre arquitetura e código** — detalha o suficiente para orientar a implementação sem virar prescrição de código linha por linha.
+
+---
+
+### 1. Posição do FDD na hierarquia
+* **Desce do HLD:** Vai do desenho arquitetural para a especificação operacional da feature.
+* **Transforma contexto em detalhe:** O HLD definiu o terreno; o FDD vira comportamento detalhado, contratos reais e condições de implementação.
+* **Nível intermediário:** Não prescreve código linha por linha, mas também não fica só na organização macro do sistema.
+* **Papel central:** Reduzir a ambiguidade entre **arquitetura e execução**.
+
+### 2. Quando usar um FDD
+* **Gatilhos:** A feature expõe API, altera contratos, adiciona configuração ou afeta segurança, performance e compatibilidade.
+* **Por que aqui:** A implementação depende de definições que não cabem mais no nível arquitetural, mas precisam ser compartilhadas antes do código.
+* **Deixa de ser opcional:** Quando a mudança afeta integração entre partes, comportamento em runtime ou expectativas externas, vira **instrumento de alinhamento técnico**.
+
+### 3. Perguntas que o documento responde
+* **Comportamento e contratos:** Como a feature se comporta em runtime, quais interfaces expõe, como é configurada e de quais dependências precisa.
+* **Erros e concorrência:** Como lida com erros, exceções e concorrência.
+* **Verificabilidade:** Define como **validar** que a implementação está correta — desloca a discussão de intenção para verificabilidade.
+* **Utilidade ampla:** Serve para construir, revisar, testar e aceitar a feature com **critérios objetivos**.
+
+### 4. FDD como ponte entre arquitetura e código
+* **Fronteira deliberada:** Detalha o suficiente para orientar a implementação sem virar padrão de codificação ou detalhe interno de classe.
+* **Onde moram os erros:** Muitos surgem no espaço entre "a arquitetura permite" e "o código realmente faz".
+* **O que fecha esse espaço:** Explicitar contratos públicos, fluxos, erros e regras operacionais que o HLD apenas sinaliza em alto nível.
+
+### 5. Contratos públicos e comportamento detalhado
+* **O que outros podem esperar:** Define o que outras partes do sistema ou consumidores externos esperam da feature.
+* **O que entra:** Assinaturas, endpoints, headers, exemplos de uso e semântica de resposta — integração exige **precisão, não intenção genérica**.
+* **No rate limiter:** O foco deixa de ser a topologia (Redis + middleware) e passa ao comportamento exato — quais headers retorna, em que condição responde `429` e qual contrato expõe.
+
+### 6. Erros, exceções e fallbacks
+* **Comportamento especificado:** Erros e exceções não são detalhe deixado para o implementador decidir no meio do desenvolvimento.
+* **Fallbacks na mesma camada:** Representam a resposta esperada quando dependências falham ou o modo principal não opera.
+* **No rate limiter:** A decisão arquitetural de **fallback open** vira regra operacional clara, com condições de acionamento e efeito observável.
+
+### 7. Configuração, dependências e compatibilidade
+* **Configuração no uso real:** Quais opções existem, como são fornecidas via código e quais combinações são válidas ou inválidas.
+* **Dependências concretas:** Deixam de ser componentes do desenho e viram requisitos para a feature funcionar, com impacto em integração e rollout.
+* **Compatibilidade explícita:** Tratada quando a mudança altera contratos, comportamento esperado ou a forma de adoção por consumidores existentes.
+
+### 8. Critérios de aceite como núcleo da especificação
+* **Tornam o doc verificável:** Transformam o FDD em referência testável, não apenas descritiva.
+* **O que definem:** As condições sob as quais a feature é considerada correta — comportamento, contratos, erros e restrições técnicas.
+* **Diferença prática:** Sem eles, o time implementa algo plausível; com eles, implementa algo **testável contra uma definição compartilhada**.
+
+### 9. Estrutura típica do documento
+* **Seções comuns:** Contexto e motivação técnica, objetivos, escopo e exclusões, fluxos detalhados, diagramas (quando necessários), contratos públicos, erros, fallbacks, dependências, compatibilidade, critérios de aceite, riscos e mitigação.
+* **Foco no que diverge:** Não serve só para descrever a feature, mas para **cercar os pontos que mais geram divergência** na implementação.
+* **Reaproveitamento:** Observabilidade e riscos podem ser referenciados a partir do que já foi estabelecido antes, desde que fique claro como afetam a operação específica da feature.
+
+### 10. Implicações para implementação com IA
+* **Contexto operacional reutilizável:** Um FDD bem escrito melhora a implementação assistida por IA em vez de depender de prompts vagos.
+* **Menos interpretação arbitrária:** Com contratos, erros, configuração e critérios de aceite explícitos, a IA gera código e testes com menos ambiguidade.
+* **Ganho principal:** Não é "automatizar a feature", mas **reduzir a distância** entre o que foi decidido e o que será implementado.
