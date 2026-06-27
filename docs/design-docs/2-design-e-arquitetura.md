@@ -14,6 +14,8 @@
 
 - [Aula 6: Feature Design Doc](#aula-6-feature-design-doc)
 
+- [Aula 7: Exemplo de um FDD](#aula-7-exemplo-de-um-fdd)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -377,3 +379,105 @@ Esta aula posiciona o **Feature Design Doc (FDD)** como o documento que desce do
 * **Contexto operacional reutilizável:** Um FDD bem escrito melhora a implementação assistida por IA em vez de depender de prompts vagos.
 * **Menos interpretação arbitrária:** Com contratos, erros, configuração e critérios de aceite explícitos, a IA gera código e testes com menos ambiguidade.
 * **Ganho principal:** Não é "automatizar a feature", mas **reduzir a distância** entre o que foi decidido e o que será implementado.
+
+## Aula 7: Exemplo de um FDD
+
+Esta aula percorre um **FDD concreto** — o mesmo **rate limiter**, agora no nível de comportamento verificável. O documento sai da topologia geral e fixa **como cada microsserviço aplica limites**: API pública (`Check`/`Middleware`/`Decision`), semântica de headers, estratégias em runtime, configuração via `options`, atomicidade (Lua no Redis, mutex por chave na memória), fallback open, observabilidade e critérios de aceite. Mostra também que a **pesquisa técnica** é o que abastece a IA com os pontos que mais afetam a implementação.
+
+> 📄 **Exemplo de referência:** o FDD completo está em [FDD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_FDD_Rate_Limiter.md). Compare com o [HLD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md) e o [PRD de Feature — Rate Limiter](/docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md) para ver a mesma feature do produto à implementação.
+
+---
+
+### 1. Contexto técnico do FDD
+* **Desce para o verificável:** Sai do desenho arquitetural e foca o comportamento.
+* **Novo foco:** Padronizar como cada microsserviço aplica limites, expõe contratos e reage a falhas — não a topologia geral.
+* **Por que existe:** Inconsistência entre serviços produz sobrecarga, integração confusa e implementação divergente.
+* **Solução:** Um SDK embutido in-process em cada serviço, com estado em Redis ou memória local.
+
+### 2. Objetivos técnicos e escopo
+* **Intenção vira requisito:** API pública estável, integração por middleware HTTP, fixed window e token bucket, telemetria nativa, baixa latência e fallback open.
+* **Escopo delimita a entrega:** Inclui Redis Cluster, memória local e geração de headers; exclui autenticação, gestão de políticas e estratégias alternativas.
+* **Exclusão é parte do contrato:** Em FDD, o que fica **de fora** é tão importante quanto o incluído — evita absorver responsabilidades de outros componentes.
+
+### 3. API `Check`, `Middleware` e `Decision`
+* **Contratos concretos:** A API expõe operações reais, não a ideia genérica de "aplicar rate limiting".
+* **`Check`:** Decisão síncrona — recebe o contexto da requisição e retorna uma `Decision` com campos observáveis (permitido/bloqueado, restante, `retry_after`).
+* **`Middleware`:** Encapsula o processo no pipeline HTTP, convertendo a decisão em continuação ou `429`.
+* **`Decision`:** Separa cálculo interno de efeito externo — facilita teste, reuso e consistência entre integração programática e HTTP.
+
+### 4. Semântica de headers de rate limiting
+* **Significado explícito:** `RateLimit`, `RateLimit-Reset` e `Retry-After` precisam de semântica clara — clientes os usam para backoff e exibição de limites.
+* **O que o FDD fixa:** Quais headers existem e o **significado operacional** de cada valor (quanto resta, quando reinicia, quanto esperar).
+* **Evita incompatibilidade:** Impede que cada serviço publique convenções divergentes.
+* **Header é API pública:** Em feature de infraestrutura, o contrato de header faz parte da interface.
+
+### 5. Estratégias: fixed window e token bucket
+* **Não reabre a decisão:** O FDD especifica como as estratégias se comportam na interface e no runtime, não a escolha arquitetural.
+* **Fixed window:** Contagem agrupada por janela discreta; reset acompanha o limite temporal.
+* **Token bucket:** Recarga contínua por `rate` até um teto de `burst`, absorvendo rajadas controladas.
+* **Utilidade:** Tornar as diferenças **implementáveis e testáveis**, inclusive nos headers e exemplos.
+
+### 6. Padrão `options` para configuração
+* **Configuração incremental:** Evita construtores com muitos parâmetros posicionais.
+* **Opções composáveis:** Storage, estratégia, credenciais, pool e comportamento operacional.
+* **Builder idiomático:** Cada opção altera a configuração final de forma explícita e extensível.
+* **Para múltiplos modos:** Melhora legibilidade, compatibilidade futura e ergonomia de uso.
+
+### 7. Validação no construtor
+* **Falhar cedo:** Impede que uma instância inválida exista em runtime.
+* **O que checar:** Coerência dos parâmetros da estratégia, combinações obrigatórias e configuração suficiente para o modo selecionado.
+* **Erro mais barato:** Desloca falha de produção para falha de inicialização.
+* **Em infraestrutura:** Falhar na criação é preferível a aceitar configuração inconsistente e gerar comportamento imprevisível.
+
+### 8. Modos de storage: Redis e memória local
+* **Não são só intercambiáveis:** Cada modo define um comportamento operacional distinto.
+* **Redis:** Cenário distribuído — múltiplas instâncias compartilham estado e aplicam o mesmo limite global.
+* **Memória local:** Desenvolvimento ou instâncias isoladas, com **perda de estado** ao reiniciar pod/container.
+* **Por que registrar:** Evitar adoção incorreta do modo local em cenários que exigem coordenação distribuída.
+
+### 9. Atomicidade em Redis com scripts Lua
+* **Problema central:** Múltiplas requisições disputam o mesmo contador simultaneamente.
+* **Solução Lua:** Executa leitura, cálculo e atualização como **operação atômica** no servidor, evitando condições de corrida.
+* **Sem round-trips frágeis:** Protege a correção do limite e preserva latência no caminho síncrono.
+
+### 10. Concorrência em memória com mutex por chave
+* **Sincronização local:** No modo memória, a atomicidade depende de sincronização dentro do processo.
+* **Mutex por chave:** Evita atualização concorrente do mesmo identificador sem serializar chaves independentes.
+* **Menos contenção:** Reduz disputa frente a um lock global e preserva paralelismo seguro.
+* **Decisão obrigatória:** Concorrência correta não é detalhe opcional em um limitador.
+
+### 11. Compatibilidade e dependências
+* **Piso técnico:** Go 1.22 e Redis 6.2 delimitam a base e evitam dependência acidental de recursos mais novos.
+* **Dependências verificáveis:** Prometheus, OpenTelemetry, Collector, Linux e AMD64/ARM viram requisitos de build, execução e observação.
+* **Por que importa:** Uma feature pode estar correta em código e falhar por **incompatibilidade de ambiente**.
+* **Em FDD:** Dependência é condição operacional, não nota de rodapé.
+
+### 12. Segurança e proteção de dados
+* **Concreta, não abstrata:** Logs, métricas, tracing e chaves não podem vazar identificadores sensíveis (ex: IP em texto cru).
+* **O que indicar:** TLS entre app e Redis quando disponível, tratamento seguro de credenciais e cuidado com atributos/spans exportados.
+* **Restrição operacional:** Segurança limita o que pode circular em observabilidade e infraestrutura.
+* **Objetivo:** Impedir que um componente de controle introduza **exposição indevida** de dados.
+
+### 13. Fallback open e comportamento em falha
+* **Já decidido, agora especificado:** O avanço é definir **quando dispara** e qual efeito observável produz.
+* **Comportamento em falha:** Com modo permissivo ativo, a requisição segue, mas o sistema registra logs, métricas e transições de conectividade.
+* **Sem isso:** A feature continua disponível, mas o comportamento fica **opaco e difícil de auditar**.
+* **Regra:** Fallback útil é fallback explicitamente operacionalizado.
+
+### 14. Observabilidade aplicada ao componente
+* **Vira contrato operacional:** Deixa de ser preocupação arquitetural genérica.
+* **O que cobrir:** Métricas de decisões, erros, fallback e desempenho; logs estruturados sem dados sensíveis; tracing com atributos e spans úteis.
+* **Depurável em produção:** Esse detalhamento é o que permite localizar gargalos e falhas.
+* **Bom FDD:** Não diz apenas que "haverá telemetria" — define **o que será observável**.
+
+### 15. Critérios de aceite e prontidão para código
+* **Checklist verificável:** Convertem o documento em referência testável.
+* **Sinais objetivos:** Contratos funcionando, testes passando, desempenho sob carga validado e resiliência confirmada.
+* **Alinha o time:** Reduz discussão subjetiva sobre "estar pronto".
+* **Ponte para o código:** Nesse nível, o FDD já serve diretamente para tarefas de implementação.
+
+### 16. Pesquisa técnica como insumo para IA
+* **IA não inventa requisitos:** Acelera a escrita, mas não cria requisitos corretos que não foram fornecidos ou compreendidos.
+* **Risco da omissão:** Sem saber que Lua, mutex por chave, semântica de headers ou modos de fallback importam, o rascunho omite o que mais afeta a implementação.
+* **Pesquisa amplia o repertório:** Mais decisões podem ser pedidas e revisadas.
+* **Onde a IA rende:** Quando recebe **contexto técnico real**, não quando substitui o entendimento do problema.

@@ -23,6 +23,7 @@
   - Templates — Design e Arquitetura
     - [HLD — Rate Limiter](docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md)
     - [Prompt para geração de um HLD](docs/design-docs/templates-design-arquitetura/ex_prompt_gerar_HLD.md)
+    - [FDD — Rate Limiter](docs/design-docs/templates-design-arquitetura/ex_FDD_Rate_Limiter.md)
 
 - **Referências**
   - [Atalhos do GitHub Copilot no VS Code](docs/referencias/atalhos-vscode-copilot.md)
