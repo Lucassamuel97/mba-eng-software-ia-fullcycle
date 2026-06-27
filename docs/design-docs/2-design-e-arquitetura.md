@@ -18,6 +18,8 @@
 
 - [Aula 8: Prompt para FDD](#aula-8-prompt-para-fdd)
 
+- [Aula 9: Realizando Deep Research](#aula-9-realizando-deep-research)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -532,3 +534,58 @@ Esta aula fecha o trio de prompts mostrando como gerar um **FDD com apoio da IA*
 * **Insumos anexáveis:** HLD existente, PRD correspondente, trechos da codebase e o template do FDD para pedir um draft inicial.
 * **Pode pular a entrevista:** Usar diretamente o esqueleto de saída como instrução de preenchimento.
 * **Resultado esperado:** Um documento próximo do que a empresa precisa, ainda tratado como **rascunho a refinar**.
+
+## Aula 9: Realizando Deep Research
+
+Esta aula apresenta o **deep research** como um modo em que a IA navega por fontes, cruza informações e produz uma pesquisa longa que vira **insumo técnico reutilizável** para os documentos seguintes. O foco prático é a **formulação do pedido**: um fluxo em **duas etapas** — entrevista curta que gera um resumo preparatório, depois a pesquisa longa — produz resultados muito melhores que um "pesquise sobre X" genérico.
+
+---
+
+### 1. Deep research como navegação longa da IA
+* **Além do conhecimento imediato:** A IA navega por fontes, cruza informações e produz um documento longo de pesquisa.
+* **Quando importa:** Para especificar uma feature sem depender só de memória, intuição ou conhecimento parcial.
+* **No rate limiter em Go:** A pesquisa vira insumo técnico para o detalhamento não ser escrito **no escuro**.
+
+### 2. Pesquisa técnica como insumo para documentos
+* **Não é o fim:** O documento extenso funciona como **contexto reutilizável** para gerar artefatos posteriores.
+* **Drafts melhores:** Com esse insumo, a IA produz design docs mais completos e menos genéricos.
+* **No rate limiting:** Sustenta decisões sobre estratégias, bibliotecas, restrições e pontos de atenção antes da especificação.
+
+### 3. Limite prático de modelos para documentos longos
+* **Comportamento varia:** Modelos diferentes lidam de forma diferente com arquivos extensos.
+* **Casos:** Às vezes o Gemini produz documentos maiores e mais completos; em outros, o ChatGPT atende bem, e o Claude também pode servir.
+* **Decisão prática, não ideológica:** Escolher o modelo que sustenta melhor **volume, completude e consistência** para o tipo de pesquisa.
+
+### 4. O erro mais comum ao pedir deep research
+* **Não é a ferramenta:** O problema está na formulação do pedido.
+* **"Faça uma pesquisa sobre X":** Gera resultado amplo demais, superficial ou desalinhado com o uso real.
+* **O que falta:** Contexto explícito sobre problema, ambiente, profundidade, tecnologias relevantes e resultado esperado.
+
+### 5. Prompt em duas etapas
+* **Separar em fases:** Primeiro a IA conduz uma entrevista curta e monta um resumo preparatório; depois dispara a pesquisa longa com base nele.
+* **Por que melhora:** A navegação longa parte de um **briefing técnico calibrado**, não de um pedido genérico.
+
+### 6. Resumo preparatório antes da pesquisa longa
+* **O que consolida:** Tema técnico, motivação, foco, contexto de uso, profundidade, stack relevante, necessidade de exemplos reais e resultado esperado.
+* **Reduz ambiguidade:** Força o autor a explicitar **o que quer aprender**.
+* **Sem alinhamento:** A IA gasta esforço em tópicos irrelevantes ou deixa lacunas nas decisões que mais importam.
+
+### 7. Entrevista guiada aplicada à pesquisa
+* **Outra função:** A entrevista guiada aqui **prepara a pesquisa**, não gera o documento final.
+* **Como opera:** Uma pergunta por vez, usando as respostas para compor o briefing.
+* **No exemplo:** Perguntas sobre motivação, contexto HTTP em microserviços, profundidade e uso de Redis refinam o escopo antes da busca longa.
+
+### 8. Como disparar a pesquisa depois da preparação
+* **Disparo simples:** Com o resumo pronto, basta pedir que a IA pesquise com base naqueles aspectos.
+* **O ganho está antes:** Não na sofisticação do comando final, mas na **qualidade do contexto acumulado**.
+* **Trate como job:** A etapa longa pode levar dezenas de minutos — é coleta e síntese, não resposta instantânea.
+
+### 9. Por que não forçar um template na primeira fase
+* **Esqueleto rígido falha:** Em deep research, a IA nem sempre respeita bem um formato fixo de saída.
+* **Mais eficaz:** Deixar a pesquisa sair em **formato livre** e só depois adaptar para um template próprio.
+* **Duas preocupações separadas:** Primeiro obter conhecimento amplo e útil; depois reorganizar para consumo recorrente.
+
+### 10. Segunda etapa: adaptar a pesquisa para formato reutilizável
+* **Boa base ≠ bom insumo operacional:** Uma pesquisa de 27 páginas pode ser excelente como base e ruim como entrada para o fluxo.
+* **Função da 2ª etapa:** Converter o conteúdo em uma estrutura compatível com os templates do time, inclusive para gerar FDDs depois.
+* **O valor:** Transformar **pesquisa bruta em contexto estruturado**, pronto para alimentar novos prompts e documentos.
