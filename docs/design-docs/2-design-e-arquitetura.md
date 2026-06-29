@@ -22,6 +22,8 @@
 
 - [Aula 10: Adaptando Deep Research a um novo formato](#aula-10-adaptando-deep-research-a-um-novo-formato)
 
+- [Aula 11: Gerando um FDD a partir da Deep Research](#aula-11-gerando-um-fdd-a-partir-da-deep-research)
+
 
 ## Aula 1: Documentos de Design e Arquitetura
 
@@ -648,3 +650,61 @@ Esta aula é a **Fase 2** do deep research: pegar a pesquisa bruta (PDF/Markdown
 * **O que permite:** Quebrar a implementação em partes, derivar tarefas, sugerir snippets e apoiar decisões com menos improviso.
 * **Não substitui programar:** Antecipa decisões e reduz ambiguidade na execução.
 * **Valor crescente:** Aumenta quando os documentos continuam sendo **atualizados** conforme o desenvolvimento avança.
+
+## Aula 11: Gerando um FDD a partir da Deep Research
+
+Esta aula fecha o módulo mostrando o **fluxo completo de composição**: gerar um FDD combinando três insumos — **HLD** (decisões já tomadas), **Deep Research** (densidade técnica) e o **esqueleto do FDD** (contrato de saída). Com contexto forte, até um prompt simples produz um draft valioso. A IA não entrega um documento final, mas **evita a página em branco** e organiza o refinamento — que continua sendo trabalho humano e iterativo.
+
+> 📄 **Exemplos de referência:** o fluxo combina [HLD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_HLD_Rate_Limiter.md) + a Deep Research (Fases [1](/docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase1.md) e [2](/docs/design-docs/templates-design-arquitetura/ex_prompt_deep_research_fase2.md)) + o [Prompt para geração de um FDD](/docs/design-docs/templates-design-arquitetura/ex_prompt_gerar_FDD.md), resultando em algo como o [FDD — Rate Limiter](/docs/design-docs/templates-design-arquitetura/ex_FDD_Rate_Limiter.md).
+
+---
+
+### 1. Composição explícita dos insumos
+* **Três artefatos, papéis distintos:** O **HLD** fixa decisões arquiteturais; a **Deep Research** amplia o repertório técnico; o **esqueleto do FDD** define a estrutura de saída.
+* **Não é "do zero":** A IA preenche uma moldura com contexto real, em vez de inventar tudo.
+* **No rate limiter:** A geração deixa de depender só de entrevista e **reutiliza** tudo o que já foi produzido no fluxo.
+
+### 2. Montagem prática do prompt
+* **Simples pode bastar:** Com contexto forte, o prompt não precisa ser elaborado.
+* **Instrução central:** Pedir o FDD da feature, informar que o HLD será fornecido, anexar a pesquisa e exigir aderência ao esqueleto.
+* **Orientar o nível:** Não descer à implementação linha por linha, mas explicitar contratos, comportamento e decisões suficientes para orientar a execução.
+
+### 3. HLD como insumo operacional
+* **Âncora, não decoração:** Serve para fixar o draft nas decisões já estabilizadas.
+* **A IA herda:** Arquitetura escolhida, componentes, responsabilidades e trade-offs — sem reinventar a solução.
+* **No exemplo:** Mantém coerência com middleware, estratégias, storage e limites arquiteturais já definidos.
+
+### 4. Deep Research como insumo de densidade técnica
+* **Complementa o HLD:** Traz o que não cabe no documento arquitetural — comparações, estratégias, referências externas e implicações operacionais.
+* **No mesmo prompt:** Dá base para enriquecer seções do FDD com mais precisão técnica.
+* **Efeito prático:** Um rascunho menos genérico, mais próximo de uma especificação utilizável.
+
+### 5. Template como contrato de saída
+* **Força cobertura mínima:** Garante contexto, escopo, exclusões, erros, observabilidade, compatibilidade e critérios de aceite.
+* **Obrigação estrutural:** Em vez de confiar que a IA lembrará espontaneamente, o template transforma isso em exigência.
+* **Mais revisável:** A equipe inspeciona **lacunas por seção**, não apenas pela impressão geral do texto.
+
+### 6. Prompt imperfeito com contexto forte
+* **Insumos compensam:** Um prompt "mal feito" ainda produz draft valioso quando o contexto é bom.
+* **Por quê:** A qualidade depende da densidade e complementaridade do contexto, não só da redação do comando.
+* **Lição:** Não abandonar bons prompts, mas entender que **contexto forte reduz fragilidade** e acelera a primeira versão.
+
+### 7. Grounding e rastreabilidade da saída
+* **O que é:** Indicação explícita de onde a IA tirou cada informação (trechos/referências do PDF anexado).
+* **Trade-off:** Pode poluir a leitura quando se quer um documento limpo, mas ajuda em auditoria, validação e revisão crítica.
+* **Em design:** Funciona como **rastreabilidade** — mostra se a saída está apoiada nos insumos ou se começou a improvisar.
+
+### 8. Leitura crítica do draft gerado
+* **Bom draft ≠ perfeito:** É o que **evita a página em branco** e organiza o refinamento.
+* **O que revisar:** Aderência ao HLD, cobertura das seções, presença de detalhes úteis e distorções de foco (ex: ênfase excessiva em multi-tenant quando não era central).
+* **No rate limiter:** A utilidade aparece quando já traz contratos, headers, erros, fallback, observabilidade, dependências, compatibilidade e critérios de aceite em formato editável.
+
+### 9. Iterações manuais como parte do processo
+* **Não elimina edição:** Desloca o esforço de **escrever tudo** para revisar, corrigir, compor e ajustar.
+* **Por que importa:** Nem tudo virá correto, completo ou no nível certo de detalhe.
+* **Fluxo robusto:** Assume várias **iterações curtas** sobre um rascunho inicial, não uma geração automática definitiva.
+
+### 10. Documentação como ativo de engenharia
+* **Dá trabalho, mas rende:** Vira ativo quando passa a ser lida por pessoas e por IA ao longo do ciclo de vida.
+* **O que acelera:** Implementação, revisão técnica, testes, manutenção e futuras automações baseadas em contexto.
+* **Por que importa:** O desenvolvimento não termina no código — decisões, contratos e restrições precisam continuar **acessíveis, atualizáveis e reutilizáveis**.
