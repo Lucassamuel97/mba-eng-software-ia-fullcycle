@@ -53,7 +53,7 @@ Tempo total de estudo: 20 minutos e 22 segundos (20:22)
 Tempo total de estudo: 27 minutos e 14 segundos (27:14)
 
 - [x] Gerando um FDD a partir da Deep Research — 11:08
-- [ ] Introdução a diagramas — 04:33
+- [x] Introdução a diagramas — 04:33
 - [ ] Introdução aos diagramas C4 — 04:21
 - [ ] C1-System Context — 07:12
 

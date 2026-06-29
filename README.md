@@ -29,6 +29,7 @@ Este repositório reúne os materiais, resumos e exemplos de código do MBA em E
 
 - [Módulo 1 — Documentação na era da IA](docs/design-docs/1-documentacao-na-era-da-ia.md)
 - [Módulo 2 — Design e Arquitetura](docs/design-docs/2-design-e-arquitetura.md)
+- [Módulo 3 — Diagramas (Design e Arquitetura)](docs/design-docs/3-diagramas-design-e-arquitetura.md)
 
 ## Referências
 
