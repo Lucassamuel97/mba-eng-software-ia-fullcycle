@@ -8,6 +8,8 @@
 
 - [Aula 3: C1 - System Context](#aula-3-c1---system-context)
 
+- [Aula 4: C2 - Containers](#aula-4-c2---containers)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -178,3 +180,77 @@ Esta aula detalha o **C1 (System Context)**: a visão de **fora do sistema**, mo
 * **Recorte final do C1:** No centro, a biblioteca/SDK; ao redor, usuário final, desenvolvedor, microserviços consumidores, storage compartilhado e observabilidade.
 * **O que o desenho responde:** Onde o Rate Limiter vive, quem o usa, quem o configura e de quais sistemas depende.
 * **O que fica fechado:** A estrutura interna — essa abertura fica para o **C2**, no próximo nível.
+
+## Aula 4: C2 - Containers
+
+Esta aula aprofunda o C1 e mostra a **organização executável** do sistema no **C2 (Containers)**. Aqui "container" **não é Docker**: é um bloco implantável/executável com responsabilidade arquitetural (serviço, banco, fila, API). O nível revela quais partes existem, como se comunicam (verbo + protocolo) e quais dependências externas sustentam a operação — servindo de **ponte para deploy, integração e infraestrutura**. Reforça também a **fidelidade à especificação**: o diagrama não inventa fluxos que o documento-fonte não declara.
+
+![C2 - Containers do Rate Limiter (Serviço HTTP da Plataforma)](/docs/design-docs/assets/c2-containers-rate-limiter.png)
+
+---
+
+### 1. Mudança de granularidade do C1 para o C2
+* **Do externo ao executável:** O C2 aprofunda a visão do C1 e mostra a organização executável do sistema.
+* **"Container" ≠ Docker:** É um bloco implantável/executável relevante para entender a operação.
+* **Novo objetivo:** Mostrar quais partes existem, como se comunicam e quais dependências tornam o sistema viável.
+* **Ponte:** Liga a arquitetura lógica a decisões de deploy, integração e infraestrutura.
+
+### 2. O que é container no modelo C4
+* **Unidade com responsabilidade:** Execução ou armazenamento com papel claro — serviço, aplicação, banco, fila ou API.
+* **Nome ≠ empacotamento:** Escolhido para organizar o sistema em blocos operacionais, não para indicar tecnologia.
+* **Erro comum:** Confundir o diagrama com a topologia de Docker ou Kubernetes.
+* **O que importa:** O **papel executável** do bloco dentro do sistema documentado.
+
+### 3. Container principal do Rate Limiter
+* **Serviço HTTP em Go:** O container central é um serviço com a biblioteca de rate limit embutida **in-process**.
+* **Como se apresenta:** Expõe endpoints e aplica middleware HTTP para checagem de limites — ponto central de execução da lógica.
+* **Avanço sobre o C1:** Em vez de só descrever uma biblioteca usada por outros, explicita **onde a lógica roda**.
+* **Efeito:** Transforma a visão conceitual em algo utilizável por quem implanta, integra e opera.
+
+### 4. Anotações técnicas do container
+* **Condensam decisões:** Ajudam a interpretar o bloco sem abrir um nível mais profundo.
+* **No exemplo:** Modos de armazenamento (Redis com script Lua para atomicidade, InMemory com locks por chave), estratégias (janela fixa, token bucket) e headers padronizados.
+* **Por que existem:** Comunicam restrições e capacidades sem exigir um C3 imediato.
+* **Bem usadas:** Tornam o container semanticamente mais rico **sem poluir** a leitura.
+
+### 5. Relações com verbos e protocolos
+* **Setas comunicam natureza:** Não servem só para ligar caixas.
+* **Verbo + protocolo:** "Leitura e atualização", "exporta métricas" ou "usa" deixam clara a responsabilidade; HTTP refina o meio.
+* **Forma flexível:** Pode-se priorizar o verbo e pôr o protocolo entre parênteses/chaves, desde que a leitura siga clara.
+* **Critério semântico:** Quem lê deve entender **o que flui** entre os blocos e **por qual meio**.
+
+### 6. Observabilidade com Prometheus em modelo pull
+* **HTTP pull:** O Prometheus **busca** as métricas no serviço, em vez de recebê-las por envio ativo.
+* **Direção correta:** Esse detalhe muda a direção da relação no diagrama e evita representação enganosa.
+* **Na prática:** O serviço **expõe** métricas para scrape; o Prometheus faz a leitura periódica do endpoint.
+* **Por que no C2:** Esse comportamento afeta configuração, rede e operação.
+
+### 7. Redis como dependência operacional
+* **Estado distribuído:** Fica em Redis quando o Rate Limiter precisa operar entre múltiplas instâncias.
+* **O que sustenta:** Contadores e buckets por chave compartilhados, preservando o limite mesmo com escala horizontal.
+* **No diagrama:** Não é detalhe interno, mas **dependência operacional indispensável**.
+* **Para quem importa:** É a informação que times de infraestrutura e plataforma precisam enxergar.
+
+### 8. OpenTelemetry Collector e fidelidade à especificação
+* **Sistema externo:** Recebe traces e potencialmente métricas e logs.
+* **Seguir a fonte:** Se o documento não diz que o Prometheus lê métricas do Collector, o diagrama **não inventa** esse fluxo só por elegância.
+* **Princípio do uso de IA:** **Fidelidade ao texto de origem** vale mais que completar lacunas com suposições plausíveis.
+* **Ordem:** Quando a especificação mudar, o diagrama muda junto — antes disso, precisão documental vem primeiro.
+
+### 9. Limite do sistema e containers externos
+* **System Boundary continua:** Separa o que pertence ao sistema do que apenas se integra a ele.
+* **Consequência prática:** Um container pode ter a mesma aparência estrutural de outro e ainda estar **fora** do sistema.
+* **No exemplo:** Redis, Prometheus e OpenTelemetry Collector são relevantes, mas **externos** ao limite do Rate Limiter.
+* **Evita confusão:** Impede que dependências sejam lidas como partes internas.
+
+### 10. C2 como insumo para deploy e infraestrutura
+* **Revela o necessário:** Mostra quais blocos precisam existir para o sistema funcionar fora do papel.
+* **Informa operação:** Redis como requisito, Prometheus em pull e Collector como destino de telemetria orientam rede, provisionamento e observabilidade.
+* **Discute escala e custo:** Inclusive sampling, para não enviar 100% dos sinais de telemetria.
+* **Mais que visão intermediária:** É um artefato para transformar arquitetura em **ambiente executável**.
+
+### 11. Aplicação prática de leitura do diagrama
+* **Comece pelo centro:** O container principal dentro da fronteira e sua responsabilidade executável.
+* **Percorra as setas:** Verbo e protocolo — chamadas de clientes, leitura/atualização em Redis, scrape do Prometheus e exportação ao Collector.
+* **Use as anotações:** Para inferir capacidades e restrições (estratégias de limitação, modos de armazenamento).
+* **Conecta desenho e operação:** O que roda, do que depende e como cada integração acontece.
