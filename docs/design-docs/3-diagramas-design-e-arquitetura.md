@@ -125,6 +125,8 @@ Esta aula apresenta o **modelo C4** como documentação arquitetural em **camada
 
 Esta aula detalha o **C1 (System Context)**: a visão de **fora do sistema**, mostrando quem o usa, com quais sistemas ele se integra e qual papel cumpre no ecossistema — sem abrir a estrutura interna. Usa o caso menos óbvio do **Rate Limiter como SDK embutido**, aplicando System Boundary, atores, dependências externas (storage e observabilidade) e anotações de propósito para que a biblioteca não "desapareça" dentro dos serviços consumidores.
 
+![C1 - System Context do Rate Limiter na Plataforma de Microsserviços](/docs/design-docs/assets/c1-system-context-rate-limiter.png)
+
 ---
 
 ### 1. C1 como visão externa do sistema
