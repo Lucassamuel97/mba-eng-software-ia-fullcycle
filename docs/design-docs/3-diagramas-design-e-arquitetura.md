@@ -6,6 +6,8 @@
 
 - [Aula 2: Introdução aos diagramas C4](#aula-2-introdução-aos-diagramas-c4)
 
+- [Aula 3: C1 - System Context](#aula-3-c1---system-context)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -118,3 +120,59 @@ Esta aula apresenta o **modelo C4** como documentação arquitetural em **camada
 * **Sem trocar de exemplo:** O mesmo sistema é lido em contexto, containers, componentes e código.
 * **O que permite ver:** Como uma única solução muda de escala conforme a pergunta fica mais ampla ou mais detalhada.
 * **Próximo passo:** O **C1**, que mostra o Rate Limiter no seu ambiente externo.
+
+## Aula 3: C1 - System Context
+
+Esta aula detalha o **C1 (System Context)**: a visão de **fora do sistema**, mostrando quem o usa, com quais sistemas ele se integra e qual papel cumpre no ecossistema — sem abrir a estrutura interna. Usa o caso menos óbvio do **Rate Limiter como SDK embutido**, aplicando System Boundary, atores, dependências externas (storage e observabilidade) e anotações de propósito para que a biblioteca não "desapareça" dentro dos serviços consumidores.
+
+---
+
+### 1. C1 como visão externa do sistema
+* **Visão de contexto:** Mostra o sistema **a partir de fora**, no ambiente em que opera.
+* **O que responde:** Quem usa, com quais sistemas se integra e qual papel cumpre — não a estrutura interna.
+* **Quando é útil:** Para vários times alinharem rapidamente fronteiras, responsabilidades e dependências sem detalhes de implementação.
+
+### 2. Granularidade do nível de contexto
+* **Deliberadamente alta:** O C1 abstrai o detalhe de propósito.
+* **Em ecossistemas grandes:** Reduz ruído e destaca só relações arquiteturalmente relevantes — consumidores, atores e integrações externas.
+* **Foco do nível:** Ainda não abre containers ou componentes; fixa o **recorte correto** do que será aprofundado depois.
+
+### 3. Biblioteca ou SDK como sistema central embutido
+* **Caso menos óbvio:** O sistema central não é um serviço isolado, mas um **SDK embutido** em outros serviços.
+* **Tratado como o sistema:** Quando a intenção é documentar seu contexto operacional — quem usa, quem configura e de quais dependências precisa.
+* **Por quê:** Evita que a biblioteca **desapareça** visualmente dentro dos microserviços consumidores e explicita seu papel arquitetural.
+
+### 4. System Boundary
+* **O que delimita:** Separa o que pertence ao sistema documentado do que está fora dele.
+* **No diagrama:** Distingue o que é desenvolvido e mantido como Rate Limiter das pessoas e sistemas que interagem com ele.
+* **Sem essa marcação:** O leitor pode confundir o SDK com a plataforma inteira ou interpretar dependências externas como partes internas.
+
+### 5. Atores do contexto
+* **Usuário final:** Aparece porque interage com os Endpoints HTTP protegidos pelo middleware.
+* **Desenvolvedor:** Entra como ator porque integra, mantém e configura o SDK nos serviços consumidores.
+* **Por que faz sentido:** Em uma biblioteca embutida, parte importante do uso acontece por **integração técnica**, não por interface de negócio.
+
+### 6. Microserviços consumidores do Rate Limiter
+* **Consumidores diretos:** Os microserviços usam o SDK para decisões de **Allow/Deny** nas requisições HTTP.
+* **Padronização:** Também padronizam a observabilidade associada ao controle.
+* **No C1:** Aparecem como sistemas **ao redor** do Rate Limiter, não como detalhamento interno dele.
+
+### 7. Storage compartilhado como dependência externa
+* **Estado por chave:** Rate limiting distribuído precisa manter contadores por IP, usuário ou outro identificador.
+* **Por que não memória local:** Com várias instâncias rodando, cada uma veria um estado diferente.
+* **No diagrama:** Um armazenamento compartilhado de estado aparece como **dependência externa opcional** para sustentar a limitação de forma consistente.
+
+### 8. Observabilidade como sistema externo
+* **Não opera isolado:** O Rate Limiter precisa alimentar a camada de observabilidade do ecossistema.
+* **O que permite acompanhar:** Volume de requisições, decisões de bloqueio e comportamento operacional.
+* **No C1:** Importa menos pelo detalhe da instrumentação e mais por deixar explícito que observabilidade faz parte do **contrato arquitetural**.
+
+### 9. Anotações de propósito em C1 para bibliotecas embutidas
+* **Nome nem sempre basta:** Em sistemas tradicionais o nome do serviço comunica a função; numa biblioteca embutida, não.
+* **Anotação curta ajuda:** Esclarece o que ela faz — limitar por chave/IP/plano, decidir localmente, usar estado compartilhado opcional e padronizar observabilidade.
+* **Não é obrigatória:** Mas evita que o elemento central pareça **genérico demais** quando não é um processo independente.
+
+### 10. Aplicação ao exemplo do Rate Limiter
+* **Recorte final do C1:** No centro, a biblioteca/SDK; ao redor, usuário final, desenvolvedor, microserviços consumidores, storage compartilhado e observabilidade.
+* **O que o desenho responde:** Onde o Rate Limiter vive, quem o usa, quem o configura e de quais sistemas depende.
+* **O que fica fechado:** A estrutura interna — essa abertura fica para o **C2**, no próximo nível.
