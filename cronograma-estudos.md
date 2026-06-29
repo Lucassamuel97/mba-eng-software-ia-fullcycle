@@ -62,7 +62,7 @@ Tempo total de estudo: 23 minutos e 38 segundos (23:38)
 
 - [x] C2-Containers — 07:33
 - [x] C3-Component — 07:34
-- [ ] C4-Code — 08:31
+- [x] C4-Code — 08:31
 
 ## 02/07/2026 (Quinta-feira)
 Tempo total de estudo: 29 minutos e 36 segundos (29:36)

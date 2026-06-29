@@ -12,6 +12,8 @@
 
 - [Aula 5: C3 - Components](#aula-5-c3---components)
 
+- [Aula 6: C4 - Code](#aula-6-c4---code)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -324,3 +326,72 @@ Esta aula abre a "caixa preta" do container do C2 e mostra o **C3 (Components)**
 * **No exemplo:** Headers e comportamentos de storage são justificados por seções específicas do documento-fonte, não inferidos livremente.
 * **Reduz alucinação:** Mantém o diagrama fiel ao design aprovado na geração assistida por IA.
 * **Próximo passo:** Materializar esses contratos internos em artefatos mais próximos do código.
+
+## Aula 6: C4 - Code
+
+Esta aula apresenta o **C4-Code**, o nível de **granularidade máxima** do modelo C4 — interfaces, structs, construtores, tipos e relações técnicas internas. É o mais poderoso e o mais **caro de manter**: envelhece rápido a cada refatoração, por isso raramente vira prática comum. A IA reduz o **custo operacional** de produzi-lo a partir do FDD, mas o nível só vale quando alguém **realmente precisa ler** esse detalhe — caso contrário, melhor parar no C3.
+
+![C4 - Code Level do SDK embutido de Rate Limiting em Go](/docs/design-docs/assets/c4-code-rate-limiter.png)
+
+> 🧩 Fonte PlantUML do diagrama (versionada para regerar): [c4-code-rate-limiter.puml](/docs/design-docs/assets/c4-code-rate-limiter.puml)
+
+---
+
+### 1. C4-Code como granularidade máxima
+* **Nível mais detalhado:** Aproxima o diagrama da estrutura real do código.
+* **O que expõe:** Interfaces, structs, construtores, tipos e relações técnicas internas — além de componentes.
+* **O que responde:** Contratos explícitos entre partes e regras que precisam ser padronizadas ou auditadas (o que o C3 não cobre bem).
+* **Limite útil:** Granularidade máxima antes de o diagrama começar a **competir com o código-fonte**.
+
+### 2. Custo alto e envelhecimento rápido
+* **Envelhece rápido:** Por descrever detalhes próximos da implementação, qualquer refatoração de interfaces, tipos ou composição pode torná-lo incorreto.
+* **Por isso é raro:** O custo histórico explica por que poucas empresas o praticam, mesmo reconhecendo seu valor conceitual.
+* **Risco real:** Um diagrama detalhado e desatualizado deixa de orientar e passa a **gerar desconfiança**.
+
+### 3. Quando usar e quando evitar
+* **Faz sentido quando:** Há necessidade real de padronização técnica, revisão de contratos internos, auditoria ou alinhamento fino antes da implementação.
+* **Também ajuda:** Em brainstorming técnico ou desenho pré-código, quando se quer mais precisão que o C3.
+* **Evite quando:** O leitor passa a consultar mais o código do que o diagrama — o custo-benefício piora.
+* **Critério:** Não é "sempre gerar", mas escolher o nível **só quando a pergunta arquitetural exige** esse detalhe.
+
+### 4. IA como redutora de custo operacional
+* **Não resolve o conceitual:** A IA não elimina o problema de fundo, mas reduz muito o custo de produzir e manter.
+* **Derivar da fonte:** Quando o diagrama vem de uma especificação textual bem escrita, atualizar a fonte é mais barato que redesenhar.
+* **Reabre a possibilidade:** Viabiliza o C4-Code onde antes a manutenção o inviabilizava.
+* **Ainda assim:** A utilidade depende de **alguém realmente precisar** ler esse nível.
+
+### 5. FDD como fonte do C4-Code
+* **Não nasce da imaginação:** Depende do que o FDD explicita.
+* **Com snippets:** Se o documento traz interfaces, tipos de configuração e contratos centrais, a IA gera uma visão estrutural coerente.
+* **Sem essas definições:** O agente tem pouco grounding para gerar um diagrama confiável.
+* **Limite da automação:** É o limite do que foi **especificado com clareza**.
+
+### 6. Public API como agrupamento de contratos
+* **De bloco a contratos:** A Public API interna deixa de ser um bloco conceitual e vira um agrupamento de contratos técnicos.
+* **O que inclui:** Interfaces expostas ao container, structs de configuração, tipos de decisão e definições de storage.
+* **Valor:** Mostra quais formas de interação são **estáveis** e quais detalhes concretos ficam por trás.
+* **Diferença:** Em vez de só dizer que existe uma API interna, o diagrama mostra **do que ela é feita**.
+
+### 7. Regras técnicas e invariantes no diagrama
+* **Nem tudo é componente:** Algumas informações são **restrições** que governam o comportamento correto.
+* **O que pode aparecer:** Semântica de headers, invariantes de decisão e regras de uso de contratos.
+* **Quando é valioso:** Para preservar consistência entre múltiplas implementações ou evitar interpretações divergentes.
+* **Avanço:** O diagrama deixa de mostrar só "quem chama quem" e registra **condições que não podem variar**.
+
+### 8. Leitura do fluxo interno a partir do código
+* **Os mesmos do C3:** Middleware, Strategy Engine e storage adapter continuam, mas lidos a partir de suas **formas concretas**.
+* **O que revela:** Integração HTTP como wrap sobre o handler, núcleo com construtor explícito, escolha de estratégia por parâmetros técnicos em contrato.
+* **Por que é útil:** Conecta a colaboração entre blocos à **estrutura implementável** que a sustenta.
+* **Resultado:** Uma visão menos abstrata e mais **verificável**.
+
+### 9. Storage concreto: Redis Store e Memory Store
+* **Da abstração às variantes:** O storage se desdobra em implementações concretas — Redis Store e Memory Store.
+* **Por que importa:** Comportamento distribuído e em memória impõem restrições diferentes de consistência, operação e configuração.
+* **Contrato comum:** A interface `Store` permanece, mas o diagrama explicita **quais implementações** a cumprem e em que contexto.
+* **O que mostra:** Não só a abstração, mas as **escolhas concretas** que materializam o sistema.
+
+### 10. Limite de uso responsável do C4-Code
+* **Instrumento especializado:** Não é o destino natural de toda documentação arquitetural.
+* **Risco da proximidade:** Quanto mais perto do código, maior a chance de o **próprio código** ser a leitura mais eficiente — sobretudo em times que dominam a base.
+* **Pergunta-chave:** O diagrama está reduzindo custo cognitivo ou só **duplicando informação com atraso**?
+* **Quando duplicar:** Melhor parar no **C3** e deixar o resto para a implementação e o FDD.
