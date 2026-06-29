@@ -10,6 +10,8 @@
 
 - [Aula 4: C2 - Containers](#aula-4-c2---containers)
 
+- [Aula 5: C3 - Components](#aula-5-c3---components)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -254,3 +256,71 @@ Esta aula aprofunda o C1 e mostra a **organização executável** do sistema no 
 * **Percorra as setas:** Verbo e protocolo — chamadas de clientes, leitura/atualização em Redis, scrape do Prometheus e exportação ao Collector.
 * **Use as anotações:** Para inferir capacidades e restrições (estratégias de limitação, modos de armazenamento).
 * **Conecta desenho e operação:** O que roda, do que depende e como cada integração acontece.
+
+## Aula 5: C3 - Components
+
+Esta aula abre a "caixa preta" do container do C2 e mostra o **C3 (Components)**: os componentes internos que colaboram para decidir **allow/deny**. Apresenta o pipeline interno — **HTTP middleware → Key Extractor → API interna → Strategy Engine → Storage Adapter** — com cada peça em um contrato distinto. Reforça o **grounding no FDD**: cada componente e anotação é rastreável ao documento-fonte, reduzindo alucinação na geração assistida por IA.
+
+![C3 - Components do Serviço HTTP com SDK embutido (Rate Limiter)](/docs/design-docs/assets/c3-component-rate-limiter.png)
+
+---
+
+### 1. C3 como decomposição interna de um container
+* **Abre o container do C2:** Detalha a estrutura interna do serviço HTTP em vez de tratá-lo como caixa preta.
+* **O que expõe:** Os componentes que colaboram para a decisão de allow/deny.
+* **Objetivo:** Tornar visíveis responsabilidades, contratos internos e pontos de acoplamento — não redesenhar o sistema.
+* **Ganho:** Preserva coesão entre módulos e reduz dependências desnecessárias.
+
+### 2. Fronteira visual do C3
+* **Só o container aberto é decomposto:** Dependências externas continuam como containers externos.
+* **No exemplo:** Redis, Prometheus e OpenTelemetry permanecem fora — não pertencem ao interior lógico do Rate Limiter.
+* **Convenção visual:** Evita misturar "o que está dentro do container" com "o que o container usa".
+* **Resultado:** A fronteira do container segue explícita mesmo com mais detalhe.
+
+### 3. HTTP middleware como ponto de entrada
+* **Toda requisição passa por ele:** Antes de seguir no pipeline do servidor.
+* **O que faz:** Recebe a chamada, extrai a identidade, aciona a API interna, interpreta a decisão e escreve os headers.
+* **Papel de orquestração:** É o ponto de coordenação do fluxo, mesmo sem concentrar toda a lógica de negócio.
+* **Vantagem:** Separa entrada HTTP, decisão de limitação e persistência em contratos distintos.
+
+### 4. Key Extractor
+* **Transforma requisição em chave:** Deriva a chave de rate limiting da requisição.
+* **O que a chave representa:** IP, API key, API token ou tenant, conforme a política.
+* **Por que existe:** O limite nunca é calculado "para a requisição em si", mas para uma **identidade** derivada dela.
+* **Multi-tenant:** Define corretamente quem consome a cota e evita aplicar o mesmo contador a entidades diferentes.
+
+### 5. API pública interna do Rate Limiter
+* **Contrato interno:** Exposto para outros componentes do mesmo container, especialmente o middleware.
+* **"Pública" ≠ externa:** Significa interface acessível e estável **dentro do processo** para solicitar a checagem.
+* **Por que importa:** O middleware depende do **contrato**, não da implementação concreta de estratégia ou storage.
+* **Resultado:** Composição interna mais testável e fácil de evoluir.
+
+### 6. Strategy Engine
+* **Decide o algoritmo:** Seleciona qual estratégia de limitação aplicar à requisição corrente.
+* **No exemplo:** Entre fixed window e token bucket, preservando paridade comportamental entre os modos.
+* **Por que existe:** Cada estratégia tem regras próprias de consumo, reposição ou contagem.
+* **Centraliza a escolha:** Evita espalhar condicionais de algoritmo pelo middleware e pelo acesso ao estado.
+
+### 7. Fixed window e token bucket
+* **Fixed window:** Conta requisições em janelas discretas ("N por minuto") e reinicia ao trocar de janela.
+* **Token bucket:** Modela capacidade por tokens consumidos a cada requisição e repostos no tempo, permitindo bursts controlados.
+* **Impacto no cliente:** A escolha altera o comportamento percebido, sobretudo em bordas de janela e picos curtos.
+* **No C3:** Por isso o diagrama mostra **onde** essa decisão algorítmica é tomada.
+
+### 8. Storage adapter
+* **Encapsula estado:** Abstrai leitura e atualização do estado usado pelas estratégias.
+* **O que esconde:** Se o estado está em memória local com locks por chave ou em Redis com script Lua (distribuído e atômico).
+* **Isolamento:** A lógica de estratégia não conhece detalhes de persistência e sincronização.
+* **Benefício:** Mantém o mesmo contrato interno mesmo trocando entre execução local e distribuída.
+
+### 9. Fluxo interno da requisição
+* **Início no middleware:** Intercepta a requisição e delega a extração ao Key Extractor.
+* **Decisão:** Chama a API interna, que usa o Strategy Engine para escolher o algoritmo e consulta/atualiza o estado via storage adapter.
+* **Resposta:** Com a decisão pronta, o middleware devolve allow/deny e escreve os headers.
+* **Efeito:** Transforma o container antes visto como bloco único em um **mecanismo interno compreensível**.
+
+### 10. Grounding no FDD
+* **Rastreabilidade:** Cada componente e anotação pode ser ligado a seções do Feature Design Doc.
+* **No exemplo:** Headers e comportamentos de storage são justificados por seções específicas do documento-fonte, não inferidos livremente.
+* **Reduz alucinação:** Mantém o diagrama fiel ao design aprovado na geração assistida por IA.
+* **Próximo passo:** Materializar esses contratos internos em artefatos mais próximos do código.
