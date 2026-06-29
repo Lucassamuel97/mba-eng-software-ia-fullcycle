@@ -4,6 +4,8 @@
 
 - [Aula 1: Introdução a Diagramas](#aula-1-introdução-a-diagramas)
 
+- [Aula 2: Introdução aos diagramas C4](#aula-2-introdução-aos-diagramas-c4)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -62,3 +64,57 @@ Esta aula apresenta os **diagramas** como forma de **reduzir o custo cognitivo**
 * **C4:** Estrutura forte para pensar **níveis de abstração** arquitetural.
 * **Mermaid:** Forma leve e textual de **materializar** diagramas em documentação contínua.
 * **Com IA:** A mesma especificação origina visões distintas com menos esforço manual.
+
+## Aula 2: Introdução aos diagramas C4
+
+Esta aula apresenta o **modelo C4** como documentação arquitetural em **camadas progressivas** de detalhe: contexto (C1), containers (C2), componentes (C3) e código (C4-Code). A regra central é a **leitura progressiva** — cada nível aprofunda o anterior sem substituí-lo —, escolhendo o nível certo para a pergunta certa. Cita as referências do ecossistema (c4model.com, Structurizr, PlantUML) e mantém o **Rate Limiter** como exemplo contínuo, agora observado em camadas.
+
+---
+
+### 1. Modelo C4 como documentação arquitetural em camadas
+* **Mesmo sistema, níveis de detalhe:** Organiza a arquitetura em profundidades progressivas, em vez de um único diagrama.
+* **Quatro visões:** Separa contexto, containers, componentes e código — cada uma responde a uma pergunta diferente.
+* **Reduz ambiguidade:** Permite aprofundar a análise sem perder coerência entre camadas.
+* **Redução sistemática:** Retomando diagramas como redução de custo cognitivo, o C4 estrutura essa redução.
+
+### 2. Os quatro níveis: C1, C2, C3 e C4-Code
+* **C1 (Contexto):** O sistema no seu ambiente, incluindo usuários e sistemas externos.
+* **C2 (Containers):** Os containers que compõem a solução.
+* **C3 (Componentes):** Os componentes internos de um container.
+* **C4-Code:** Quando necessário, aproxima a documentação da organização do código.
+* **Utilidade:** A **progressão** — sair do macro ao detalhe estrutural sem trocar de domínio nem refazer a explicação.
+
+### 3. Leitura progressiva do mesmo sistema
+* **Regra central:** Cada nível **aprofunda** o anterior, não o substitui.
+* **Evita sobrecarga:** Impede diagramas superlotados e adapta a explicação ao público e à decisão técnica.
+* **Nível por contexto:** Conversa executiva → contexto basta; revisão de implementação → componentes ou código.
+* **O valor:** Não é produzir todos os níveis sempre, mas escolher o **nível certo para a pergunta certa**.
+
+### 4. c4model.com como referência oficial
+* **Fonte primária:** Referência oficial para terminologia, proposta e tipos de diagrama esperados.
+* **Autoria:** Escrito por Simon Brown, criador do C4 — alinha nomenclatura e intenção arquitetural.
+* **Por que importa:** Times usam "C4" de forma vaga; a referência reduz interpretações divergentes e melhora a consistência.
+
+### 5. Structurizr no ecossistema C4
+* **O que é:** Ferramenta do ecossistema C4 para modelar uma base arquitetural e visualizar diagramas derivados dela.
+* **Ideia central:** Manter uma representação estruturada do sistema e explorar diferentes visões a partir dela, em vez de desenhar cada diagrama isolado.
+* **Benefício:** Favorece consistência entre níveis e facilita a evolução da documentação.
+* **Para quem:** Equipes que querem operacionalizar C4 com menos esforço manual.
+
+### 6. PlantUML como meio textual de geração
+* **Diagrama em texto:** Meio comum para gerar diagramas C4 sem edição gráfica manual.
+* **Ganho de processo:** Permite versionamento, revisão e automação com o mesmo fluxo do desenvolvimento.
+* **Combina com o módulo:** Alinha-se à proposta de gerar e manter diagramas a partir de documentos-fonte.
+* **Quando usar:** Para integrar arquitetura ao repositório e ao processo de revisão, com menos atrito.
+
+### 7. IA como apoio à interpretação arquitetural
+* **O que faz:** Lê descrições do sistema e infere contexto, fronteiras, relações e níveis de detalhe compatíveis com o C4.
+* **Mais que caixas e setas:** Ajuda a transformar base textual em visões úteis para análise, refatoração e geração de artefatos.
+* **Depende de moldura:** Precisa de uma estrutura clara de leitura — e o C4 oferece exatamente essa moldura.
+* **Validação humana:** Continua necessária para confirmar se a interpretação corresponde ao sistema real.
+
+### 8. Rate Limiter como exemplo contínuo
+* **Mesmo domínio, nova lente:** O avanço não é o problema, mas observá-lo em **camadas**.
+* **Sem trocar de exemplo:** O mesmo sistema é lido em contexto, containers, componentes e código.
+* **O que permite ver:** Como uma única solução muda de escala conforme a pergunta fica mais ampla ou mais detalhada.
+* **Próximo passo:** O **C1**, que mostra o Rate Limiter no seu ambiente externo.
