@@ -14,6 +14,8 @@
 
 - [Aula 6: C4 - Code](#aula-6-c4---code)
 
+- [Aula 7: Gerando diagrama C4](#aula-7-gerando-diagrama-c4)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -395,3 +397,80 @@ Esta aula apresenta o **C4-Code**, o nível de **granularidade máxima** do mode
 * **Risco da proximidade:** Quanto mais perto do código, maior a chance de o **próprio código** ser a leitura mais eficiente — sobretudo em times que dominam a base.
 * **Pergunta-chave:** O diagrama está reduzindo custo cognitivo ou só **duplicando informação com atraso**?
 * **Quando duplicar:** Melhor parar no **C3** e deixar o resto para a implementação e o FDD.
+
+## Aula 7: Gerando diagrama C4
+
+Esta aula transforma a geração de diagramas C4 em um **workflow automatizado** que parte do **FDD como fonte de verdade**, produz arquivos **PlantUML** (`.puml`) versionáveis e um **relatório Markdown** com justificativas. O ponto central é a **geração adaptativa** — gerar apenas o nível que o documento sustenta — e a **revalidação obrigatória**. O "agente" aqui é essencialmente um **prompt portável** com regras, parâmetros e validação.
+
+---
+
+### 1. FDD como fonte de verdade para geração
+* **Insumo controlado:** A geração parte de objetivos, escopo, exclusões, fluxos, interface pública, semântica, exemplos, configurações e opções já documentados.
+* **Não "imaginar":** Em vez de pedir que o modelo invente a arquitetura, o processo extrai estrutura do que está escrito.
+* **No Rate Limiter:** Transforma o documento em **base operacional** para produzir artefatos versionáveis.
+* **Reduz invenção:** O agente extrai do que existe, não do que seria plausível.
+
+### 2. PlantUML como artefato textual de saída
+* **Alvo da automação:** O agente gera arquivos `.puml` (`c1.puml`, `c2.puml`, `c3.puml` e, com base suficiente, níveis mais detalhados).
+* **Por que texto:** Pode ser salvo no repositório, revisado em pull request e convertido em imagem depois.
+* **Mais confiável:** Saída textual é **auditável**, ao contrário de uma imagem opaca.
+
+### 3. Language matching, acentuação e UTF-8
+* **Idioma acompanha a fonte:** FDD em inglês → diagrama em inglês; em português → diagrama em português, preservando **nomes de tecnologia em inglês**.
+* **Regra explícita:** Modelos tendem a misturar idiomas, traduzir indevidamente e errar acentuação.
+* **UTF-8:** Evita corrupção de caracteres e garante a renderização correta de textos em português.
+
+### 4. Geração adaptativa até o nível sustentado pelo documento
+* **Sem completude artificial:** O agente decide até qual nível do C4 ir com base na **densidade real** do FDD.
+* **Exemplo:** Sustenta C1/C2/C3 → para ali; sem detalhe de código → não gera C4-Code.
+* **Por que importa:** Evita diagramas detalhados demais, porém inventados.
+* **Critério:** Não "gerar todos os níveis", mas "gerar só o que o documento justifica".
+
+### 5. Prompt robusto como workflow explícito
+* **Mais que instrução curta:** Vira um workflow operacional.
+* **O que define:** Leitura do FDD, decisão de nível, geração dos arquivos, tratamento de erros, exportação opcional de imagem, relatório e revalidação final.
+* **Exige construção:** Iteração, exemplos certos e errados, regras detalhadas — pois os erros recorrentes vêm das ambiguidades do comando.
+* **Quanto mais explícito:** Menor a chance de o agente improvisar etapas ou ignorar restrições.
+
+### 6. Relatório Markdown com justificativas
+* **Além dos `.puml`:** Gera um `.md` explicando o que foi produzido e por quê.
+* **O que registra:** Justificativas, decisões de escopo e evidências de que cada nível foi escolhido com base na fonte.
+* **Valor:** **Auditabilidade** — revisar não só o diagrama, mas a lógica que levou a ele.
+* **Princípio:** Saída sem justificativa é difícil de confiar e de manter.
+
+### 7. Revisão e validação obrigatórias
+* **Gerar não encerra:** O agente relê o documento e revalida o que produziu.
+* **O que detecta:** Inconsistências, elementos não sustentados pelo FDD e problemas de exportação/formatação.
+* **Também cobre:** Erros operacionais, como parâmetros inválidos ou falhas no uso do PlantUML.
+* **Sem essa etapa:** A automação acelera a produção — e também a **propagação de erro**.
+
+### 8. Subagentes com contexto isolado
+* **Janela separada:** O subagente executa em contexto isolado da conversa principal.
+* **Duplo benefício:** Evita que o histórico contamine a geração e que o prompt longo do gerador consuma o contexto do agente principal.
+* **Em workflows complexos:** Separar contexto melhora foco e previsibilidade.
+* **Ganho prático:** Transforma uma tarefa extensa e especializada em **unidade isolada de execução**.
+
+### 9. Agente como prompt portável entre ferramentas
+* **Não depende de ferramenta:** "Agente" aqui é essencialmente um **prompt estruturado** com regras e workflow.
+* **Portável:** Adaptável a Claude, GPT, Gemini, Composer ou outros ambientes que executem instruções longas e manipulem arquivos.
+* **Por que importa:** Evita aprisionar o processo a um vendor ou IDE.
+* **O ativo real:** Deixa de ser a interface e passa a ser a **especificação operacional** do trabalho.
+
+### 10. Parametrização com FilePath, OutputFolder e flags
+* **Parâmetros explícitos:** `FilePath` aponta o FDD a ler; `OutputFolder` define onde gravar; flags como `-noimage` alteram o comportamento (ex: desabilitar PNG).
+* **Comando reutilizável:** Transforma o prompt em algo ajustável a diferentes projetos e ambientes.
+* **Sem parâmetros claros:** O processo fica acoplado a caminhos fixos e perde reprodutibilidade.
+
+### 11. Workflow operacional de geração
+* **Ordem clara:** Ler o FDD → detectar idioma e regras → decidir o nível máximo → gerar os `.puml` → exportar imagem se necessário → produzir relatório `.md` → revalidar tudo.
+* **No Rate Limiter:** O sistema deixa de ser um caso explicado manualmente e vira **insumo de uma rotina repetível** de documentação.
+* **Por que é útil em times:** Pode ser **repetido, auditado e ajustado** sem recomeçar do zero.
+
+### 12. Parte prática: como executar o gerador
+* **Chamada simples:** Desde que os parâmetros estejam corretos — `FilePath` (caminho do FDD), `OutputFolder` (saída) e `-noimage` para só os textuais.
+* **Pode exigir artefatos:** Como a geração dos C4 e do relatório final.
+* **O decisivo:** Não a sintaxe exata da ferramenta, mas a **disciplina** de tornar entradas, saídas e opções explícitas.
+
+### 13. Parte prática: o que auditar na saída
+* **Quatro pontos:** (1) idioma do diagrama acompanha o FDD sem traduzir tecnologias; (2) níveis param onde a documentação sustenta; (3) `.puml` e `.md` criados no local correto; (4) a justificativa aponta para o documento-fonte.
+* **Se algo falhar:** O problema não está só na saída — está no **prompt, nos parâmetros ou na validação** insuficiente.
