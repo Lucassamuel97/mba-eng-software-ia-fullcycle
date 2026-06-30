@@ -10,6 +10,8 @@
 
 - [Aula 4: Status, Metadados e Fluxos](#aula-4-status-metadados-e-fluxos)
 
+- [Aula 5: Boas práticas e dicas importantes](#aula-5-boas-práticas-e-dicas-importantes)
+
 
 ## Aula 1: Introdução a ADRs
 
@@ -220,3 +222,59 @@ Esta aula detalha o **ciclo de vida** de um ADR pelos seus **status** (`Draft`, 
 * **Reflitam a realidade:** Status = estado real da decisão; links = relação real entre documentos.
 * **Deprecated × Superseded:** Não use `Deprecated` quando houve **substituição explícita** — aí `Superseded` com referência cruzada comunica melhor.
 * **relatesTo × dependsOn:** Não use `relatesTo` para esconder dependência estrutural — se uma decisão **sustenta** a outra, o vínculo correto é `dependsOn`.
+
+## Aula 5: Boas práticas e dicas importantes
+
+Esta aula consolida o que mantém um acervo de ADRs **útil ao longo do tempo**: uma decisão por documento, escrita objetiva, nomenclatura rastreável, **governança por pull request** e **links bidirecionais** com HLD/FDD. Reforça a regra de **não reescrever o passado** (marcar, não apagar) e o alerta central da era da IA: **documentação errada pode ser pior que ausência**, porque o agente a consome como contexto válido e propaga o erro.
+
+---
+
+### 1. Uma ADR por decisão
+* **Granularidade certa:** Registra **uma única** decisão arquitetural, não o sistema inteiro.
+* **Evita:** Documentos longos, vagos e difíceis de manter — e torna a timeline mais precisa.
+* **Decisão recorrente:** Consolidar em um ADR próprio e **referenciá-lo**, em vez de duplicar o raciocínio em vários lugares.
+
+### 2. Escrita objetiva e técnica
+* **Registro, não narrativa:** É o raciocínio que levou à escolha, não uma história extensa.
+* **Contexto a serviço da decisão:** Indispensável, mas existe para **sustentar** a escolha, não para deixar o texto prolixo.
+* **Quanto mais direto:** Mais fácil revisar, comparar alternativas e usar em busca, automação e IA.
+
+### 3. Nomenclatura consistente e rastreabilidade
+* **Identificadores estáveis:** ADR001, ADR002 e variações por domínio/módulo/componente — só funcionam com **convenção previsível**.
+* **Objetivo operacional:** Localizar, ordenar, citar e relacionar decisões sem ambiguidade (não é estética).
+* **Sem isso:** Se o time não acha o ADR rápido, o repositório vira um **diretório de arquivos**, não memória técnica.
+
+### 4. Revisão e governança por pull request
+* **Mesmo rigor do código:** Pull request, comentários, aprovação e histórico de mudanças.
+* **O que gera:** Artefato governado, menos decisões mal formuladas e **responsabilização** sobre o que entra no acervo.
+* **Mais crítico com IA:** Prompts, instruções e documentos alteram diretamente o comportamento do agente sobre o sistema.
+
+### 5. Links bidirecionais entre ADR, HLD e FDD
+* **Apontar nos dois sentidos:** O ADR aponta para os artefatos de requisito/desenho, e eles apontam **de volta** para a decisão.
+* **O que cria:** Navegação confiável entre motivo, impacto estrutural e origem funcional da escolha.
+* **Sem o encadeamento:** O leitor encontra peças soltas, mas **não reconstrói** o raciocínio completo.
+
+### 6. Encadeamento documental e contexto de decisão
+* **Decisão não nasce isolada:** Pode depender de um requisito em FDD, de uma restrição em HLD ou de outra decisão anterior aceita.
+* **Encadear = explicitar:** Dependências e relações de leitura, formando uma **malha coerente** em vez de arquivos independentes.
+* **Vale para humanos e IA:** Agentes inferem melhor quando as conexões **já estão declaradas**.
+
+### 7. Não reescrever o passado
+* **Histórico preservado:** Decisões antigas permanecem como foram tomadas, mesmo quando deixam de valer.
+* **Ao mudar:** Criar um **novo ADR** e ajustar o status/relação do anterior — não reescrever o documento antigo.
+* **Benefício:** Mantém a evolução **auditável** e não apaga o contexto que justificou decisões passadas.
+
+### 8. ADR desatualizada deve ser marcada, não apagada
+* **Sinalizar explicitamente:** Decisão que deixa de valer precisa ser marcada como substituída, não ficar ambígua.
+* **Papel operacional do `superseded`:** Impedir que leitores e ferramentas tratem uma decisão antiga como atual.
+* **Em acervos com IA:** Essa marcação reduz respostas incorretas baseadas em documentação obsoleta.
+
+### 9. Documentação errada pode ser pior que ausência
+* **Falsa confiança:** Documentação incompleta, contraditória ou mal conectada engana.
+* **Humano × agente:** Pessoas podem desconfiar e investigar; a IA tende a usar o texto como **contexto válido** e propagar o erro em código, sugestões e análises.
+* **Conclusão:** Qualidade documental é **requisito operacional**, não luxo editorial.
+
+### 10. IA exige padronização e revisão disciplinada
+* **Não elimina entendimento:** Gerar com IA não dispensa conhecer o tipo de documento nem a governança.
+* **Sem prompt claro, convenção e revisão:** O resultado tende a ser prolixo, inconsistente e contraditório com o acervo.
+* **Dependência direta:** A utilidade da IA depende da **qualidade estrutural** dos ADRs e dos vínculos com os demais documentos.

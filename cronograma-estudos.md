@@ -87,7 +87,7 @@ Tempo total de estudo: 29 minutos e 55 segundos (29:55)
 - [x] Estrutura clássica — 07:43
 - [x] MADRs — 08:37
 - [x] Status, Metadados e Fluxos — 05:26
-- [ ] Boas práticas e dicas importantes — 06:09
+- [x] Boas práticas e dicas importantes — 06:09
 
 ## 07/07/2026 (Terça-feira)
 Tempo total de estudo: 22 minutos e 1 segundo (22:01)
