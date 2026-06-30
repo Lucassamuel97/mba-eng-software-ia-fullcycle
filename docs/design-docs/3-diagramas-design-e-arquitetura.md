@@ -22,6 +22,8 @@
 
 - [Aula 10: Flowchart e Sequence Diagram](#aula-10-flowchart-e-sequence-diagram)
 
+- [Aula 11: Prática, Class e ER Diagram](#aula-11-prática-class-e-er-diagram)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -658,3 +660,135 @@ sequenceDiagram
 ### 5. Como ler os dois diagramas em conjunto
 * **Mesmo sistema, perspectivas diferentes:** O flowchart responde **qual caminho interno** é seguido conforme o `Storage Mode`; o sequence diagram responde **como os componentes colaboram** ao longo do tempo para produzir `allow` ou `deny`.
 * **Usados juntos:** Conectam a **decisão estrutural de execução** com o **comportamento observável** na interface HTTP.
+
+## Aula 11: Prática, Class e ER Diagram
+
+Esta aula traz dois tipos de diagrama Mermaid mais próximos da estrutura — **class diagram** (tipos e contratos, ao nível do C4-Code) e **ER diagram** (entidades, atributos e relações de dados) — e fecha com a **parte prática**: o Mermaid Live Editor e a sintaxe básica de flowchart (direção, nós, rótulos e decisões). A regra que se mantém: quanto mais perto do código, maior a precisão e maior o **custo de manutenção** — daí regenerar a partir da fonte.
+
+> 🛠️ Os blocos Mermaid abaixo foram **reconstruídos a partir da descrição da aula**. Renderizam no GitHub e no site Docsify (plugin já habilitado). Se a versão do curso diferir, me passe que eu substituo.
+
+---
+
+### 1. Class diagram em Mermaid
+* **Próximo do código:** Representa classes, structs, atributos, métodos e relacionamentos — torna explícitos contratos e tipos que ficam implícitos em níveis mais altos (próximo do C4-Code).
+* **No Rate Limiter:** `RateLimiter`, `Decision`, `Options`, `StorageConfig` e `RedisConfig` aparecem como peças estruturais — ajuda a ver como configuração, decisão e storage se conectam.
+* **Forma e responsabilidade, não fluxo:** `Decision` concentra o resultado do `check` (permitido, restante, retry); `Options` concentra estratégia, limite e janela.
+* **Contrato vs. configuração:** `StorageConfig` guarda a config de storage e o modo Redis exige `RedisConfig` — separa contrato genérico de configuração específica.
+
+```mermaid
+classDiagram
+    class RateLimiter {
+        <<interface>>
+        +Check(ctx, key) Decision
+        +Middleware(next) http.Handler
+    }
+    class Decision {
+        +Allowed bool
+        +Remaining int
+        +RetryAfter time.Duration
+    }
+    class Options {
+        +Strategy string
+        +Limit int
+        +Window time.Duration
+        +Rate float64
+        +Burst int
+        +Storage StorageConfig
+        +FallbackOpen bool
+    }
+    class StorageConfig {
+        +Mode string
+        +Redis RedisConfig
+    }
+    class RedisConfig {
+        +Addr string
+        +Password string
+        +UseTLS bool
+        +ClusterMode bool
+        +PoolSize int
+        +Timeout time.Duration
+    }
+    RateLimiter ..> Decision : retorna
+    RateLimiter ..> Options : configurado por
+    Options *-- StorageConfig
+    StorageConfig *-- RedisConfig
+```
+
+### 2. Granularidade e custo de manutenção
+* **Precisão tem preço:** Quanto mais perto do código, maior a precisão estrutural e maior o custo de manter o diagrama atualizado.
+* **Quando vale:** Para discutir interfaces, métodos e tipos concretos.
+* **Quando perde valor:** Se o código evolui e o diagrama não acompanha.
+* **Prática sustentável:** **Regenerar** o diagrama a partir da fonte textual ou do código a cada mudança relevante.
+
+### 3. ER diagram em Mermaid
+* **Foco em dados:** Modela entidades, atributos, chaves e relacionamentos — ideal para tabelas, modelagem relacional e como informações se conectam.
+* **No exemplo:** Campos como `ID`, `Name`, `Type` e entidades como `Policy`, `Service`, `Window` e `Assignment` mostram a **camada de dados**, não a de comportamento.
+* **Diferença para o class diagram:** O class responde **como o software está estruturado** (tipos e contratos); o ER responde **como os dados são organizados e relacionados**.
+* **Quando usar ER:** Para discutir persistência, chaves e cardinalidade, é mais direto que uma visão orientada a classes.
+
+```mermaid
+erDiagram
+    POLICY ||--o{ ASSIGNMENT : aplica
+    SERVICE ||--o{ ASSIGNMENT : recebe
+    POLICY ||--|| WINDOW : define
+    POLICY {
+        string ID PK
+        string Name
+        string Type
+    }
+    SERVICE {
+        string ID PK
+        string Name
+    }
+    WINDOW {
+        string ID PK
+        int Limit
+        int DurationSeconds
+    }
+    ASSIGNMENT {
+        string ID PK
+        string PolicyID FK
+        string ServiceID FK
+    }
+```
+
+### 4. Mermaid Live Editor
+* **Edição em tempo real:** Ambiente web para escrever, renderizar e ajustar diagramas Mermaid.
+* **Ciclo curto:** Sintaxe textual e resultado visual lado a lado — facilita aprender a linguagem e corrigir rápido.
+* **Recursos:** Uso gratuito, salvar diagramas em conta e apoio de IA para correções pontuais de sintaxe.
+
+### 5. Sintaxe básica de flowchart no Mermaid
+* **Primeira linha define tipo e direção:** `flowchart TD` = fluxograma de cima para baixo (top-down); outras direções mudam a leitura espacial.
+* **Direção ≠ lógica:** Não altera a lógica, mas a **legibilidade** — importante com muitos ramos ou decisões.
+* **Nó = id + rótulo:** Em `A[User]`, `A` é a referência usada nas conexões e `User` o texto exibido; `A --> B` cria a relação.
+* **Id único:** O identificador não deve ser reutilizado — representa uma instância única no diagrama.
+
+### 6. Nós, rótulos e decisões
+* **Delimitador define o significado visual:** Um nó de decisão (ex: roteador de destino ou verificação de cache hit no Redis) comunica que dali saem **caminhos condicionais**.
+* **Rótulos nos arcos:** Labels como `service A` e `service B` tornam explícita qual condição leva a cada destino.
+* **Fluxo autoexplicativo:** O roteador aponta para `Microservice A` ou `B`; a decisão de cache aponta para leitura no Redis ou consulta ao banco.
+* **Semântica da bifurcação:** O diagrama mostra não só **que** há bifurcação, mas **qual** é o significado de cada caminho.
+
+### 7. Leitura prática do exemplo no editor
+* **Seguir a ordem das conexões:** `User` chama `API Gateway`, que passa por um ponto de decisão entre `Microservice A` e `Microservice B`, e cada ramo segue seu fluxo.
+* **Ramo A:** A decisão de cache separa o caminho curto (leitura no Redis) do mais longo (consulta e grava no banco antes de retornar ao gateway).
+* **Ramo B:** Chamada à API externa, verificação de limite e retorno `OK`, com ou sem etapa de aumento de limite.
+* **Revisar como código:** Lendo identificadores, rótulos e setas — em Markdown, basta um bloco cercado por três crases com `mermaid` para renderizar.
+
+```mermaid
+flowchart TD
+    U[User] --> GW[API Gateway]
+    GW --> R{Router}
+    R -->|service A| MA[Microservice A]
+    R -->|service B| MB[Microservice B]
+    MA --> C{Cache hit?}
+    C -->|sim| RD[(Redis)]
+    C -->|não| DB[(Banco de dados)]
+    RD --> GW
+    DB --> GW
+    MB --> EXT[API externa]
+    EXT --> LIM{Verifica limite}
+    LIM -->|ok| OK[Retorna OK]
+    LIM -->|aumentar| INC[Aumenta limite]
+    INC --> OK
+```
