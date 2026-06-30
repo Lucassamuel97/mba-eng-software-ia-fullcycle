@@ -16,7 +16,9 @@
 
 - [Aula 7: Prompts e agentes](#aula-7-prompts-e-agentes)
 
-- [Aula 8: Diagramas Mermaid](#aula-8-diagramas-mermaid)
+- [Aula 8: Gerando diagrama C4](#aula-8-gerando-diagrama-c4)
+
+- [Aula 9: Diagramas Mermaid](#aula-9-diagramas-mermaid)
 
 
 ## Aula 1: Introdução a Diagramas
@@ -477,7 +479,73 @@ Esta aula trata o **prompt como agente**: um **workflow estruturado** que parte 
 * **Quatro pontos:** (1) idioma do diagrama acompanha o FDD sem traduzir tecnologias; (2) níveis param onde a documentação sustenta; (3) `.puml` e `.md` criados no local correto; (4) a justificativa aponta para o documento-fonte.
 * **Se algo falhar:** O problema não está só na saída — está no **prompt, nos parâmetros ou na validação** insuficiente.
 
-## Aula 8: Diagramas Mermaid
+## Aula 8: Gerando diagrama C4
+
+Esta aula é a **parte prática** da geração: executar o agente, inspecionar os artefatos (`.puml`, `.md`, PNG) e **ler o PlantUML/C4 como código** antes de confiar na imagem. Reforça que o **artefato textual é a base confiável** (PNG é a etapa mais frágil), que o prompt roda **sem lock-in** entre ferramentas, e que a saída é sempre **rascunho revisável** — com espaço para automatizar a revalidação via **hook de pré-commit**.
+
+---
+
+### 1. Velocidade versus modo thinking
+* **Thinking segue workflows longos:** Gasta mais processamento em raciocínio intermediário, o que tende a aumentar a precisão dos passos.
+* **Não garante resultado melhor:** Indica mais análise antes da saída, não qualidade automática.
+* **Velocidade surpreende:** Alguns modelos combinam rapidez e qualidade, mudando o custo operacional.
+* **Critério prático:** Não "modelo lento é melhor", mas qual entrega artefatos úteis com **menos iteração** para o seu caso.
+
+### 2. Geração de C4 sem lock-in de ferramenta
+* **Roda fora do ambiente de origem:** Desde que o workflow esteja bem especificado.
+* **O valor está no prompt:** Cursor, Cloud Code, Copilot ou outro agente produzem arquivos equivalentes — a interface não é o ativo.
+* **Permite comparar agentes:** Por velocidade, aderência ao formato e capacidade de corrigir a própria saída.
+* **Consequência:** Trocar de ferramenta quando fizer sentido, **sem reescrever** o processo.
+
+### 3. Execução do comando e artefatos gerados
+* **Transforma o FDD em arquivos:** Tipicamente `.puml` e `.md`, opcionalmente PNG.
+* **`.puml`:** Código PlantUML/C4 com elementos e relações; **`.md`:** justificativas, validações e observações.
+* **Por que importa:** O diagrama deixa de ser ideia no prompt e vira **artefato auditável** no repositório.
+* **Quando funciona bem:** A ferramenta cria a pasta de saída, escreve os arquivos e valida dependências locais antes de renderizar.
+
+### 4. Falhas na geração de PNG
+* **Etapa mais frágil:** A renderização para PNG falha mais que a geração textual.
+* **Causas:** Dependência ausente, erro de sintaxe residual ou problema no ambiente local — mesmo com `.puml` correto.
+* **Base confiável é o texto:** O sucesso do pipeline não deve depender só do PNG.
+* **Se a imagem falhar:** Inspecionar o `.puml`, corrigir e rerodar a exportação.
+
+### 5. Leitura prática de um arquivo PlantUML/C4
+* **Estrutura típica:** `@startuml`, declaração de encoding UTF-8 e includes da biblioteca C4 do nível representado.
+* **Elementos:** `Person`, `System`, `System_Ext`, fronteiras `System_Boundary` e relações `Rel` (com verbos e descrições).
+* **No Rate Limiter:** Variáveis nomeadas para Redis, Prometheus e OpenTelemetry, além das relações entre desenvolvedor, operador e serviço.
+* **Por que ler:** A revisão arquitetural acontece **no texto antes da imagem**.
+
+### 6. Preview local no VS Code
+* **Inspeção sem sair do editor:** Extensões de PlantUML renderizam o `.puml` na hora.
+* **Dependem de bibliotecas locais:** Quando faltam, o próprio erro costuma indicar o pacote (`brew`/`apt`).
+* **Encurta o ciclo:** Editar → visualizar → corrigir.
+* **Autonomia:** O desenvolvedor valida localmente, sem depender só do agente.
+
+### 7. Inspeção dos níveis gerados
+* **Verificar coerência por nível:** Não redefinir C1–C4, mas conferir se cada um virou arquivo coerente.
+* **O que cada um traz:** C1 = atores, boundary e externos; C2 = containers e tecnologias; C3 = componentes internos; nível mais detalhado = contratos e estruturas.
+* **Conferir contra o FDD:** Nomes, relações, notas laterais e dependências externas — sem assumir que a primeira saída está correta.
+* **Cuidado:** Similaridade visual ajuda, mas **não substitui** validação semântica.
+
+### 8. Diferenças entre agentes e qualidade da saída
+* **Parecidos, mas divergentes:** Dois agentes podem gerar diagramas funcionais e diferir em ícones, convenções visuais ou aderência ao prompt.
+* **Trade-off:** Um modelo rápido entrega ótimo rascunho em segundos; outro mais cuidadoso segue regras de estilo mais fielmente.
+* **Nenhum se invalida:** Muda o **esforço de revisão** posterior.
+* **Critério técnico:** Custo total = tempo de geração + tempo de correção.
+
+### 9. Saída da IA como rascunho revisável
+* **Nunca é definitiva:** Tratar a saída como rascunho, não como documentação final.
+* **Ler como código:** Conferir elementos, relações, notas, encoding, includes e aderência ao FDD.
+* **Por quê:** A IA pode produzir algo plausível, rápido e convincente, mas **semanticamente incorreto**.
+* **Revisão humana:** Parte do pipeline, não um detalhe opcional.
+
+### 10. Hook de validação antes do commit
+* **Automatizar a revalidação:** Com geração rápida, faz sentido checar os diagramas antes do commit.
+* **O que o hook faz:** Verifica consistência entre código, FDD e arquivos gerados; em divergência, bloqueia o commit ou dispara regeneração.
+* **Diagramas vivos:** Tornam-se artefatos do fluxo de engenharia, não documentação esquecida.
+* **Limite:** A automação não substitui revisão humana, mas impede que **inconsistências óbvias** cheguem ao repositório.
+
+## Aula 9: Diagramas Mermaid
 
 Esta aula apresenta o **Mermaid** como linguagem de marcação que converte **texto em diagramas**, tratando o diagrama como artefato textual — editável, versionável, revisável em diff e renderizável **nativamente no Markdown/GitHub**. Mais leve que o PlantUML, é ideal para **documentação viva** e fluxos/regras pontuais. O fechamento é o **critério de escolha**: C4 para visões arquiteturais; Mermaid para fluxos e regras que precisam viver junto do texto.
 
