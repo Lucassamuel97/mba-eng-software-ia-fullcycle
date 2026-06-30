@@ -12,6 +12,8 @@
 
 - [Aula 5: Boas práticas e dicas importantes](#aula-5-boas-práticas-e-dicas-importantes)
 
+- [Aula 6: Quando é recomendável utilizar ADRs](#aula-6-quando-é-recomendável-utilizar-adrs)
+
 
 ## Aula 1: Introdução a ADRs
 
@@ -278,3 +280,81 @@ Esta aula consolida o que mantém um acervo de ADRs **útil ao longo do tempo**:
 * **Não elimina entendimento:** Gerar com IA não dispensa conhecer o tipo de documento nem a governança.
 * **Sem prompt claro, convenção e revisão:** O resultado tende a ser prolixo, inconsistente e contraditório com o acervo.
 * **Dependência direta:** A utilidade da IA depende da **qualidade estrutural** dos ADRs e dos vínculos com os demais documentos.
+
+## Aula 6: Quando é recomendável utilizar ADRs
+
+Esta aula define **quando um ADR é altamente recomendado**: decisões com **impacto arquitetural**, que **permanecem por muito tempo** e cujo **motivo deixará de ser óbvio** no futuro. Percorre os casos clássicos — tecnologias-base, padrões de comunicação, persistência, auth, observabilidade, deploy/infra, resiliência, versionamento de API, lock-in e substituição de componentes críticos — sempre pela mesma lente: o quanto a escolha é **sistêmica e cara de reverter**.
+
+**Situações que merecem um ADR**
+
+| Situação | Por que merece um ADR |
+| --- | --- |
+| Escolha de tecnologias base (banco de dados, linguagem, framework principal, mensageria) | Afeta todo o ciclo de vida do sistema, performance e custos. |
+| Padrões de comunicação (REST, gRPC, eventos, GraphQL) | Define como os serviços interagem e como o sistema se expande. |
+| Estratégia de persistência (SQL, NoSQL, Redis, etc.) | Envolve trade-offs de consistência, disponibilidade e complexidade. |
+| Autenticação e autorização (JWT, OAuth2, OpenID Connect) | Impacta segurança e compatibilidade entre componentes. |
+| Observabilidade e telemetria (OpenTelemetry, Prometheus, tracing) | Crucial para monitoramento e debugging entre times. |
+| Estratégia de deploy e infraestrutura (Kubernetes, ECS, Cloud Run, Terraform) | Define como o sistema escala, é versionado e mantido. |
+| Padrões de resiliência e fallback (retry, circuit breaker, timeout) | Determinam confiabilidade sob falhas e carga alta. |
+
+---
+
+### 1. Critério central de elegibilidade
+* **Os três sinais:** Impacto arquitetural + permanência por bastante tempo + motivo que deixará de ser óbvio no futuro.
+* **Não é qualquer escolha:** Registra o que **altera a estrutura** do sistema ou condiciona sua evolução.
+* **Custo de perder o contexto:** A decisão segue influenciando código, operação, integrações e times muito depois da implementação.
+
+### 2. Decisões estruturais e impacto arquitetural
+* **Quando aparece:** A escolha afeta vários componentes, módulos ou times — não um trecho isolado.
+* **Cria restrições duradouras:** Muda interfaces, dependências, operação, observabilidade, segurança ou forma de escalar.
+* **Quanto mais difícil reverter:** Mais sistêmica a consequência, mais forte a justificativa para um ADR.
+
+### 3. Tecnologias-base como decisões de longa duração
+* **Moldam o ciclo de vida:** Banco principal, linguagem, framework central e mensageria.
+* **O que influenciam:** Performance, custo operacional, contratação, ecossistema de bibliotecas e como o time resolve problemas.
+* **Caras de trocar:** Migração custosa e arriscada — o ADR preserva **por que** a base foi adotada e quais alternativas foram descartadas.
+
+### 4. Padrões de comunicação
+* **Contratos de interação:** REST, gRPC, eventos, GraphQL, MCP e A2A não são detalhes locais.
+* **Tendem a permanecer:** Orientam novas integrações, tooling e observabilidade mesmo quando o comportamento evolui.
+* **Novo padrão = novas regras:** A arquitetura passa a conviver com trade-offs adicionais, o que justifica um ADR específico.
+
+### 5. Estratégias de persistência
+* **Mais que escolher produto:** Define consistência, disponibilidade, latência e complexidade operacional.
+* **Trade-offs explícitos:** Postgres × MySQL só faz sentido quando o time explica o **porquê**, não como preferência pessoal.
+* **Central e cara de substituir:** A estratégia de dados costuma ser duradoura — apropriada para ADR.
+
+### 6. Autenticação e autorização
+* **Segurança e interoperabilidade:** JWT, OAuth2 e OpenID Connect afetam compatibilidade entre componentes internos e externos.
+* **O que definem:** Como identidades circulam, como permissões são verificadas e quais integrações futuras serão mais simples ou difíceis.
+* **Mudanças se propagam:** Envolvem risco operacional amplo — o racional precisa ficar explícito em ADR.
+
+### 7. Observabilidade e telemetria como ADR
+* **Como o sistema é entendido em produção:** A organização da stack de telemetria é decisão arquitetural.
+* **O que muda:** OpenTelemetry, Collector, sidecar, envio direto ao vendor ou intermediário alteram custo, acoplamento, padronização e evolução.
+* **Tracing com/sem sampling:** Muda volume de dados, precisão diagnóstica e viabilidade econômica — não deve ficar implícito.
+
+### 8. Deploy e infraestrutura como ADR
+* **Modelo operacional, não só ferramenta:** Kubernetes, ECS, Cloud Run e Terraform definem como escalar, versionar e manter.
+* **O que determinam:** Grau de automação, complexidade da plataforma, forma de rollout e conhecimento que o time precisa sustentar.
+* **Dependências difíceis de remover:** Afetam todo o ambiente produtivo — racional merece registro formal.
+
+### 9. Resiliência e fallback como ADR
+* **Comportamento sob falha:** Circuit breaker, retry e timeout definem como o sistema reage a degradação e alta carga.
+* **Não são cosméticos:** Alteram confiabilidade percebida, consumo de recursos, propagação de erro e experiência operacional.
+* **Postura sistêmica:** Escolher um padrão de resiliência é definir uma posição diante de falhas — precisa ser documentado.
+
+### 10. Versionamento de API
+* **Controla compatibilidade contratual:** Decisão arquitetural sobre como evoluir sem quebrar consumidores.
+* **O que define:** Quanto legado manter e como introduzir mudanças incompatíveis.
+* **Efeito acumulado:** Impacta múltiplas integrações por anos — o ADR evita perder o motivo da política escolhida.
+
+### 11. Lock-in técnico e operacional
+* **Além de depender de uma tecnologia:** Frameworks, middlewares ou vendors proprietários trazem custos futuros de migração, treinamento, renegociação e adaptação de processos.
+* **Vira parte da arquitetura:** Quando um API Gateway proprietário estrutura tráfego e segurança, a **dificuldade de substituição** passa a ser estrutural.
+* **Deve ser registrado:** Para que o custo do lock-in seja uma decisão consciente.
+
+### 12. Substituição de componentes críticos
+* **Mexe nas fundações:** Trocar RabbitMQ por Kafka, substituir um SDK corporativo ou alterar um componente central.
+* **Reversão cara:** O impacto se espalha por múltiplos serviços e o sucesso depende de entender por que o anterior deixou de atender.
+* **ADR como memória da transição:** Referência para futuras revisões ou novas substituições.

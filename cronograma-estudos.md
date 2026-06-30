@@ -92,7 +92,7 @@ Tempo total de estudo: 29 minutos e 55 segundos (29:55)
 ## 07/07/2026 (Terça-feira)
 Tempo total de estudo: 22 minutos e 1 segundo (22:01)
 
-- [ ] Quando e recomendável utilizar ADRs — 08:07
+- [x] Quando e recomendável utilizar ADRs — 08:07
 - [ ] Quando ADRs são opcionais — 07:46
 - [ ] Quando não devemos usar ADRs — 06:08
 
