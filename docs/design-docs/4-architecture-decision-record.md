@@ -14,6 +14,8 @@
 
 - [Aula 6: Quando é recomendável utilizar ADRs](#aula-6-quando-é-recomendável-utilizar-adrs)
 
+- [Aula 7: Quando ADRs são opcionais](#aula-7-quando-adrs-são-opcionais)
+
 
 ## Aula 1: Introdução a ADRs
 
@@ -358,3 +360,63 @@ Esta aula define **quando um ADR é altamente recomendado**: decisões com **imp
 * **Mexe nas fundações:** Trocar RabbitMQ por Kafka, substituir um SDK corporativo ou alterar um componente central.
 * **Reversão cara:** O impacto se espalha por múltiplos serviços e o sucesso depende de entender por que o anterior deixou de atender.
 * **ADR como memória da transição:** Referência para futuras revisões ou novas substituições.
+
+## Aula 7: Quando ADRs são opcionais
+
+Esta aula trata a **zona cinzenta**: decisões que existem, mas cujo efeito pode ser **local, reversível ou já absorvido** pela cultura do time. O critério deixa de ser "houve decisão" e passa a ser "isso precisa virar **memória arquitetural explícita**?" — pesando o **custo de documentar o óbvio**. O fio condutor é o **contrato público** e a **ruptura de paradigma**: o que sobe de nível merece ADR; o que é convenção local, não.
+
+---
+
+### 1. Regra geral e zona cinzenta
+* **Forte candidato:** Decisão com implicações em performance, segurança, custo, interoperabilidade ou manutenção.
+* **A zona cinzenta:** Quando o efeito é local, reversível ou já absorvido pela cultura técnica.
+* **Critério deslocado:** De "houve decisão" para "essa decisão precisa virar **memória arquitetural explícita**".
+* **Custo conta:** Registrar o óbvio consome tempo sem aumentar entendimento futuro.
+
+### 2. Padrão arquitetural local versus mudança de paradigma
+* **Padrão local:** Convenção de implementação do time (MVC, Clean Architecture, hexagonal) usada de forma recorrente.
+* **Redundante documentar:** Se já é o boilerplate normal e estável da empresa, a decisão está institucionalizada.
+* **Quando muda:** Ruptura de paradigma — ex: migrar de MVC estrito para Clean Architecture + orientação a eventos altera responsabilidades, fronteiras e evolução.
+* **Sobe de nível:** Aí deixa de ser convenção local e justifica ADR.
+
+### 3. Modelagem de domínio versus estilo de modelagem
+* **Não por item:** Entidades, agregados e regras isoladas mudam com frequência — não pedem um ADR cada.
+* **O que merece registro:** O **estilo de modelagem** adotado — a forma estrutural de organizar o domínio.
+* **Exemplo:** DDD com decisões explícitas sobre Aggregate Root, árvore de dependências e Value Objects, quando é uma forma incomum ou deliberadamente diferente.
+* **Função:** Registrar a **opção estrutural** que orienta várias regras, não catalogar cada regra.
+
+### 4. Organização de pastas e módulos como caso opcional
+* **Melhor em docs operacionais:** `README` ou `CONTRIBUTING.md` orientam contribuição cotidiana com menos atrito.
+* **ADR só quando:** A organização expressa uma decisão arquitetural mais profunda, não só convenção de navegação.
+* **Reflete padrão conhecido:** Formalizar em ADR gera burocracia.
+* **Materializa nova separação:** Se traz nova modularização ou responsabilidades, o caso sobe de nível.
+
+### 5. Decisões menores e critério de contratos públicos
+* **Design não vira ADR sozinho:** Strategy, Adapter ou certas interfaces não exigem ADR só por serem design.
+* **Ponto de elevação — contrato público:** Quando a interface passa a ser consumida por outros sistemas, APIs ou SDKs, cria dependências externas.
+* **Por que registrar:** Mudanças futuras podem **quebrar consumidores** ou gerar acoplamentos difíceis de desfazer.
+* **Sem contrato público:** Continua sendo detalhe local de implementação.
+
+### 6. SDKs e exposição arquitetural
+* **Contrato pesa mais que o tamanho do código:** Mesmo com implementação simples, a superfície pública define como terceiros integram.
+* **Impacto desproporcional:** A exposição carrega peso arquitetural maior que a complexidade interna.
+* **O que registrar:** Por que certos contratos foram expostos e por que aquela abordagem — reduz ambiguidade na evolução.
+* **Dependentes externos:** Tornam o caso muito mais forte (nem todo SDK exigirá).
+
+### 7. Configurações específicas como decisão contextual
+* **Normalmente não é ADR:** Timeout, batch size e afins pertencem a FDD, LLD ou HLD — ajustes operacionais que variam.
+* **Quando sobe:** Ao deixar de ser tuning local e virar **restrição sistêmica** ou estratégia incomum.
+* **Exemplo:** Um timeout crítico que sustenta carga pesada, impõe comportamento fora do padrão ou força compensações relevantes.
+* **Critério:** Não é o número, mas o **papel estrutural** que ele desempenha.
+
+### 8. Contexto do time e do projeto
+* **Mesma escolha, decisões diferentes:** Maturidade do time, padrões consolidados e tipo de sistema mudam o custo-benefício.
+* **Stack consolidada:** Redocumentar a convenção pouco acrescenta.
+* **Time migrando de paradigma:** A documentação alinha linguagem, fronteiras e expectativas.
+* **O julgamento:** Depende menos da tecnologia e mais do quanto a decisão **precisa ser explicada** para continuar compreendida.
+
+### 9. Trade-offs de documentação
+* **Os dois extremos:** Documentar demais vira burocracia; de menos apaga o raciocínio das decisões relevantes.
+* **O equilíbrio:** Evitar o documento óbvio **e** a omissão de mudanças estruturais.
+* **Exemplos:** Migrar de MVC para DDD + Clean Architecture **merece** (houve ruptura); trocar Repository por DAO em um microserviço pequeno com duas tabelas **não** compensa.
+* **O valor real:** O ADR vale quando preserva **contexto que não permanecerá evidente** no código ou na cultura.
