@@ -26,6 +26,8 @@
 
 - [Aula 12: State Diagram](#aula-12-state-diagram)
 
+- [Aula 13: Gerando diagramas Mermaid com IA](#aula-13-gerando-diagramas-mermaid-com-ia)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -850,3 +852,69 @@ stateDiagram-v2
 * **Máquina de estados como texto versionável:** Como os demais diagramas trabalhados.
 * **Passo prático:** Listar os estados relevantes, nomear as transições com os **eventos de negócio** e verificar se cada mudança de comportamento está ancorada em um estado explícito.
 * **Critério:** Se a regra depende de "status atual + evento recebido", o state diagram comunica melhor que um fluxo puramente procedural.
+
+## Aula 13: Gerando diagramas Mermaid com IA
+
+Esta aula fecha o módulo com um **agente Mermaid Generator**: um workflow que converte o **FDD em um pacote de diagramas Mermaid** complementares, num **único Markdown**, com regras explícitas (language matching, short labels, controle de densidade, sem duplicar visões). Diferente do pipeline C4, o eixo Mermaid favorece **um arquivo curado**. O ciclo de qualidade combina **autorrevisão do agente**, **validação por compilação** e — sempre — **revisão humana**.
+
+> 🔌 **Plugin/doc usado na aula** (outro repositório): [diagrams-generator / mermaid-generate.md](https://github.com/Lucassamuel97/claude-plugins/blob/main/plugins/diagrams-generator/commands/mermaid-generate.md)
+
+---
+
+### 1. Agente Mermaid Generator
+* **Workflow, não improviso:** Transforma o FDD em um pacote de diagramas a partir de regras explícitas, em vez de um único diagrama solto.
+* **Função central:** Ler o documento-fonte, extrair elementos, identificar escopo (dentro/fora) e só então escolher as representações visuais.
+* **Reduz alucinação:** Regras como não inventar elementos, usar **language matching** e justificar inferências inevitáveis.
+* **Resultado:** Geração **guiada por critérios auditáveis**, não resposta solta do modelo.
+
+### 2. Workflow e regras críticas do prompt
+* **Ordem explícita:** Leitura do FDD → extração dos elementos → identificação de inferências → seleção dos diagramas → geração → revisão interna.
+* **Regras de qualidade:** `short labels`, `clean syntax`, sem emojis e proibição de duplicar a mesma visão — evita poluição visual e redundância.
+* **Inferência minimizada e justificada:** A ausência de dados no FDD não autoriza completar o sistema com suposições arbitrárias.
+* **Por que importa:** O desenho do prompt vale mais que um texto genérico pedindo "gere diagramas Mermaid".
+
+### 3. Seleção do tipo de diagrama conforme o problema
+* **Dirigida pela pergunta técnica:** Interação temporal → sequência; fluxo decisório/algoritmo → flowchart; contrato estrutural → class; modelagem de dados → ER (opcional).
+* **No Rate Limiter:** O mesmo FDD vira fluxo HTTP, algoritmos de limitação, modos de storage, contratos públicos e cenários de fallback — **sem repetir conteúdo**.
+* **O ganho:** Cobrir **perspectivas complementares**, não multiplicar diagramas por volume.
+
+### 4. Quantidade ótima e controle de densidade
+* **Sem conjunto fixo:** Diferente do C4, o Mermaid não impõe arquivos fixos — o prompt controla quantidade e granularidade.
+* **Faixa equilibrada:** ~6 a 8 diagramas equilibram cobertura e legibilidade; um teto de ~10 evita explosão de artefatos pouco úteis.
+* **Regras de densidade:** Agrupar fluxos com +8 etapas; dividir diagramas com +10 nós em views complementares — evita que compile mas siga ilegível.
+* **Critério:** Não "quanto mais, melhor", mas "quantos são necessários para explicar sem redundância".
+
+### 5. Saída em um único arquivo Markdown
+* **Formato prático:** Um Markdown com texto explicativo e blocos Mermaid renderizáveis.
+* **Vantagens:** Simplifica versionamento, leitura e incorporação na documentação — sem espalhar a visão em vários arquivos pequenos (como no pipeline C4).
+* **Favorece revisão:** Contexto, justificativas e diagramas ficam lado a lado.
+* **No Rate Limiter:** Funciona como **documento curado** de referência técnica.
+
+### 6. Execução prática com `generateMermaid`
+* **Comando simples:** Chama o agente, aponta para o FeatureDoc e define a pasta de saída.
+* **No exemplo:** `generateMermaid` usa o agente `MermaidDiagramGenerator` sobre o contexto do `@rate-limiter`, delegando ao prompt as fases de análise, seleção, geração e checagem.
+* **Separação importante:** O comando permanece **estável**; a inteligência fica no agente.
+* **Consequência:** Com prompt bem desenhado, trocar modelo ou ferramenta altera menos o workflow do que parece.
+
+### 7. Autorrevisão do agente
+* **Etapa explícita:** O próprio agente relê o que gerou e corrige antes da entrega.
+* **O que captura:** Erros de sintaxe, inconsistências de nomenclatura, excesso de densidade e escolhas ruins de representação.
+* **Não é cosmético:** A diferença entre a versão inicial e a revisada mostra que pedir revisão é **controle de qualidade**.
+* **Sem ela:** O custo da depuração manual cresce rápido.
+
+### 8. Validação por compilação e renderização
+* **Feedback objetivo:** Se a sintaxe estiver errada, o diagrama não compila/renderiza.
+* **Separa erro estrutural de semântico:** Primeiro garante que é renderizável; depois verifica se representa o sistema.
+* **No exemplo:** A compilação bem-sucedida elimina uma classe inteira de **falhas mecânicas**.
+* **Limite:** Renderizar **não prova fidelidade** ao FDD, só que o código Mermaid é formalmente aceitável.
+
+### 9. Pacote de diagramas do Rate Limiter
+* **Múltiplas visões no mesmo Markdown:** Sequência HTTP (`allow`/`deny`), fluxo de `fixed window`, fluxo de `token bucket`, comparação `Redis` × `Memory`, `fallback open`, atomicidade com Lua no Redis, concorrência local com `mutex` e contratos públicos.
+* **Um documento, várias perguntas:** Mostra como um único FDD gera diagramas operacionais, algorítmicos e estruturais sem reexplicar o domínio.
+* **Ponto principal:** Cada diagrama responde a uma **pergunta técnica distinta**.
+
+### 10. Validação humana continua obrigatória
+* **Etapa decisiva:** Mesmo com compilação, autorrevisão e modelo rápido, a revisão humana é insubstituível.
+* **O que conferir:** Cluster Redis, réplicas, políticas de fallback, contratos públicos e os **limites do que estava realmente documentado**.
+* **Risco oculto:** Diagramas plausíveis podem esconder simplificações indevidas ou omissões — sobretudo onde houve inferência.
+* **Divisão de responsabilidade:** A IA acelera o rascunho; a **correção arquitetural** fica com quem revisa.
