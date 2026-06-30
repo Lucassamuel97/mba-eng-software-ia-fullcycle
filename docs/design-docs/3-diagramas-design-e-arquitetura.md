@@ -20,6 +20,8 @@
 
 - [Aula 9: Diagramas Mermaid](#aula-9-diagramas-mermaid)
 
+- [Aula 10: Flowchart e Sequence Diagram](#aula-10-flowchart-e-sequence-diagram)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -590,3 +592,69 @@ Esta aula apresenta o **Mermaid** como linguagem de marcação que converte **te
 * **Quando Mermaid vence:** Quando o custo de detalhar, renderizar e manter um diagrama arquitetural formal supera o benefício.
 * **Forças de cada um:** Mermaid favorece velocidade, embutimento e baixo atrito; C4 favorece estrutura arquitetural explícita.
 * **No Rate Limiter:** C4 para vistas arquiteturais; Mermaid para **fluxos e regras específicas** que vivem junto do Markdown.
+
+## Aula 10: Flowchart e Sequence Diagram
+
+Esta aula mostra dois tipos de diagrama Mermaid aplicados ao Rate Limiter: o **flowchart**, que responde "qual caminho o sistema segue quando uma condição muda?" (a decisão de `Storage Mode` entre Redis e Memory), e o **sequence diagram**, que responde "como a requisição atravessa os componentes ao longo do tempo?" (a sequência allow/deny). Juntos, conectam **decisão estrutural de execução** com **comportamento observável** na interface HTTP.
+
+> 🛠️ Os blocos Mermaid abaixo foram **reconstruídos a partir da descrição da aula** (o código exato do curso não foi anexado). Renderizam nativamente no GitHub; no site Docsify, precisam do plugin Mermaid habilitado. Se a versão do curso diferir, é só me passar que eu substituo.
+
+---
+
+### 1. Flowchart: fluxo de decisão e caminhos alternativos
+* **Processo com decisões:** Representa um processo como passos conectados por bifurcações.
+* **Pergunta que responde:** "Qual caminho o sistema segue quando uma condição muda?" — funciona bem com bifurcações explícitas.
+* **No Rate Limiter:** Modela a decisão do `Storage Mode` — com `Redis`, segue para script Lua, `EvalSha` e estado compartilhado; com `Memory`, segue para `mutex`, `LocalMap` e estado isolado.
+* **Valor:** Mostra que a **mesma responsabilidade** de persistência muda de implementação e de propriedade operacional conforme o modo.
+
+```mermaid
+flowchart TD
+    A{Storage Mode} -->|Redis| B[Script Lua]
+    B --> C[EvalSha]
+    C --> D[(Estado compartilhado no Redis)]
+    A -->|Memory| E[Mutex]
+    E --> F[LocalMap]
+    F --> G[Estado isolado no processo]
+```
+
+### 2. Redis versus Memory no fluxo
+* **Ramo Redis — consistência distribuída:** O script Lua concentra a operação no servidor e `EvalSha` preserva **atomicidade** executando a lógica como unidade única; o estado deixa de ser local e passa a ser **compartilhado entre instâncias**.
+* **Ramo Memory — local ao processo:** O `mutex` protege a concorrência dentro da instância e o `LocalMap` mantém o estado em memória **sem compartilhamento**.
+* **Trade-off:** O caminho Memory simplifica a execução, mas o isolamento muda o comportamento em cenários com **múltiplas réplicas**.
+
+### 3. Sequence Diagram: troca de mensagens ao longo do tempo
+* **Interações temporais:** Mostra quem chama quem, em que ordem, e qual resposta retorna em cada etapa.
+* **Pergunta que responde:** "Como a requisição atravessa os componentes até produzir a resposta?"
+* **No Rate Limiter:** O `client` envia um `HTTP request` ao middleware (ponto de entrada), que obtém a chave e delega a checagem ao `rate limiter`, que lê/altera o estado no storage antes de devolver a decisão.
+* **O que explicita:** **Onde a decisão nasce** e em que ponto ela volta para o fluxo HTTP.
+
+```mermaid
+sequenceDiagram
+    participant Client as client
+    participant MW as middleware
+    participant RL as rate limiter
+    participant ST as storage
+    participant H as handler
+
+    Client->>MW: HTTP request
+    MW->>MW: obtém a chave do contexto
+    MW->>RL: checar limite (key)
+    RL->>ST: ler / atualizar estado
+    ST-->>RL: estado atual
+    RL-->>MW: decisão (allow / deny)
+    alt allow
+        MW->>H: encaminha a requisição
+        H-->>Client: HTTP 200 + headers X-RateLimit-*
+    else deny
+        MW-->>Client: HTTP 429 Too Many Requests + Retry-After
+    end
+```
+
+### 4. Sequência da decisão allow/deny
+* **Allow:** O processamento segue até o `handler` (controller da lógica de negócio), que produz a resposta HTTP; os headers de rate limiting acompanham a resposta bem-sucedida. O diagrama deixa claro que a **limitação ocorre antes** da regra de negócio.
+* **Deny:** O fluxo **não** segue para o `handler`; o middleware adiciona o header `Retry-After` e encerra com `HTTP 429 Too Many Requests`.
+* **Complementaridade:** Essa bifurcação temporal complementa o flowchart — um mostra a escolha do storage, o outro mostra o **efeito** dela no ciclo de vida da requisição.
+
+### 5. Como ler os dois diagramas em conjunto
+* **Mesmo sistema, perspectivas diferentes:** O flowchart responde **qual caminho interno** é seguido conforme o `Storage Mode`; o sequence diagram responde **como os componentes colaboram** ao longo do tempo para produzir `allow` ou `deny`.
+* **Usados juntos:** Conectam a **decisão estrutural de execução** com o **comportamento observável** na interface HTTP.
