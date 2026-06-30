@@ -6,6 +6,8 @@
 
 - [Aula 2: Estrutura clássica](#aula-2-estrutura-clássica)
 
+- [Aula 3: MADRs](#aula-3-madrs)
+
 
 ## Aula 1: Introdução a ADRs
 
@@ -105,3 +107,59 @@ Esta aula detalha o **template clássico de Michael Nygard**: campos simples e s
 * **Contexto:** Restrições de custo, infraestrutura disponível e conhecimento do time.
 * **Decisão / Alternativas:** Adoção do RabbitMQ; Kafka aparece como opção considerada e descartada.
 * **Consequências:** Benefícios operacionais e limitações aceitas — um documento curto, mas **suficiente** para explicar o caminho da arquitetura.
+
+## Aula 3: MADRs
+
+Esta aula apresenta o **MADR (Markdown ADR)**: um formato padronizado em Markdown, **legível por pessoas e parseável por máquina**. Ele não muda o conteúdo lógico da decisão — muda a **disciplina documental**: metadados estruturados (`status`, `date`, `supersedes`, `superseded by`, `amends`) e seções fixas que viabilizam **busca, validação, automação em CI/CD** e uso por IA. O critério final é **consistência suficiente**, adaptável ao contexto da organização.
+
+---
+
+### 1. MADR como operacionalização do ADR
+* **Formato padronizado em Markdown:** Registra decisões de forma legível para pessoas e parseável por máquina.
+* **Não substitui o conceito:** Torna o registro mais previsível, reduzindo variação de estrutura entre autores.
+* **A diferença central:** Está menos no conteúdo lógico da decisão e mais na **disciplina documental** aplicada ao arquivo.
+
+### 2. Padronização e parseabilidade por máquina
+* **Problema da variação:** Campos, nomes e seções diferentes a cada autor fragilizam busca, validação e automação.
+* **A solução:** Campos recorrentes e estrutura fixa, interpretáveis por ferramentas sem leitura humana caso a caso.
+* **O que habilita:** Documento processável em pipelines, CLIs, indexadores e fluxos assistidos por IA.
+
+### 3. Metadados estruturados
+* **Semântica explícita:** `status`, `date`, `tags`, `supersedes`, `amends` e `superseded by`.
+* **Não são ornamento:** Permitem saber se a decisão está ativa, quando foi registrada, quais temas cobre e como se relaciona com outras.
+* **Sem eles:** A timeline arquitetural existe, mas fica **implícita** e difícil de consultar automaticamente.
+
+### 4. Relações entre ADRs
+* **Vínculos explícitos:** O MADR materializa relações em vez de deixá-las no texto corrido.
+* **Os campos:** `supersedes` (substitui outra), `superseded by` (é substituída), `amends` (complementa/ajusta parcialmente).
+* **Resultado:** Transforma arquivos soltos em uma **rede navegável** de decisões.
+
+### 5. Estrutura padronizada do conteúdo
+* **Seções típicas:** `Context and Problem Statement`, `Decision Drivers`, `Considered Options`, `Decision Outcome`, `Pros and Cons of the Options`, `Consequences` e `References`.
+* **Refina o clássico:** Separa melhor motivadores, opções avaliadas e efeitos da escolha.
+* **O ganho:** Não é burocracia — é consistência para leitura rápida, comparação entre ADRs e extração automatizada.
+
+### 6. Exemplo de substituição explícita de decisão
+* **Cenário:** Uma ADR adota gRPC no lugar de REST e declara `supersedes ADR 02`.
+* **Sem ambiguidade:** Informa que a decisão anterior deixou de ser a referência principal para aquele contexto.
+* **Ciclo completo:** Se no futuro outra abordagem substituir o gRPC, o `superseded by` fecha o ciclo **sem apagar o histórico**.
+
+### 7. Integração com ferramentas
+* **Ecossistema:** ADR Tools, ADR Log, scripts CLI e extensões de editor.
+* **O que um CLI faz:** Cria nova ADR com a próxima numeração, aplica template consistente e prepara os campos de relacionamento/rastreabilidade.
+* **Dependência:** Essas ferramentas exigem **convenções estáveis** — sem elas, automatizar vira uma coleção de exceções.
+
+### 8. Validação estrutural e automação em pipeline
+* **Formato previsível = validável:** O repositório pode rodar lint e checagens estruturais em CI/CD.
+* **Exemplo (GitHub Actions):** Verificar campos obrigatórios, nomenclatura correta e integridade dos links entre documentos.
+* **Benefício:** Reduz **deriva documental** e mantém a consistência do acervo conforme ele cresce.
+
+### 9. Uso por IA
+* **Contexto explícito + estruturado:** O ganho aumenta quando o contexto também é estruturado, não só presente.
+* **O que um conjunto de MADRs permite:** Identificar quais decisões substituíram outras, quais temas se repetem e quando certas escolhas foram feitas.
+* **Efeito:** A IA opera sobre uma **memória arquitetural** com relações e metadados claros, em vez de inferir tudo do código.
+
+### 10. Adaptação ao contexto da organização
+* **Padrão, não ritual:** MADR é útil, mas não imutável.
+* **Variações possíveis:** Templates, campos adicionais e papéis como `Informed` e `Consulted` — fazem sentido em alguns times, são excesso em outros.
+* **Critério:** Preservar **consistência suficiente** para leitura, governança e automação, ajustando ao contexto real da empresa.

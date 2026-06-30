@@ -85,7 +85,7 @@ Tempo total de estudo: 29 minutos e 55 segundos (29:55)
 
 - [x] Introdução a ADRs — 02:00
 - [x] Estrutura clássica — 07:43
-- [ ] MADRs — 08:37
+- [x] MADRs — 08:37
 - [ ] Status, Metadados e Fluxos — 05:26
 - [ ] Boas práticas e dicas importantes — 06:09
 
