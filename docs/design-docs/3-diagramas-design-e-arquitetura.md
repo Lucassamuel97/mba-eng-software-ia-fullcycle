@@ -14,7 +14,7 @@
 
 - [Aula 6: C4 - Code](#aula-6-c4---code)
 
-- [Aula 7: Gerando diagrama C4](#aula-7-gerando-diagrama-c4)
+- [Aula 7: Prompts e agentes](#aula-7-prompts-e-agentes)
 
 - [Aula 8: Diagramas Mermaid](#aula-8-diagramas-mermaid)
 
@@ -400,9 +400,9 @@ Esta aula apresenta o **C4-Code**, o nível de **granularidade máxima** do mode
 * **Pergunta-chave:** O diagrama está reduzindo custo cognitivo ou só **duplicando informação com atraso**?
 * **Quando duplicar:** Melhor parar no **C3** e deixar o resto para a implementação e o FDD.
 
-## Aula 7: Gerando diagrama C4
+## Aula 7: Prompts e agentes
 
-Esta aula transforma a geração de diagramas C4 em um **workflow automatizado** que parte do **FDD como fonte de verdade**, produz arquivos **PlantUML** (`.puml`) versionáveis e um **relatório Markdown** com justificativas. O ponto central é a **geração adaptativa** — gerar apenas o nível que o documento sustenta — e a **revalidação obrigatória**. O "agente" aqui é essencialmente um **prompt portável** com regras, parâmetros e validação.
+Esta aula trata o **prompt como agente**: um **workflow estruturado** que parte do **FDD como fonte de verdade** para gerar diagramas C4 em **PlantUML** (`.puml`) versionáveis e um **relatório Markdown** com justificativas. O ponto central é a **geração adaptativa** (gerar só o nível que o documento sustenta), a **revalidação obrigatória**, o uso de **subagentes** com contexto isolado e a **portabilidade** do agente entre ferramentas, sustentada por **parametrização** explícita.
 
 ---
 

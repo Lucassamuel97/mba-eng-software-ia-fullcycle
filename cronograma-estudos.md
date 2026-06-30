@@ -67,8 +67,8 @@ Tempo total de estudo: 23 minutos e 38 segundos (23:38)
 ## 02/07/2026 (Quinta-feira)
 Tempo total de estudo: 29 minutos e 36 segundos (29:36)
 
-- [ ] Prompts e agentes — 08:38
-- [x] Gerando diagrama C4 — 12:13
+- [x] Prompts e agentes — 08:38
+- [ ] Gerando diagrama C4 — 12:13
 - [x] Diagramas Mermaid — 04:13
 - [ ] Flowchart e Sequence Diagram — 04:32
 
