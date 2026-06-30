@@ -83,7 +83,7 @@ Tempo total de estudo: 28 minutos e 46 segundos (28:46)
 ## 06/07/2026 (Segunda-feira)
 Tempo total de estudo: 29 minutos e 55 segundos (29:55)
 
-- [ ] Introdução a ADRs — 02:00
+- [x] Introdução a ADRs — 02:00
 - [ ] Estrutura clássica — 07:43
 - [ ] MADRs — 08:37
 - [ ] Status, Metadados e Fluxos — 05:26

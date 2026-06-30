@@ -17,6 +17,7 @@
   - [Módulo 1 — Documentação na era da IA](docs/design-docs/1-documentacao-na-era-da-ia.md)
   - [Módulo 2 — Design e Arquitetura](docs/design-docs/2-design-e-arquitetura.md)
   - [Módulo 3 — Diagramas (Design e Arquitetura)](docs/design-docs/3-diagramas-design-e-arquitetura.md)
+  - [Módulo 4 — Architecture Decision Record (ADR)](docs/design-docs/4-architecture-decision-record.md)
   - Templates — PRD
     - [PRD de Feature — Catálogo de Produtos](docs/design-docs/templates-prd/ex_PRD_Feature_Catalogo_Produtos.md)
     - [PRD de Feature — Rate Limiter](docs/design-docs/templates-prd/ex_PRD_Feature_Rate_Limiter.md)
