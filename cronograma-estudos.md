@@ -78,7 +78,7 @@ Tempo total de estudo: 28 minutos e 46 segundos (28:46)
 - [x] Prática, Class e ER Diagram — 08:01
 - [x] State Diagram — 03:27
 - [x] Gerando diagramas Mermaid com IA — 13:26
-- [ ] Acesso aos prompts — 03:52
+- [x] Acesso aos prompts — 03:52
 
 ## 06/07/2026 (Segunda-feira)
 Tempo total de estudo: 29 minutos e 55 segundos (29:55)
@@ -86,7 +86,7 @@ Tempo total de estudo: 29 minutos e 55 segundos (29:55)
 - [x] Introdução a ADRs — 02:00
 - [x] Estrutura clássica — 07:43
 - [x] MADRs — 08:37
-- [ ] Status, Metadados e Fluxos — 05:26
+- [x] Status, Metadados e Fluxos — 05:26
 - [ ] Boas práticas e dicas importantes — 06:09
 
 ## 07/07/2026 (Terça-feira)

@@ -8,6 +8,8 @@
 
 - [Aula 3: MADRs](#aula-3-madrs)
 
+- [Aula 4: Status, Metadados e Fluxos](#aula-4-status-metadados-e-fluxos)
+
 
 ## Aula 1: Introdução a ADRs
 
@@ -163,3 +165,58 @@ Esta aula apresenta o **MADR (Markdown ADR)**: um formato padronizado em Markdow
 * **Padrão, não ritual:** MADR é útil, mas não imutável.
 * **Variações possíveis:** Templates, campos adicionais e papéis como `Informed` e `Consulted` — fazem sentido em alguns times, são excesso em outros.
 * **Critério:** Preservar **consistência suficiente** para leitura, governança e automação, ajustando ao contexto real da empresa.
+
+## Aula 4: Status, Metadados e Fluxos
+
+Esta aula detalha o **ciclo de vida** de um ADR pelos seus **status** (`Draft`, `Proposal`, `Accepted`, `Rejected`, `Withdrawn`, `Deprecated`, `Superseded`) e pelos **metadados de relação** (`supersedes`/`superseded by`, `amends`, `relatesTo`, `dependsOn`). A regra de ouro: **status reflete o estado real** da decisão e **links refletem a relação real** entre documentos — usar o vínculo errado distorce a leitura histórica do acervo.
+
+---
+
+### 1. Proposal, Draft e o início formal da decisão
+* **Não são sinônimos:** `Draft` é documento ainda em elaboração (pode circular de forma restrita); `Proposal` indica que a decisão já entrou em discussão/aprovação.
+* **Diferença de governança:** Um rascunho pode existir **fora** do processo decisório; uma proposta já entra no **fluxo institucional** da arquitetura.
+
+### 2. Accepted e a vigência da decisão
+* **Referência oficial:** `Accepted` marca o ponto em que a decisão passa a valer.
+* **Não é "implementado":** Significa que o direcionamento foi aprovado e deve orientar novas mudanças, não que tudo já foi construído.
+* **Na timeline:** É o marco que torna a decisão **vigente** no acervo.
+
+### 3. Rejected versus Withdrawn
+* **Rejected:** A proposta foi analisada e **descartada** após avaliação — negativa deliberada.
+* **Withdrawn:** A decisão foi **retirada de pauta** antes de seguir/ser aprovada, por mudança de contexto, prioridade ou interesse.
+* **Por que distinguir:** Um registra discordância técnica; o outro registra **interrupção do processo**, não necessariamente discordância.
+
+### 4. Deprecated como legado ainda válido
+* **Não apaga nem invalida:** A decisão deprecada não invalida automaticamente o que já foi construído com ela.
+* **O que comunica:** A escolha **não deve mais ser adotada** em novos contextos, mas segue relevante para interpretar legados.
+* **No exemplo:** Pode deixar de ser recomendada hoje **sem exigir migração imediata** de tudo que a usou.
+
+### 5. Superseded e substituição explícita
+* **Substituição por outra:** `Superseded` indica que uma decisão anterior foi trocada por uma mais recente.
+* **Pareamento de vínculos:** Vem com `superseded by` (aponta o sucessor); o novo documento declara `supersedes` (indica quem substituiu).
+* **Benefício:** Evita ambiguidade sobre **qual ADR está vigente** e preserva a leitura histórica.
+
+### 6. Metadados como estrutura da evolução histórica
+* **Status × metadados:** O status diz a situação atual; os metadados dizem como o documento **se conecta** ao acervo.
+* **Os campos-chave:** `supersedes`, `superseded by` e `amends` transformam ADRs isolados em sequência interpretável.
+* **O que permitem:** Reconstruir a evolução arquitetural **sem depender da memória** do time.
+
+### 7. Amends e alteração parcial
+* **Quando usar:** A decisão antiga **continua existindo**, mas recebe um ajuste parcial.
+* **Não é substituição:** Registra correção, extensão ou refinamento que altera só **parte** do conteúdo ou escopo.
+* **Evita falsa ruptura:** Comunica **continuidade com modificação localizada**, não troca total.
+
+### 8. RelatesTo versus DependsOn
+* **relatesTo:** Relação técnica **sem dependência obrigatória** — ex: duas ADRs sobre gateways de pagamento que compartilham contexto, mas existem independentes.
+* **dependsOn:** Mais forte — a decisão atual **só faz sentido/funciona** porque uma anterior já foi tomada.
+* **A escolha do vínculo:** Define se há acoplamento real entre as decisões.
+
+### 9. Fluxo de aprovação e governança do documento
+* **Início:** `Draft`, nem sempre público; às vezes ocupa o espaço de uma RFC.
+* **Submissão:** Ao time, tech lead ou diretoria, vira **proposta**; se aprovado, torna-se `Accepted`.
+* **Depois:** A governança continua — permanecer vigente, virar `Deprecated` para novos usos ou ser `Superseded` por uma decisão posterior.
+
+### 10. Regras de aplicação dos status e links
+* **Reflitam a realidade:** Status = estado real da decisão; links = relação real entre documentos.
+* **Deprecated × Superseded:** Não use `Deprecated` quando houve **substituição explícita** — aí `Superseded` com referência cruzada comunica melhor.
+* **relatesTo × dependsOn:** Não use `relatesTo` para esconder dependência estrutural — se uma decisão **sustenta** a outra, o vínculo correto é `dependsOn`.
