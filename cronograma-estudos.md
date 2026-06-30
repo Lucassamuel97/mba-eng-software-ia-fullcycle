@@ -76,7 +76,7 @@ Tempo total de estudo: 29 minutos e 36 segundos (29:36)
 Tempo total de estudo: 28 minutos e 46 segundos (28:46)
 
 - [x] Prática, Class e ER Diagram — 08:01
-- [ ] State Diagram — 03:27
+- [x] State Diagram — 03:27
 - [ ] Gerando diagramas Mermaid com IA — 13:26
 - [ ] Acesso aos prompts — 03:52
 

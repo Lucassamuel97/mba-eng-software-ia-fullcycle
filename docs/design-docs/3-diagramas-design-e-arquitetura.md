@@ -24,6 +24,8 @@
 
 - [Aula 11: Prática, Class e ER Diagram](#aula-11-prática-class-e-er-diagram)
 
+- [Aula 12: State Diagram](#aula-12-state-diagram)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -792,3 +794,59 @@ flowchart TD
     LIM -->|aumentar| INC[Aumenta limite]
     INC --> OK
 ```
+
+## Aula 12: State Diagram
+
+Esta aula apresenta o **state diagram** em Mermaid: a representação dos **estados possíveis** de uma entidade e das **transições** entre eles. É a escolha certa quando o comportamento depende do **status atual**, não apenas de uma sequência de passos — típico de workflows, automações e máquinas de estado. O exemplo modela a limitação de requisições como uma cadeia de estados (parado → ativo → limitado → cooling down → ativo/bloqueado).
+
+> 🛠️ O diagrama Mermaid abaixo foi **reconstruído a partir da descrição da aula**. Renderiza no GitHub e no site Docsify. Se a versão do curso diferir, me passe que eu substituo.
+
+---
+
+### 1. State diagram e comportamento dependente de estado
+* **Estados e transições:** Representa os estados possíveis do sistema e as mudanças entre eles.
+* **Quando é a escolha certa:** Quando o comportamento depende do **status atual** da entidade, não só de uma sequência de passos.
+* **Onde aparece:** Workflows, automações e máquinas de estado — a mesma entrada pode produzir respostas diferentes conforme o estado armazenado.
+
+### 2. Quando usar state diagram em vez de flowchart ou sequence
+* **Flowchart:** Útil para decisões e caminhos alternativos.
+* **Sequence:** Útil para interações ao longo do tempo.
+* **State diagram:** Responde "em que estado o sistema está agora e para quais estados pode ir depois".
+* **Regra central:** Mais adequado quando o padrão é "se estiver neste status, reaja desta forma".
+
+### 3. Estados e transições no exemplo
+* **Cadeia de estados:** parado, ativo, limitado, cooling down e bloqueado.
+* **Nós e setas:** Cada nó é uma condição (persistente ou temporária); cada seta é o **evento ou condição** que autoriza a mudança.
+* **Valor:** Torna explícito que o sistema reage ao **histórico condensado** no estado atual, não apenas ao evento corrente.
+
+```mermaid
+stateDiagram-v2
+    state "Cooling Down" as CoolingDown
+    [*] --> Parado
+    Parado --> Ativo : requisição chega
+    Ativo --> Limitado : atinge o limite
+    Limitado --> CoolingDown : aplica restrição temporária
+    CoolingDown --> Ativo : janela reiniciada
+    CoolingDown --> Bloqueado : abuso detectado
+    Bloqueado --> [*]
+```
+
+### 4. Ativo, limitado e cooling down
+* **Ativo:** Ao chegar uma requisição, o sistema sai do estado inicial e opera **dentro do limite** esperado.
+* **Limitado:** Ao atingir o limite definido, transita para limitado — a política de controle passou a **restringir** o comportamento.
+* **Cooling down:** Estado **temporário** em que a janela é reiniciada antes de permitir o retorno ao estado ativo.
+
+### 5. Bloqueio por abuso
+* **Regra mais severa:** O estado bloqueado modela penalidade mais forte que a limitação temporária.
+* **Transição condicional:** Se durante o cooling down houver abuso, a transição deixa de apontar para recuperação e vai para **bloqueio permanente**.
+* **Por que modelar:** Separa claramente penalidades **temporárias** de **definitivas**, evitando que a regra fique implícita em texto solto ou espalhada no código.
+
+### 6. Regras de negócio com status e flags
+* **Dependem de estado:** Muitas regras dependem de status, flags e condições temporárias registradas no sistema.
+* **O que o diagrama revela:** Por que uma ação foi permitida, negada, adiada ou redirecionada.
+* **Rastreabilidade:** Se um item está em certo estado, ele percorreu transições específicas — melhora revisão de regra, alinhamento entre times e manutenção.
+
+### 7. Aplicação prática em Mermaid
+* **Máquina de estados como texto versionável:** Como os demais diagramas trabalhados.
+* **Passo prático:** Listar os estados relevantes, nomear as transições com os **eventos de negócio** e verificar se cada mudança de comportamento está ancorada em um estado explícito.
+* **Critério:** Se a regra depende de "status atual + evento recebido", o state diagram comunica melhor que um fluxo puramente procedural.
