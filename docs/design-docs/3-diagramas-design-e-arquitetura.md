@@ -16,6 +16,8 @@
 
 - [Aula 7: Gerando diagrama C4](#aula-7-gerando-diagrama-c4)
 
+- [Aula 8: Diagramas Mermaid](#aula-8-diagramas-mermaid)
+
 
 ## Aula 1: Introdução a Diagramas
 
@@ -474,3 +476,49 @@ Esta aula transforma a geração de diagramas C4 em um **workflow automatizado**
 ### 13. Parte prática: o que auditar na saída
 * **Quatro pontos:** (1) idioma do diagrama acompanha o FDD sem traduzir tecnologias; (2) níveis param onde a documentação sustenta; (3) `.puml` e `.md` criados no local correto; (4) a justificativa aponta para o documento-fonte.
 * **Se algo falhar:** O problema não está só na saída — está no **prompt, nos parâmetros ou na validação** insuficiente.
+
+## Aula 8: Diagramas Mermaid
+
+Esta aula apresenta o **Mermaid** como linguagem de marcação que converte **texto em diagramas**, tratando o diagrama como artefato textual — editável, versionável, revisável em diff e renderizável **nativamente no Markdown/GitHub**. Mais leve que o PlantUML, é ideal para **documentação viva** e fluxos/regras pontuais. O fechamento é o **critério de escolha**: C4 para visões arquiteturais; Mermaid para fluxos e regras que precisam viver junto do texto.
+
+---
+
+### 1. Mermaid como linguagem de marcação para diagramas
+* **Texto vira diagrama:** Descreve fluxos, integrações e estruturas sem sair do documento técnico.
+* **Artefato textual:** Aproxima o diagrama do fluxo normal de engenharia — editar, versionar, revisar em diff e automatizar.
+* **Documentação viva:** Ideal quando o diagrama precisa evoluir junto com o conteúdo escrito.
+
+### 2. Por que Mermaid é mais leve que PlantUML
+* **Diferença de verbosidade:** O PlantUML segue útil, mas sua sintaxe cresce rápido com classes, ícones e convenções.
+* **Escrita enxuta:** O Mermaid reduz esse atrito, diminuindo o custo de criação e manutenção.
+* **Uso frequente:** Favorece a documentação cotidiana.
+
+### 3. Manutenção, revisão e automação com IA
+* **Texto é fácil de gerar:** Agentes de IA geram, revisam e atualizam com muito menos fricção que arquivos visuais.
+* **Amplia o workflow do FDD:** Combina com a geração a partir do FDD, mas estende para cenários menores e locais.
+* **Consistência mais fácil:** O diagrama deixa de depender de edição gráfica manual ou exportações repetidas.
+
+### 4. Renderização nativa em Markdown e GitHub
+* **Aparece no contexto:** Um bloco Mermaid no README ou doc compatível renderiza no próprio documento.
+* **Sem ciclo separado:** Dispensa gerar imagem, fazer upload e referenciar arquivo externo.
+* **Efeito:** Reduz o atrito de publicação e incentiva o time a documentar mais.
+
+### 5. Uso de Mermaid para regras de negócio e documentação leve
+* **Não reabre a arquitetura:** Útil quando o objetivo é registrar um fluxo específico ou uma regra pontual.
+* **Exemplos:** Uma decisão de limitação, uma sequência de validações ou um fluxo de integração do Rate Limiter.
+* **Mais leve:** Mais rápido de revisar e compatível com documentação embutida no texto.
+
+### 6. Diferença de propósito entre Mermaid e C4
+* **C4 é mais forte quando:** A pergunta é arquitetural e exige convenção de níveis, fronteiras e relações.
+* **Mermaid atende melhor quando:** É preciso comunicar rapidamente um fluxo, regra ou estrutura simples dentro do documento.
+* **A escolha:** Não "qual é melhor em absoluto", mas qual linguagem responde melhor ao tipo de explicação a manter.
+
+### 7. Limites de usar Mermaid para representar C4
+* **Dá para imitar, mas:** Reproduzir níveis do C4 com Mermaid não preserva automaticamente a convenção do modelo.
+* **Risco:** Parece semelhante, mas foge do padrão arquitetural esperado, reduzindo consistência entre leitores e artefatos.
+* **Conclusão:** Mermaid **não substitui** o C4 — é alternativa textual leve para outros tipos de comunicação, não cópia fiel das regras.
+
+### 8. Critério prático de escolha
+* **Quando Mermaid vence:** Quando o custo de detalhar, renderizar e manter um diagrama arquitetural formal supera o benefício.
+* **Forças de cada um:** Mermaid favorece velocidade, embutimento e baixo atrito; C4 favorece estrutura arquitetural explícita.
+* **No Rate Limiter:** C4 para vistas arquiteturais; Mermaid para **fluxos e regras específicas** que vivem junto do Markdown.
